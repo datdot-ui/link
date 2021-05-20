@@ -1,4 +1,10 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+module.exports={
+    "color": "var(--color-white)",
+    "bgColor": "var(--color-black)"
+    
+}
+},{}],2:[function(require,module,exports){
 (function (__filename){(function (){
 const bel = require('bel')
 const csjs = require('csjs-inject')
@@ -7,132 +13,121 @@ const filename = path.basename(__filename)
 const button = require('..')
 const svg = require('datdot-ui-graphic')
 const domlog = require('ui-domlog')
+const main_button = require('./main_button.json')
+const black_button = require('./black_button.json')
+const white_button = require('./white_button.json')
 
 function demoComponent() {
-    let number = 0
     let recipients = []
-    const data = ['Available', 'Not available', 'Hypercore', 'Hyperdrive', 'Cabal']
-    // icons
-    const iconCancel = svg( { css: `${css.icon} ${css['icon-cancel']}`, path: 'assets/cancel.svg' })
-    const iconClear = svg( { css: `${css.icon} ${css['icon-clear']}`, path: 'assets/cancel.svg' })
-    const iconClear1 = svg( { css: `${css.icon} ${css['icon-clear']}`, path: 'assets/cancel.svg' })
-    const iconCheck = svg( { css: `${css.icon} ${css['icon-check']}`, path: 'assets/check.svg' })
-    const iconPlus = svg( { css: `${css.icon} ${css['icon-plus']}`, path: 'assets/plus.svg' })
-    const iconPlus1 = svg( { css: `${css.icon} ${css['icon-plus']}`, path: 'assets/plus.svg' })
-    const iconPlus2 = svg( { css: `${css.icon} ${css['icon-plus']}`, path: 'assets/plus.svg' })
-    const iconMinus= svg( { css: `${css.icon} ${css['icon-plus']}`, path: 'assets/minus.svg' })
-    const iconMinus1= svg( { css: `${css.icon} ${css['icon-plus']}`, path: 'assets/minus.svg' })
-    const iconOption = svg( { css: `${css.icon} ${css['icon-option']}`, path: 'assets/option.svg' })
-    const iconFilterOption = svg( { css: `${css.icon} ${css['icon-option']}`, path: 'assets/option.svg' })
-    // default buttons
-    const confirm = button({page: 'JOBS', name: 'confirm', content: 'Confirm', style: 'solid', color: 'black', custom: [css.customColor, css.customBackgroundColor]}, protocol('confirm'))
-    const click = button({page: 'JOBS', name: 'click', content: 'Click', style: 'solid', color: 'white'}, protocol('click'))
-    const cancel = button({page: 'JOBS', name: 'cancel', content: 'Cancel', style: 'outlined', color: 'border-grey'}, protocol('cancel'))
-    const previous = button({page: 'JOBS', name: 'previous', content: 'Previous', style: 'outlined', color: 'border-white'}, protocol('cancel'))
-    const plan1 = button({page: 'JOBS', flow: 'plans', name: 'plan1', content: 'Plan1', style: 'solid', color: 'list', current: true}, plansProtocol('plan1'))
-    const plan2 = button({page: 'JOBS', flow: 'plans', name: 'plan2', content: 'Plan2', style: 'solid', color: 'list', current: false}, plansProtocol('plan2'))
-    const plan3 = button({page: 'JOBS', flow: 'plans', name: 'plan3', content: 'Plan3', style: 'solid', color: 'list', current: false}, plansProtocol('plan3'))
-    // icon buttons
-    const cancel1 = button({page: 'JOBS', name: 'icon-cancel', content: iconCancel, style: 'solid', color: 'grey'}, protocol('icon-cancel'))
-    const save = button({page: 'JOBS', name: 'icon-save', content: iconCheck, style: 'solid', color: 'black'}, protocol('icon-save'))
-    const clear = button({page: 'PLANS', name: 'icon-clear', content: iconClear, style: ['circle-solid', 'small'], color: 'light-grey'}, protocol('icon-cancel'))
-    const create = button({page: 'JOBS', name: 'icon-create', content: iconPlus, style: 'solid', color: 'black'}, protocol('cicon-reate'))
-    const option = button({page: 'PLANS', name: 'icon-option', content: iconOption, style: 'default', color: 'fill-grey'}, protocol('icon-option'))
-    const filterOption = button({page: 'PLANS', flow: 'option', name: 'filter-option', content: iconFilterOption, style: 'default', color: 'grey'}, protocol('filter-option'))
-    // increment and decrement buttons
-    const minus = button({page: 'JOBS', flow: 'calculate', name: 'icon-decrement', content: iconMinus, style: 'default', color: 'stroke-black'}, protocol('icon-decrement'))
-    const minusDisabled = button({page: 'JOBS', flow: 'calculate', name: 'icon-decrement-disabled', content: iconMinus1, style: 'default', color: 'stroke-black', disabled: true}, protocol('icon-decrement-disabled'))
-    const plus = button({page: 'JOBS', flow: 'calculate', name: 'icon-increment', content: iconPlus2, style: 'default', color: 'stroke-black'}, protocol('icon-increment'))
-    const calNumber = bel`<span class=${css.num}>${number}</span>`
-    const calculateElement = bel`<div class=${css.calculate}>${minus}${calNumber}${plus}</div>`
-    // link buttons
-    const linkCancel = button({page: 'PLANS', name: 'link-cancel', content: 'Cancel', style: 'link', color: 'link-cancel'}, protocol('link-cancel'))
-    const link1 = button({page: 'PLANS', name: 'link1', content: 'Link1', style: 'link', color: 'link-blue'}, protocol('link1'))
-    // disabled buttons
-    const disabled = button({page: 'JOBS', name: 'disabled', content: 'Disabled', style: 'solid', color: 'black', disabled: true}, protocol('disabled'))
-    const clearDisabled = button({page: 'PLANS', name: 'icon-clear-disabled', content: iconClear1, style: ['circle-solid', 'small'], color: 'light-grey', disabled: true}, protocol('icon-clear-disabled'))
-    const createDisabled = button({page: 'JOBS', name: 'icon-create-disabled', content: iconPlus1, style: 'solid', color: 'black', disabled: true}, protocol('icon-create-disabled'))
-    const plansList = bel`<div class=${css.plansList}>${plan1}${plan2}${plan3}</div>`
-    const plans = plansList.children
-    // location buttons
-    const location1 = button({page: 'JOBS', flow: 'location', name: 'central-europe', content: 'Central Europe', style: 'option', color: 'link-grey', current: true}, locationProtocol('central-europe'))
-    const location2 = button({page: 'JOBS', flow: 'location', name: 'eastern-europe', content: 'Eastern Europe', style: 'option', color: 'link-grey'}, locationProtocol('eastern-europe'))
-    const location3 = button({page: 'JOBS', flow: 'location', name: 'northern-europe', content: 'Northern Europe', style: 'option', color: 'link-grey'}, locationProtocol('northern-europe'))
-    const locationList = bel`<div class=${css.locationList}>${location1}${location2}${location3}</div>`
-    const locations = locationList.children
-    // navigation buttons
-    const nav1 = button({page: 'PLANS', flow: 'nav', name: 'user', content: 'USER', style: 'nav', color: 'white'}, navigationProtocol('user'))
-    const nav2 = button({page: 'PLANS', flow: 'nav', name: 'plans', content: 'PLANS', style: 'nav', color: 'white', current: true}, navigationProtocol('plans'))
-    const nav3 = button({page: 'PLANS', flow: 'nav', name: 'jobs', content: 'JOBS', style: 'nav', color: 'white'}, navigationProtocol('jobs'))
-    const nav4 = button({page: 'PLANS', flow: 'nav', name: 'apps', content: 'APPS', style: 'nav', color: 'white'}, navigationProtocol('apps'))
-    const navigation = bel`<nav class=${css.nav}>${nav1}${nav2}${nav3}${nav4}</nav>`
-    const navs = navigation.children
-    // filter option
-    const optionList = bel`<ul class="${css['option-list']}" onclick=${(e) => actionOptionList(e)}></ul>`
-    const optionAction = bel`<div class="${css.action} ${css.option}">${filterOption}</div>`
-    const tabList = bel`<div class=${css['tab-list']}></div>`
-    tabs()
-    
-    
-    // get list
-    optionListRender(data).then( buttons => {
-        buttons.map( item => { 
-            const li = bel`<li>${item}</li>`
-            optionList.append(li) 
-        })
-    })
+    // UI element settings
+    let option = {
+        page: 'USER',
+        name: 'button1',
+        content: 'Black',
+        theme: { ...main_button , ...black_button},
+    }
+
+    let option1 = {
+        page: 'demo',
+        name: 'button2',
+        content: 'White',
+        theme: {  
+            ...main_button,
+            ...white_button,
+            colorHover: 'hsl(0, 0%, 0%)',
+            bgHover: 'hsl(0, 0%, 65%)'
+        }
+    }
+
+    let option2 = {
+        page: 'demo',
+        flow: 'toggle',
+        name: 'date',
+        content: 'Date',
+        theme: {
+            ...main_button,
+            ...white_button,
+            width: '100%',
+            textAlign: 'right',
+            colorHover: 'hsl(0, 0%, 100%)',
+            bgColorHover: 'hsl(0, 0%, 65%)'
+        }
+    }
+
+    let tabOption1 = {
+        page: 'demo',
+        flow: 'tab',
+        name: 'hourly',
+        content: '1H',
+        theme: {
+            ...main_button,
+            ...white_button,
+        },
+        isActive: true,
+    }
+
+    let tabOption2 = {
+        page: 'demo',
+        flow: 'tab',
+        name: 'daily',
+        content: '1D',
+        theme: {
+            ...main_button,
+            ...white_button,
+        }
+    }
+
+    let tabOption3 = {
+        page: 'demo',
+        flow: 'tab',
+        name: 'monthly',
+        content: '1M',
+        theme: {
+            ...main_button,
+            ...white_button,
+        }
+    }
+
+    let tabOption4 = {
+        page: 'demo',
+        flow: 'tab',
+        name: 'yearly',
+        content: '1Y',
+        theme: {
+            ...main_button,
+            ...white_button,
+        },
+        isDisabled: true
+    }
+
+
+    // UI elements
+    // primary
+    const btn1 = button({...option}, protocol(option.name))
+    const btn2 = button({...option1}, protocol(option1.name))
+    // toggle
+    const btn3 = button({...option2}, protocol(option2.name))
+    // tab
+    const tab1 = button({...tabOption1}, protocol(tabOption1.name))
+    const tab2 = button({...tabOption2}, protocol(tabOption2.name))
+    const tab3 = button({...tabOption3}, protocol(tabOption3.name))
+    const tab4 = button({...tabOption4}, protocol(tabOption4.name))
 
     // content
     const content = bel`
     <div class=${css.content}>
-        <div>
-            <h3>Text</h3>
-            ${confirm}
-            ${cancel}
-            ${previous}
-            ${click}
-        </div>
-        <div>
-            <h3>Icon</h3>
-            ${save}
-            ${cancel1}
-            ${create}
-            ${clear}
-            ${option}
-            ${calculateElement}
-        </div>
-        <div>
-            <h3>Link</h3>
-            ${linkCancel}
-            ${link1}
-        </div>
-        <div>
-            <h3>Disabeld</h3>
-            ${disabled}
-            ${clearDisabled}
-            ${createDisabled}
-            ${minusDisabled}
-        </div>
-        <div>
-            <h3>Plans list</h3>
-            ${plansList}
-        </div>
-        <div>
-            <h3>Location list</h3>
-            ${locationList}
-        </div>
-        <div>
-            <h3>navigation</h3>
-            ${navigation}
-        </div>
-        <div>
-            <h3>Option</h3>
-            ${optionAction}
-        </div>
-        <div>
-            <h3>Tab</h3>
-            ${tabList}
-        </div>
+        <section>
+            <h2>Button</h2>
+            <div>${btn1}${btn2}</div>
+        </section>
+        <section>
+            <h2>Toggle</h2>
+            <div>${btn3}</div>
+        </section>
+        <section>
+            <h2>Tab</h2>
+            <div class=${css.tab}>${tab1}${tab2}${tab3}${tab4}</div>
+        </section>
     </div>`
 
     // show logs
@@ -154,182 +149,52 @@ function demoComponent() {
     }
 
     /*************************
-    * ------- Elements --------
+    * ------ Actions -------
     *************************/
-    // tab list
-    function tabs () {
-        const obj = {data: [], schedule: '', location: '', peformance: '', swam: { key: '', feeds: [1,2,3,4,5]}}
-        Object.keys(obj).map( (item, index) => {
-            const name = item.split('').map( (text, i) => {
-                if (i === 0) return text.toUpperCase()
-                return text
-            }).join('')
-            const btn = button({page: 'PLANS', flow: 'tab-list', name: item, content: item, style: 'tab', color: 'grey', current: index === 0? true : false}, tabProtocol(item))
-            tabList.append(btn)
+    function toggle(message) {
+        const { page, from, flow, type, action, state, body } = message
+        let update
+        if (state === 'inactive') update = 'active' 
+        if (state === 'active') update = 'inactive'
+        return recipients[from]({page, from, flow, type: 'clicked', state: update })
+    }
+
+    function tab(message) {
+        const { page, from, flow, type, action, state, body } = message
+        const tab = document.querySelector(`.${css.tab}`)
+        const { children } = tab
+        const items = [...children]
+        // if tab is active then do nothing
+        if (state === 'active') return
+        items.forEach( item => {
+            let name = item.dataset.name
+            // make all tabs are inactive, expact current one 
+            recipients[name]({page, from, flow, type: 'clicked', state: 'inactive' })
+            // make tab active
+            if (name === from) recipients[name]({page, from, flow, type: 'clicked', state: 'active' })
+            
         })
-    }
-
-    /*************************
-    * ------- Actions --------
-    *************************/
-    function actionSwitch(args, message) {
-        const { page, from, flow, type, action, body } = message
-        const classList = []
-        args.forEach( (btn, i) => {
-            const target = btn.getAttribute('name')
-            classList.push( target )
-            const type = target === from ? 'current-active' : 'remove-current'
-            const name = target === from ? from : classList[i]
-            const log = { page, from: name, flow, type}
-            recipients[name](log)
-            return showLog({...log, body, filename, line: 159})
-        })
-    }
-
-    function actionOptionList (event) {
-        const target = event.target
-        if (!target.classList.contains(css.status)) return
-        const icon = target.firstChild
-        // for recipients[name] using
-        const name = target.innerText
-        // if icon is not contained css.hide then do toggling it on unchecked/checked 
-        const type = !icon.classList.contains(css.hide) ? 'unchecked' : 'checked'
-        icon.classList.toggle(css.hide)
-        recipients[name]({page: 'demo', from: target.innerText, flow: 'option-list', type, body: name})
-        const message = {page: 'demo', from: target.innerText, flow: 'option-list', type, body: name, filename, line: 197}
-        showLog(message)
-    }
-
-    function actionFilterOption (message) {
-        let log = {}
-        const {page, from, flow, type, body, action} = message
-        // check button is not active then add active style
-        if (recipients[from].state === undefined) {
-            recipients[from].state = 'self-active'
-            recipients[from]({page, flow, from, type: 'active', body})
-            log = {page: 'demo', from, flow, type: 'active', body, filename, line: 208}
-            if (optionList.children.length > 0) optionList.classList.remove(css.hide)
-            optionAction.append( optionList )
-            return showLog(log)
-        }
-        // check button is active then remove active style
-        if (recipients[from].state === 'self-active') {
-            recipients[from].state = undefined
-            recipients[from]({page, flow, from, type: 'remove-active', body})
-            log = {page: 'demo', from, flow, type: 'remove-active', body, filename, line: 217}
-            optionList.classList.add(css.hide)
-            return showLog(log)
-        }
-    }
-
-    // addtion and Subtraction
-    function actionIncrement (message) {
-        let {from, flow} = message
-        number++
-        calNumber.textContent = number
-        const log = {page: 'demo', from, flow, type: 'number', body: number, filename, line: 228}
-        showLog(log)
-    }
-
-    function actionDecrement (message) {
-        let {from, flow} = message
-        if (number <= 0 ) return showLog({page: 'demo', from, flow: 'calculate/ui-button', type: 'number', body: '0', filename, line: 234})
-        number--
-        calNumber.textContent = number
-        const log = {page: 'demo', from, flow, type: 'number', body: number, filename, line: 237}
-        showLog(log)
     }
 
     /*************************
     * ------ Receivers -------
     *************************/
-    // tab
-    function tabReceive (message) {
-        let { page, from, flow, type, action, body } = message
-        if (type === 'init') showLog({page: 'demo', from, flow, type: 'ready', body, filename, line: 247})
-        if (type === 'click') actionSwitch([...tabList.children], message)
-    }
-    // navigation menu
-    function navigationReceive (message) {
-        let { page, from, flow, type, action, body } = message
-        showLog(message)
-        
-        if (type === 'init') showLog({page: 'demo', from, flow, type: 'ready', body, filename, line: 255})
-        if (type === 'click') actionSwitch([...navs], message)
-    }
-
-    // location list
-    function locationReceive (message) {
-        let { page, from, flow, type, action, body } = message
-        showLog(message)
-        if (type === 'init') showLog({page: 'demo', from, flow, type: 'ready', body, filename, line: 263})
-        if (type === 'click') actionSwitch([...locations], message)
-    }
-
-    // Plans list
-    function plansReceive (message) {
-        let { page, from, flow, type, action, body } = message 
-        showLog(message)
-        if (type === 'init') showLog({page: 'demo', from, flow, type: 'ready', body, filename, line: 271})
-        if (type === 'click') actionSwitch([...plans], message)
-    }
-
-    // Option
-    function optionReceive (message) {
-        let { page, from, flow, type, action, body } = message 
-        showLog(message)
-        if (type === 'init') showLog({page: 'demo', from, flow, type: 'ready', body, filename, line: 279})
-    } 
-
     function receive (message) {
-        const { page, from, flow, type, action, body } = message
+        const { page, from, flow, type, body } = message
         showLog(message)
-        if (type === 'init') showLog({page: 'demo', from, flow, type: 'ready', body, filename, line: 285})
-        if (type === 'click') {
-            if (from === 'icon-increment') actionIncrement(message)
-            if (from === 'icon-decrement') actionDecrement(message)
-            if (from === 'filter-option') actionFilterOption(message)
-        } 
+        if (type === 'init') return showLog({page, from, flow, type: 'ready', body, filename, line: 51})
+        if (type === 'click') { 
+            // send log to child module and require to do actions
+            if (flow.split('/').includes('toggle')) return toggle(message)
+            if (flow.split('/').includes('tab')) return tab(message)
+            recipients[from](message)
+            showLog({page, from, flow, type: 'clicked', body, filename, line: 52})
+        }
     }
 
     /*************************
     * ------ Protocols -------
     *************************/
-    function tabProtocol (name) {
-        return send => {
-            recipients[name] = send
-            return tabReceive
-        }
-    }
-
-    function optionProtocol (name) {
-        return send => {
-            recipients[name] = send
-            return optionReceive
-        }
-    }
-
-    function navigationProtocol (name) {
-        return send => {
-            recipients[name] = send
-            return navigationReceive
-        }
-    }
-
-    function locationProtocol (name) {
-        return send => {
-            recipients[name] = send
-            return locationReceive
-        }
-    }
-
-    function plansProtocol (name) {
-        return send => {
-            recipients[name] = send
-            return plansReceive
-        }
-    }
-
     // original protocol for all use
     function protocol (name) {
         return send => {
@@ -341,28 +206,6 @@ function demoComponent() {
     /*********************************
     * ------ Promise() Element -------
     *********************************/
-    async function optionListRender (data) {
-        return await new Promise((resolve, reject) => {
-            if (data === undefined) reject('not data load')
-            const lists = data.map( item => {
-                let style
-                const check = svg( { css: `${css.icon} ${css['icon-check']}`, path: 'assets/check.svg' })
-                const circle = bel`<span class="${css.circle}"></span>`
-                if (item === 'Available') style = css.on
-                if (item === 'Not available') style = css.off
-                if (item === 'Hypercore') style = css.core
-                if (item === 'Hyperdrive') style = css.drive
-                if (item === 'Cabal') style = css.cabal
-                circle.classList.add(style)
-                const content = bel`<div class=${css.status}>${check}${circle}${item}</div>`
-                const btn = button({page: 'PLANS', flow: 'option' , name: item, content, style: 'link', color: 'link-white'}, optionProtocol(`${item}`))
-                return btn
-            })
-            return resolve(lists)
-
-        }).catch( err => { throw new Error(err) })
-    }
-
     // keep the scroll on bottom when the log displayed on the terminal
     function showLog (message) { 
         sendMessage(message)
@@ -382,9 +225,44 @@ function demoComponent() {
 }
 
 const css = csjs`
+:root {
+    --h: 0;
+    --s: 0%;
+    --l: 50%;
+    --color: var(--h), var(--s);
+    --color-black: hsl(var(--color), calc(var(--l) - 50%));
+    --color-white: hsl(var(--color), calc(var(--l) + 50%));
+    --color-red: hsl(358, 99%, calc(var(--l) + 3%));
+    --font-primary: 1.6rem;
+    --font-smaller: calc(var(--font-primary) - 0.4rem);
+    --font-small: calc(var(--font-primary) - 0.2rem);
+    --font-mediuem: calc(var(--font-primary) + 0.2rem);
+    --font-big: calc(var(--font-primary) + 0.4rem);
+    --font-bigger: calc(var(--font-primary) + 0.6rem);
+    --font-large: calc(var(--font-primary) + 0.8rem);
+    --font-larger: calc(var(--font-primary) + 1rem);
+    --border-width: 0px;
+    --border-color: var(--color-black);
+    --border-style: solid;
+    --font-weight: 300;
+    --shadow: 2px 5px 10px hsla(var(--color), calc(var(--l) - 50%), 0.7);
+    --font-weight-primary: 300;
+    --font-weight-bold: 800;
+    --rounder0: 0;
+    --rounder-primary: 4px;
+    --rounder8: calc(var(--rounder-primary) * 2);
+    --rounder12: calc(var(--rounder-primary) * 3);
+    --rounder50: calc(var(--rounder-primary) * 12.5);
+    --button-padding: 0.8rem 1.4rem;
+    --button-color-hover: var(--color-white);
+    --button-bg-hover: hsla(var(--color), calc(var(--l) - 50%), .5);
+    --button-text-align: center;
+
+}
 html {
     box-sizing: border-box;
     height: 100%;
+    font-size: 62.5%;
 }
 *, *:before, *:after {
     box-sizing: inherit;
@@ -393,7 +271,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 14px;
+    font-size: 1.6rem;
     background-color: rgba(0, 0, 0, .1);
     height: 100%;
 }
@@ -409,171 +287,30 @@ body {
 .content > div {
     margin-bottom: 20px;
 }
-.content > div button {
-    margin-right: 10px;
-}
 .terminal {
     background-color: #212121;
     color: #f2f2f2;
     font-size: 13px;
     overflow-y: auto;
 }
-.code-line {}
-.icon {
-    width: 16px;
-}
-.icon-cancel {}
-.icon-clear {}
-.icon-check {}
-.icon-plus {}
-.icon-option {}
-.plansList {}
-.locationList {}
-.customColor {
-    color: #e0fbfc;
-}
-.customBackgroundColor {
-    background-color: #457b9d;
-}
-.nav {
-    width: 50%;
-    max-width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-}
-.nav button {
-    padding:0;
-    margin: 0 !important;
-}
-.calculate {}
-.num {
-    font-size: 16px;
-    font-weight: bold;
-    padding: 0 12px;
-}
-.option {
-    position: relative;
-    display: grid;
-    justify-items: right;
-    width: 150px;
-}
-.option > button[class^="btn"] {
-    position: relative;
-    z-index: 3;
-    margin-right: 0;
-}
-.option-list {
-    position: absolute;
-    z-index: 2;
-    right: 0;
-    width: 100%;
-    animation: showup .25s linear forwards;
-}
-.option-list, .option-list li  { 
-    margin: 0; 
-    padding: 0;
-    list-style: none;
-}
-.option-list li > button{
-    background-color: #000;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    text-align: left;
-}
-.option-list li:first-child button {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-}
-.option-list li:last-child button {
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
-}
-.option-list li button:hover {
-    color: #fff;
-    background-color: #333;
-}
-.hide {
-    animation: disppear .5s linear forwards;
-}
-.status {
-    display: grid;
-    grid-template-rows: 32px;
-    grid-template-columns: 18px 27px auto;
-    padding: 0 10px;
-    align-items: center;
-}
-.circle {
-    display: block;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: #000;
-    justify-self: center;
-    pointer-events: none;
-}
-.on {
-    background-color: #109B36;
-}
-.off {
-    background-color: #D9D9D9;
-}
-.core {
-    background-color: #BCE0FD;
-}
-.drive {
-    background-color: #FFDFA2;
-}
-.cabal {
-    background-color: #E9D3FD;
-}
-.option-list .icon-check {
-    pointer-events: none;
-}
-.option-list .icon-check svg path {
-    stroke: #fff;
-}
-:root .tab-list button {
-    margin-right: 2px;
-}
-@media screen and (max-width: 812px) {
-    .option-list {
-        margin-top: 2px;
-    }
-}
-@media screen and (max-width: 812px) {
-    .nav {
-        width: 100%;
-    }
-    .option-list {
-        margin-top: 2px;
-    }
-}
-@keyframes showup {
-    0% {
-        opacity: 0;
-        top: 45px;
-    }
-    100% {
-        opacity: 1;
-        top: 53px;
-    }
-}
-@keyframes disppear {
-    0% {
-        opacity: 1;
-        top: 53px;
-    }
-    100% {
-        opacity: 0;
-        top: 45px;
-    }
-}
+.tab {}
 `
 
 document.body.append( demoComponent() )
 }).call(this)}).call(this,"/demo/demo.js")
-},{"..":30,"bel":3,"csjs-inject":6,"datdot-ui-graphic":23,"path":27,"ui-domlog":29}],2:[function(require,module,exports){
+},{"..":33,"./black_button.json":1,"./main_button.json":3,"./white_button.json":4,"bel":6,"csjs-inject":9,"datdot-ui-graphic":26,"path":30,"ui-domlog":32}],3:[function(require,module,exports){
+module.exports={
+    "fontSize": "var(--font-primary)",
+    "fontWeight": "300",
+    "padding": "var(--button-padding)",
+    "borderWidth": "0"
+}
+},{}],4:[function(require,module,exports){
+module.exports={
+    "colorHover": "var(--color-white)",
+    "bgColorHover": "var(--color-red)"
+}
+},{}],5:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
 var trailingSpaceRegex = /[\s]+$/
@@ -706,7 +443,7 @@ module.exports = function appendChild (el, childs) {
   }
 }
 
-},{}],3:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var hyperx = require('hyperx')
 var appendChild = require('./appendChild')
 
@@ -807,7 +544,7 @@ module.exports = hyperx(belCreateElement, {comments: true})
 module.exports.default = module.exports
 module.exports.createElement = belCreateElement
 
-},{"./appendChild":2,"hyperx":25}],4:[function(require,module,exports){
+},{"./appendChild":5,"hyperx":28}],7:[function(require,module,exports){
 (function (global){(function (){
 'use strict';
 
@@ -826,12 +563,12 @@ function csjsInserter() {
 module.exports = csjsInserter;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"csjs":9,"insert-css":26}],5:[function(require,module,exports){
+},{"csjs":12,"insert-css":29}],8:[function(require,module,exports){
 'use strict';
 
 module.exports = require('csjs/get-css');
 
-},{"csjs/get-css":8}],6:[function(require,module,exports){
+},{"csjs/get-css":11}],9:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -840,17 +577,17 @@ module.exports = csjs;
 module.exports.csjs = csjs;
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":4,"./get-css":5}],7:[function(require,module,exports){
+},{"./csjs":7,"./get-css":8}],10:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/csjs');
 
-},{"./lib/csjs":13}],8:[function(require,module,exports){
+},{"./lib/csjs":16}],11:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/get-css');
 
-},{"./lib/get-css":17}],9:[function(require,module,exports){
+},{"./lib/get-css":20}],12:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -860,7 +597,7 @@ module.exports.csjs = csjs;
 module.exports.noScope = csjs({ noscope: true });
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":7,"./get-css":8}],10:[function(require,module,exports){
+},{"./csjs":10,"./get-css":11}],13:[function(require,module,exports){
 'use strict';
 
 /**
@@ -882,7 +619,7 @@ module.exports = function encode(integer) {
   return str;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -926,7 +663,7 @@ function getClassChain(obj) {
   return acc;
 }
 
-},{"./composition":12}],12:[function(require,module,exports){
+},{"./composition":15}],15:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -1006,7 +743,7 @@ function ignoreComposition(values) {
  */
 function Composition() {}
 
-},{}],13:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 var extractExtends = require('./css-extract-extends');
@@ -1084,7 +821,7 @@ function without(obj, unwanted) {
   }, {});
 }
 
-},{"./build-exports":11,"./composition":12,"./css-extract-extends":14,"./css-key":15,"./extract-exports":16,"./scopeify":22}],14:[function(require,module,exports){
+},{"./build-exports":14,"./composition":15,"./css-extract-extends":17,"./css-key":18,"./extract-exports":19,"./scopeify":25}],17:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -1137,7 +874,7 @@ function getClassName(str) {
   return trimmed[0] === '.' ? trimmed.substr(1) : trimmed;
 }
 
-},{"./composition":12}],15:[function(require,module,exports){
+},{"./composition":15}],18:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1147,7 +884,7 @@ function getClassName(str) {
 
 module.exports = ' css ';
 
-},{}],16:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 var regex = require('./regex');
@@ -1174,7 +911,7 @@ function getExport(css, regex) {
   return prop;
 }
 
-},{"./regex":19}],17:[function(require,module,exports){
+},{"./regex":22}],20:[function(require,module,exports){
 'use strict';
 
 var cssKey = require('./css-key');
@@ -1183,7 +920,7 @@ module.exports = function getCss(csjs) {
   return csjs[cssKey];
 };
 
-},{"./css-key":15}],18:[function(require,module,exports){
+},{"./css-key":18}],21:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1201,7 +938,7 @@ module.exports = function hashStr(str) {
   return hash >>> 0;
 };
 
-},{}],19:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 'use strict';
 
 var findClasses = /(\.)(?!\d)([^\s\.,{\[>+~#:)]*)(?![^{]*})/.source;
@@ -1217,7 +954,7 @@ module.exports = {
   ignoreComments: ignoreComments,
 };
 
-},{}],20:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 var ignoreComments = require('./regex').ignoreComments;
 
 module.exports = replaceAnimations;
@@ -1248,7 +985,7 @@ function replaceAnimations(result) {
   return result;
 }
 
-},{"./regex":19}],21:[function(require,module,exports){
+},{"./regex":22}],24:[function(require,module,exports){
 'use strict';
 
 var encode = require('./base62-encode');
@@ -1262,7 +999,7 @@ module.exports = function fileScoper(fileSrc) {
   }
 };
 
-},{"./base62-encode":10,"./hash-string":18}],22:[function(require,module,exports){
+},{"./base62-encode":13,"./hash-string":21}],25:[function(require,module,exports){
 'use strict';
 
 var fileScoper = require('./scoped-name');
@@ -1303,7 +1040,7 @@ function scopify(css, ignores) {
   return replaceAnimations(result);
 }
 
-},{"./regex":19,"./replace-animations":20,"./scoped-name":21}],23:[function(require,module,exports){
+},{"./regex":22,"./replace-animations":23,"./scoped-name":24}],26:[function(require,module,exports){
 module.exports = svg
 
 function svg(opts) {
@@ -1331,7 +1068,7 @@ function svg(opts) {
     
     return el
 }   
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -1352,7 +1089,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],25:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -1649,7 +1386,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":24}],26:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":27}],29:[function(require,module,exports){
 var inserted = {};
 
 module.exports = function (css, options) {
@@ -1673,7 +1410,7 @@ module.exports = function (css, options) {
     }
 };
 
-},{}],27:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 (function (process){(function (){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -1979,7 +1716,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this)}).call(this,require('_process'))
-},{"_process":28}],28:[function(require,module,exports){
+},{"_process":31}],31:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2165,7 +1902,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],29:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 
@@ -2243,7 +1980,7 @@ const css = csjs`
 }
 .info {}
 `
-},{"bel":3,"csjs-inject":6}],30:[function(require,module,exports){
+},{"bel":6,"csjs-inject":9}],33:[function(require,module,exports){
 (function (__filename){(function (){
 const bel = require('bel')
 const csjs = require('csjs-inject')
@@ -2252,314 +1989,90 @@ const filename = path.basename(__filename)
 
 module.exports = button
 
-function button ({page, flow = null, name, content, style, color, custom, current, disabled = false}, protocol) {
+// button ({page, flow = null, name, content, style, color, custom, isActive, disabled = false}, protocol
+function button (option, protocol) {
     const widget = 'ui-button'
-    const send2Parent = protocol( receive )
-    send2Parent({page, from: name, flow: flow ? `${flow}/${widget}` : widget, type: 'init', filename, line: 11})
-    let state
-    
-    let button = bel`<button role="button" class="${css.btn} ${ checkStyle() } ${color ? css[color] : ''} ${custom ? custom.join(' ') : ''} ${current ? css.current : '' }" name=${name} aria-label=${name} disabled=${disabled}>${content}</button>`
-    button.onclick = click
+    const {page, flow, name, content = 'Button', theme, isActive, isDisabled} = option
 
-    return button
+    const ui_element = (css) => {
+        let state = 'inactive'
+        const send2Parent = protocol( receive )
+        send2Parent({page, from: name, flow: flow ? `${flow}/${widget}` : widget, type: 'init', filename, line: 11})
+        // for tab to check isActive is true then set button state to active
+        if (isActive) setState('active')
+        const element = bel`<button role="button" class="${css.button} ${isActive ? css.active : ''} ${isDisabled ? css.disabled : '' }" data-name="${name}">${content}</button>`
+        element.onclick = (e) => click(element)
+        return element
 
-    function checkStyle() {
-        let arr = []
-        if (Array.isArray(style)) {
-            for (let i = 0; i < style.length; i++) {
-                arr.push(css[style[i]])
-            }
-            return arr.join(' ')
-        } 
-        return css[style]
-    }
-    
-    function click(e) {
-        let x = e.clientX - e.target.offsetLeft
-        let y = e.clientY - e.target.offsetTop
-        let ripple = document.createElement('span')
-        ripple.classList.add(css.ripple)
-        ripple.style.left = `${x}px`
-        ripple.style.top = `${y}px`
-
-        button.append(ripple)
-        setTimeout( () => { ripple.remove() }, 600)
-        send2Parent({page, from: name, flow: flow ? `${flow}/${widget}` : widget, type: 'click', filename, line: 40})
-    }
-
-    function setState(update) {
-        return state = update
+        /*************************
+        * ------ Actions -------
+        *************************/
+        function click(target) {
+            if (isDisabled) return
+            send2Parent({page, from: name, flow: flow ? `${flow}/${widget}` : widget, type: 'click', state, filename, line: 24})
+        }
+        function setState(update) {
+            return state = update
+        }
+        /*************************
+        * ------ Receivers -------
+        *************************/
+        function receive(message) {
+            const { from, type, state } = message
+            console.log('message received from main component:', message)
+            if (state === 'inactive') element.classList.remove(css.active)
+            if (state === 'active') element.classList.add(css.active)
+            return setState(state)
+        }
     }
 
-    function toggleActive (isActive, message) {
-        const { page, from, flow } = message
-        let newState = isActive ? setState('self-active') : setState('remove-active')
-        button.classList.toggle(css.active)
-        return send2Parent({page, flow, from, type: 'state', body: newState, filename, line: 51})
-    }
+    // if theme is entering as a property then set apply CSS styles
+    if (theme) 
+        var {width, minWidth, maxWidth, 
+            height, minHeight, maxHeight, 
+            fontSize, fontWeight, textAlign, 
+            borderWidth,  borderColor, borderStyle,
+            padding, rounder, 
+            color, bgColor, colorHover, bgColorHover, colorActive, bgColorActive,
+            shadow } = theme
 
-    function receive(message) {
-        const { type } = message
-        // console.log('received from main component', message )
-        if ( type === 'current-active' ) button.classList.add(css.current)
-        if ( type === 'remove-current' ) button.classList.remove(css.current)
-        if ( type === 'disabled' ) button.setAttribute('disabled', true)
-        if ( type === 'active' ) toggleActive(true, message)
-        if ( type === 'remove-active' ) toggleActive(false, message)
+    const style = csjs`
+    .button {
+        width: ${width ? width : 'auto'};
+        min-width: ${minWidth ? minWidth : 'auto'};
+        max-width: ${maxWidth ? maxWidth : 'inherit'};
+        height: ${height ? height : 'auto'};
+        min-height: ${minHeight ? minHeight : 'auto'};
+        max-height: ${maxHeight ? maxHeight : 'inherit'};
+        font-size: ${fontSize ? fontSize : 'var(--font-primary)'};
+        font-weight: ${fontWeight ? fontWeight : 'var(--font-weight-primary)'};
+        color: ${color ? color : 'hsl(0, 0%, 0%)' };
+        background-color: ${bgColor ? bgColor : 'hsl(0, 0%, 100%)'};
+        border-width: ${borderWidth ? borderWidth : 'var(--border-width)'};
+        border-color: ${borderColor ? borderColor : 'var(--border-color)'};
+        border-style: ${borderStyle ? borderStyle : 'var(--border-style)'};
+        border-radius: ${rounder ? rounder : 'var(--rounder0)'};
+        box-shadow: ${shadow ? shadow : 'none'};
+        padding: ${padding ? padding : 'var(--button-padding)'};
+        text-align: ${textAlign ? textAlign : 'var(--button-text-align)'};
+        white-space: nowrap;
+        transition: color .5s, background .5s ease-in-out;
+        cursor: pointer;
     }
-}
-
-
-const css = csjs`
-.btn {
-    position: relative;
-    border: none;
-    background: transparent;
-    padding: 15px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    outline: none;
-    overflow: hidden;
-    transition: color .3s, background-color .3s, border .3s ease-in-out;
-}
-.btn svg g {
-    transition: fill .3s linear;
-}
-.solid {
-    color: #fff;
-    font-weight: bold;
-    border-radius: 8px;
-}
-.solid:hover {
-    background-color: rgba(0, 0, 0, .8);
-}
-.solid [class^="icon"] path {
-    stroke: #fff;
-}
-.outlined {
-    border-radius: 8px;
-}
-.circle-solid {
-    border-radius: 100%;
-}
-.circle-solid:hover {
-    border-radius: 100%;
-    background-color: #333;
-}
-.default {
-    border-radius: 8px;
-    background-color: transparent;
-}
-.fill-grey svg g {
-    fill: #BBBBBB;
-}
-.fill-grey:hover {
-    background-color: rgba(0, 0, 0, .75);
-}
-.fill-grey:hover svg g {
-    fill: #fff;
-}
-.fill-dark svg g {
-    fill: #333;
-}
-.fill-dark:hover {
-    background-color: rgba(255,255,255, .5);
-}
-.fill-white svg g {
-    fill: #fff;
-}
-.fill-white:hover {
-    background-color: rgba(188,188,188, .5);
-}
-.stroke-black path {
-    stroke: #000;
-}
-.stroke-grey path {
-    stroke: #BBB;
-}
-.link {}
-.link:hover {
-    color: rgba(0, 0, 0, .6);
-}
-.link-black {
-    color: #000;
-}
-.link-white {
-    color: #fff;
-}
-.link-blue {
-    color: #4BAFFF;
-}
-.link-blue:hover {
-    color: #008af9;
-}
-.link-grey {
-    color: #707070;
-}
-.link-grey:hover {
-    color: #333;
-}
-.link-cancel {
-    color: #9A9A9A;
-}
-.link.cancel:hover {
-    background-color: transparent;
-}
-.ripple {
-    position: absolute;
-    border-radius: 50%;
-    background-color: #fff;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    -webkit-animation: ripples .6s linear infinite;
-    animation: ripples .6s linear infinite;
-}
-.transparent {
-    background-color: transparent;
-}
-.black {
-    color: #fff;
-    background-color: #000;
-}
-.dark {
-    color: #fff;
-    background-color: #333;
-}
-.dark svg g {
-    fill: #fff;
-}
-.dark.active {
-    background-color: #000;
-}
-.grey {
-    color: #fff;
-    background-color: #9A9A9A;
-}
-.grey svg g {
-    fill: #fff;
-}
-.white {
-    color: #707070;
-    background-color: #fff;
-}
-.white:hover {
-    color: #fff;
-    background-color: #d3d3d3;
-}
-.white.active svg g {
-    fill: #fff;
-}
-.list {
-    color: #707070;
-    background-color: #DDD;
-}
-.list.current {
-    color: #fff;
-    background-color: #333;
-}
-.list:hover {
-    color: #fff;
-}
-.light-grey {
-    color: #fff;
-    background-color: #BBBBBB;
-}
-.border-grey {
-    color: #707070;
-    border: 1px solid #707070;
-}
-.border-grey:hover {
-    color: rgba(143, 143, 143, 1);
-    border-color: rgba(143, 143, 143, .15);
-    background-color: rgba(143, 143, 143, .15);
-}
-.border-white {
-    color: #fff;
-    border: 1px solid #fff;
-}
-.border-white:hover {
-    background-color: rgba(255, 255, 255, .5);
-}
-svg {
-    width: 100%;
-    height: auto;
-}
-.circle-solid [class^="icon"] path {
-    stroke: #fff;
-}
-.small {
-    width: 30px;
-    height: 30px;
-    padding: 0;
-}
-.small [class^='icon'] {
-    display: inline-block;
-    padding-top: 2px;
-}
-.btn[disabled], .btn[disabled]:hover {
-    color: #a9a9a9;
-    background-color: rgba(217, 217, 217, 1);
-    cursor: not-allowed;
-}
-.btn[disabled].default {
-    background-color: transparent;
-}
-.btn[disabled].default:hover g {
-    fill: #BBB;
-}
-.btn[disabled].default path {
-    stroke: #BBB;
-}
-.current {}
-.nav {
-    padding: 0;
-    line-height: 40px;
-}
-.nav.current {
-    color: #242424;
-    font-weight: bold;
-    background-color: #F2F2F2;
-}
-.option {
-    border: 2px solid rgba(255,255,255,0);
-    border-radius: 18px;
-    transition: border .6s, color .5s ease-in-out;
-}
-.option.current {
-    font-size: 16px;
-    font-weight: bold;
-    color: #000;
-    border: 2px solid rgba(0,0,0,1);
-}
-.active {
-    color: #fff;
-    background-color: #000;
-}
-.tab {
-    padding: 15px;
-    background-color: #D9D9D9;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    margin-right: 2px;
-    color: #000;
-    cursor: pointer;
-    text-transform: capitalize;
-}
-.tab.current {
-    background-color: #fff;
-}
-@keyframes ripples {
-    0% {
-        width: 0px;
-        height: 0px;
-        opacity: .5;
+    .button:hover {
+        color: ${colorHover ? colorHover : 'hsl(0, 0%, 100%)' };
+        background: ${bgColorHover ? bgColorHover : 'hsl(0, 0%, 40%)'};
     }
-    100% {
-        width: 500px;
-        height: 500px;
-        opacity: 0;
+    .active {
+        color: ${colorActive ? colorActive : 'hsl(0, 0%, 100%)' };
+        background-color: ${bgColorActive ? bgColorActive : 'hsl(0, 0%, 0%)'};
     }
+    .disabled {
+        opacity: .2;
+        pointer-events: none;
+    }
+    `
+    return ui_element(style)
 }
-`
 }).call(this)}).call(this,"/src/index.js")
-},{"bel":3,"csjs-inject":6,"path":27}]},{},[1]);
+},{"bel":6,"csjs-inject":9,"path":30}]},{},[2]);
