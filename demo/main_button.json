@@ -1,6 +1,3 @@
 {
-    "fontSize": "var(--font-primary)",
-    "fontWeight": "300",
-    "padding": "var(--button-padding)",
-    "borderWidth": "0"
+
 }

@@ -5,8 +5,6 @@ const filename = path.basename(__filename)
 const button = require('..')
 const svg = require('datdot-ui-graphic')
 const domlog = require('ui-domlog')
-const main_button = require('./main_button.json')
-const black_button = require('./black_button.json')
 const white_button = require('./white_button.json')
 
 function demoComponent() {
@@ -16,19 +14,13 @@ function demoComponent() {
         page: 'USER',
         name: 'button1',
         content: 'Black',
-        theme: { ...main_button , ...black_button},
     }
 
     let option1 = {
         page: 'demo',
         name: 'button2',
         content: 'White',
-        theme: {  
-            ...main_button,
-            ...white_button,
-            colorHover: 'hsl(0, 0%, 0%)',
-            bgHover: 'hsl(0, 0%, 65%)'
-        }
+        theme: {...white_button}
     }
 
     let option2 = {
@@ -36,13 +28,13 @@ function demoComponent() {
         flow: 'toggle',
         name: 'date',
         content: 'Date',
+        custom: css.toggle,
         theme: {
-            ...main_button,
-            ...white_button,
             width: '100%',
             textAlign: 'right',
             colorHover: 'hsl(0, 0%, 100%)',
-            bgColorHover: 'hsl(0, 0%, 65%)'
+            bgColorHover: 'hsl(0, 0%, 65%)',
+            textTransform: 'uppercase'
         }
     }
 
@@ -52,7 +44,6 @@ function demoComponent() {
         name: 'hourly',
         content: '1H',
         theme: {
-            ...main_button,
             ...white_button,
         },
         isActive: true,
@@ -64,7 +55,6 @@ function demoComponent() {
         name: 'daily',
         content: '1D',
         theme: {
-            ...main_button,
             ...white_button,
         }
     }
@@ -75,7 +65,6 @@ function demoComponent() {
         name: 'monthly',
         content: '1M',
         theme: {
-            ...main_button,
             ...white_button,
         }
     }
@@ -86,7 +75,6 @@ function demoComponent() {
         name: 'yearly',
         content: '1Y',
         theme: {
-            ...main_button,
             ...white_button,
         },
         isDisabled: true
@@ -128,7 +116,7 @@ function demoComponent() {
     const container = wrap(content, terminal)
     return container
 
-    function wrap (content) {
+    function wrap (content, terminal) {
         const container = bel`
         <div class=${css.wrap}>
             <section class=${css.container}>
@@ -137,6 +125,7 @@ function demoComponent() {
             ${terminal}
         </div>
         `
+
         return container
     }
 
@@ -216,6 +205,8 @@ function demoComponent() {
     }
 }
 
+
+
 const css = csjs`
 :root {
     --h: 0;
@@ -225,6 +216,7 @@ const css = csjs`
     --color-black: hsl(var(--color), calc(var(--l) - 50%));
     --color-white: hsl(var(--color), calc(var(--l) + 50%));
     --color-red: hsl(358, 99%, calc(var(--l) + 3%));
+    --color-blue: hsl(223, 100%, 61%);
     --font-primary: 1.6rem;
     --font-smaller: calc(var(--font-primary) - 0.4rem);
     --font-small: calc(var(--font-primary) - 0.2rem);
@@ -233,23 +225,7 @@ const css = csjs`
     --font-bigger: calc(var(--font-primary) + 0.6rem);
     --font-large: calc(var(--font-primary) + 0.8rem);
     --font-larger: calc(var(--font-primary) + 1rem);
-    --border-width: 0px;
-    --border-color: var(--color-black);
-    --border-style: solid;
-    --font-weight: 300;
-    --shadow: 2px 5px 10px hsla(var(--color), calc(var(--l) - 50%), 0.7);
-    --font-weight-primary: 300;
-    --font-weight-bold: 800;
-    --rounder0: 0;
-    --rounder-primary: 4px;
-    --rounder8: calc(var(--rounder-primary) * 2);
-    --rounder12: calc(var(--rounder-primary) * 3);
-    --rounder50: calc(var(--rounder-primary) * 12.5);
-    --button-padding: 0.8rem 1.4rem;
-    --button-color-hover: var(--color-white);
-    --button-bg-hover: hsla(var(--color), calc(var(--l) - 50%), .5);
-    --button-text-align: center;
-
+    --position-abs: absolute;
 }
 html {
     box-sizing: border-box;
@@ -286,6 +262,7 @@ body {
     overflow-y: auto;
 }
 .tab {}
+.toggle {}
 `
 
 document.body.append( demoComponent() )

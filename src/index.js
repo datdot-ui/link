@@ -8,7 +8,7 @@ module.exports = button
 // button ({page, flow = null, name, content, style, color, custom, isActive, disabled = false}, protocol
 function button (option, protocol) {
     const widget = 'ui-button'
-    const {page, flow, name, content = 'Button', theme, isActive, isDisabled} = option
+    const {page, flow, name, content = 'Button', custom, theme, isActive, isDisabled} = option
 
     const ui_element = (css) => {
         let state = 'inactive'
@@ -16,7 +16,8 @@ function button (option, protocol) {
         send2Parent({page, from: name, flow: flow ? `${flow}/${widget}` : widget, type: 'init', filename, line: 11})
         // for tab to check isActive is true then set button state to active
         if (isActive) setState('active')
-        const element = bel`<button role="button" class="${css.button} ${isActive ? css.active : ''} ${isDisabled ? css.disabled : '' }" data-name="${name}">${content}</button>`
+        const element = bel`<button role="button" class="${css.button}${custom ? ` ${custom}` : ''}${isActive ? ` ${css.active}` : ''}${isDisabled ? ` ${css.disabled}` : ''}" data-name="${name}">${content}</button>`
+        
         element.onclick = (e) => click(element)
         return element
 
@@ -44,44 +45,90 @@ function button (option, protocol) {
 
     // if theme is entering as a property then set apply CSS styles
     if (theme) 
-        var {width, minWidth, maxWidth, 
+        var {
+            width, minWidth, maxWidth, 
             height, minHeight, maxHeight, 
-            fontSize, fontWeight, textAlign, 
+            fontFamily, fontSize, fontWeight, 
+            textAlign, textTransform,
             borderWidth,  borderColor, borderStyle,
-            padding, rounder, 
+            padding, borderRadius, 
             color, bgColor, colorHover, bgColorHover, colorActive, bgColorActive,
-            shadow } = theme
+            boxShadow, position, zIndex, top, bottom, left, right, cursor
+        } = theme
+
+    document.documentElement.style.setProperty('--button-black', 'hsl(0, 0%, 0%')
+    document.documentElement.style.setProperty('--button-white', 'hsl(0, 0%, 100%')
+    document.documentElement.style.setProperty('--button-grey', 'hsl(0, 0%, 20%')
+    document.documentElement.style.setProperty('--button-color', 'var(--button-white)')
+    document.documentElement.style.setProperty('--button-color-hover', 'var(--button-white)')
+    document.documentElement.style.setProperty('--button-color-active', 'var(--button-white)')
+    document.documentElement.style.setProperty('--button-bg-color', 'var(--button-black)')
+    document.documentElement.style.setProperty('--button-bg-color-hover', 'var(--button-grey)')
+    document.documentElement.style.setProperty('--button-bg-color-active', 'var(--button-black)')
+    document.documentElement.style.setProperty('--button-position', 'inherit')
+    document.documentElement.style.setProperty('--button-z-index', 'inherit')
+    document.documentElement.style.setProperty('--button-position-top', 'unset')
+    document.documentElement.style.setProperty('--button-position-bottom', 'unset')
+    document.documentElement.style.setProperty('--button-position-left', 'unset')
+    document.documentElement.style.setProperty('--button-position-right', 'unset')
+    document.documentElement.style.setProperty('--button-width', 'auto')
+    document.documentElement.style.setProperty('--button-min-width', 'auto')
+    document.documentElement.style.setProperty('--button-max-width', 'inherfit')
+    document.documentElement.style.setProperty('--button-height', 'auto')
+    document.documentElement.style.setProperty('--button-min-height', 'auto')
+    document.documentElement.style.setProperty('--button-max-height', 'inherfit')
+    document.documentElement.style.setProperty('--button-font-family', 'initial')
+    document.documentElement.style.setProperty('--button-font-size', '1.4rem')
+    document.documentElement.style.setProperty('--button-font-weight', '300')
+    document.documentElement.style.setProperty('--button-border-width', '0')
+    document.documentElement.style.setProperty('--button-border-color', 'unset')
+    document.documentElement.style.setProperty('--button-border-style', 'unset')
+    document.documentElement.style.setProperty('--button-border-radius', '0')
+    document.documentElement.style.setProperty('--button-box-shadow', 'none')
+    document.documentElement.style.setProperty('--button-padding', '8px 12px')
+    document.documentElement.style.setProperty('--button-text-align', 'center')
+    document.documentElement.style.setProperty('--button-text-transform', 'unset')
+    document.documentElement.style.setProperty('--button-cursor', 'pointer')
 
     const style = csjs`
     .button {
-        width: ${width ? width : 'auto'};
-        min-width: ${minWidth ? minWidth : 'auto'};
-        max-width: ${maxWidth ? maxWidth : 'inherit'};
-        height: ${height ? height : 'auto'};
-        min-height: ${minHeight ? minHeight : 'auto'};
-        max-height: ${maxHeight ? maxHeight : 'inherit'};
-        font-size: ${fontSize ? fontSize : 'var(--font-primary)'};
-        font-weight: ${fontWeight ? fontWeight : 'var(--font-weight-primary)'};
-        color: ${color ? color : 'hsl(0, 0%, 0%)' };
-        background-color: ${bgColor ? bgColor : 'hsl(0, 0%, 100%)'};
-        border-width: ${borderWidth ? borderWidth : 'var(--border-width)'};
-        border-color: ${borderColor ? borderColor : 'var(--border-color)'};
-        border-style: ${borderStyle ? borderStyle : 'var(--border-style)'};
-        border-radius: ${rounder ? rounder : 'var(--rounder0)'};
-        box-shadow: ${shadow ? shadow : 'none'};
+        position: ${position ? position : 'var(--button-position)'};
+        z-index: ${zIndex ? zIndex : 'var(--button-z-index)'};
+        top: ${top ? top : 'var(--button-position-top)'};
+        bottom: ${bottom ? bottom : 'var(--button-position-bottom)'};
+        left: ${left ? left : 'var(--button-position-left)' };
+        right: ${right ? right : 'var(--button-position-right)'};
+        width: ${width ? width : 'var(--button-width)'};
+        min-width: ${minWidth ? minWidth : 'var(--button-min-width)'};
+        max-width: ${maxWidth ? maxWidth : 'var(--button-max-width)'};
+        height: ${height ? height : 'var(--button-height)'};
+        min-height: ${minHeight ? minHeight : 'var(--button-min-height)'};
+        max-height: ${maxHeight ? maxHeight : 'var(--button-max-height)'};
+        font-family: ${maxHeight ? maxHeight : 'var(--button-font-family)'};
+        font-size: ${fontSize ? fontSize : 'var(--button-font-size)'};
+        font-weight: ${fontWeight ? fontWeight : 'var(--button-font-weight)'};
+        color: ${color ? color : 'var(--button-color)'};
+        background-color: ${bgColor ? bgColor : 'var(--button-bg-color)'};
+        border-width: ${borderWidth ? borderWidth : 'var(--button-border-width)'};
+        border-color: ${borderColor ? borderColor : 'var(--button-border-color)'};
+        border-style: ${borderStyle ? borderStyle : 'var(--button-border-style)'};
+        border-radius: ${borderRadius ? borderRadius : 'var(--button-border-radius)'};
+        box-shadow: ${boxShadow ? boxShadow : 'var(--button-box-shadow)'};
         padding: ${padding ? padding : 'var(--button-padding)'};
-        text-align: ${textAlign ? textAlign : 'var(--button-text-align)'};
-        white-space: nowrap;
-        transition: color .5s, background .5s ease-in-out;
-        cursor: pointer;
+        text-align:  ${textAlign ? textAlign : 'var(--button-text-align)'};
+        text-transform: ${textTransform ? textTransform: 'var(--button-text-transform)'};
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+        transition: color .3s, background-color .3s ease-in-out;
+        cursor: ${cursor ? cursor: 'var(--button-cursor)'};
     }
     .button:hover {
-        color: ${colorHover ? colorHover : 'hsl(0, 0%, 100%)' };
-        background: ${bgColorHover ? bgColorHover : 'hsl(0, 0%, 40%)'};
+        color: ${colorHover ? colorHover : 'var(--button-color-hover)'};
+        background-color: ${bgColorHover ? bgColorHover : 'var(--button-bg-color-hover)'};
     }
     .active {
-        color: ${colorActive ? colorActive : 'hsl(0, 0%, 100%)' };
-        background-color: ${bgColorActive ? bgColorActive : 'hsl(0, 0%, 0%)'};
+        color: ${colorActive ? colorActive : 'var(--button-color-active)'};
+        background-color: ${bgColorActive ? bgColorActive : 'var(--button-bg-color-active)'}
     }
     .disabled {
         opacity: .2;

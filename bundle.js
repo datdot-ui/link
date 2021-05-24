@@ -1,10 +1,4 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-module.exports={
-    "color": "var(--color-white)",
-    "bgColor": "var(--color-black)"
-    
-}
-},{}],2:[function(require,module,exports){
 (function (__filename){(function (){
 const bel = require('bel')
 const csjs = require('csjs-inject')
@@ -13,8 +7,6 @@ const filename = path.basename(__filename)
 const button = require('..')
 const svg = require('datdot-ui-graphic')
 const domlog = require('ui-domlog')
-const main_button = require('./main_button.json')
-const black_button = require('./black_button.json')
 const white_button = require('./white_button.json')
 
 function demoComponent() {
@@ -24,19 +16,13 @@ function demoComponent() {
         page: 'USER',
         name: 'button1',
         content: 'Black',
-        theme: { ...main_button , ...black_button},
     }
 
     let option1 = {
         page: 'demo',
         name: 'button2',
         content: 'White',
-        theme: {  
-            ...main_button,
-            ...white_button,
-            colorHover: 'hsl(0, 0%, 0%)',
-            bgHover: 'hsl(0, 0%, 65%)'
-        }
+        theme: {...white_button}
     }
 
     let option2 = {
@@ -44,13 +30,13 @@ function demoComponent() {
         flow: 'toggle',
         name: 'date',
         content: 'Date',
+        custom: css.toggle,
         theme: {
-            ...main_button,
-            ...white_button,
             width: '100%',
             textAlign: 'right',
             colorHover: 'hsl(0, 0%, 100%)',
-            bgColorHover: 'hsl(0, 0%, 65%)'
+            bgColorHover: 'hsl(0, 0%, 65%)',
+            textTransform: 'uppercase'
         }
     }
 
@@ -60,7 +46,6 @@ function demoComponent() {
         name: 'hourly',
         content: '1H',
         theme: {
-            ...main_button,
             ...white_button,
         },
         isActive: true,
@@ -72,7 +57,6 @@ function demoComponent() {
         name: 'daily',
         content: '1D',
         theme: {
-            ...main_button,
             ...white_button,
         }
     }
@@ -83,7 +67,6 @@ function demoComponent() {
         name: 'monthly',
         content: '1M',
         theme: {
-            ...main_button,
             ...white_button,
         }
     }
@@ -94,7 +77,6 @@ function demoComponent() {
         name: 'yearly',
         content: '1Y',
         theme: {
-            ...main_button,
             ...white_button,
         },
         isDisabled: true
@@ -136,7 +118,7 @@ function demoComponent() {
     const container = wrap(content, terminal)
     return container
 
-    function wrap (content) {
+    function wrap (content, terminal) {
         const container = bel`
         <div class=${css.wrap}>
             <section class=${css.container}>
@@ -145,6 +127,7 @@ function demoComponent() {
             ${terminal}
         </div>
         `
+
         return container
     }
 
@@ -224,6 +207,8 @@ function demoComponent() {
     }
 }
 
+
+
 const css = csjs`
 :root {
     --h: 0;
@@ -233,6 +218,7 @@ const css = csjs`
     --color-black: hsl(var(--color), calc(var(--l) - 50%));
     --color-white: hsl(var(--color), calc(var(--l) + 50%));
     --color-red: hsl(358, 99%, calc(var(--l) + 3%));
+    --color-blue: hsl(223, 100%, 61%);
     --font-primary: 1.6rem;
     --font-smaller: calc(var(--font-primary) - 0.4rem);
     --font-small: calc(var(--font-primary) - 0.2rem);
@@ -241,23 +227,7 @@ const css = csjs`
     --font-bigger: calc(var(--font-primary) + 0.6rem);
     --font-large: calc(var(--font-primary) + 0.8rem);
     --font-larger: calc(var(--font-primary) + 1rem);
-    --border-width: 0px;
-    --border-color: var(--color-black);
-    --border-style: solid;
-    --font-weight: 300;
-    --shadow: 2px 5px 10px hsla(var(--color), calc(var(--l) - 50%), 0.7);
-    --font-weight-primary: 300;
-    --font-weight-bold: 800;
-    --rounder0: 0;
-    --rounder-primary: 4px;
-    --rounder8: calc(var(--rounder-primary) * 2);
-    --rounder12: calc(var(--rounder-primary) * 3);
-    --rounder50: calc(var(--rounder-primary) * 12.5);
-    --button-padding: 0.8rem 1.4rem;
-    --button-color-hover: var(--color-white);
-    --button-bg-hover: hsla(var(--color), calc(var(--l) - 50%), .5);
-    --button-text-align: center;
-
+    --position-abs: absolute;
 }
 html {
     box-sizing: border-box;
@@ -294,23 +264,19 @@ body {
     overflow-y: auto;
 }
 .tab {}
+.toggle {}
 `
 
 document.body.append( demoComponent() )
 }).call(this)}).call(this,"/demo/demo.js")
-},{"..":33,"./black_button.json":1,"./main_button.json":3,"./white_button.json":4,"bel":6,"csjs-inject":9,"datdot-ui-graphic":26,"path":30,"ui-domlog":32}],3:[function(require,module,exports){
-module.exports={
-    "fontSize": "var(--font-primary)",
-    "fontWeight": "300",
-    "padding": "var(--button-padding)",
-    "borderWidth": "0"
+},{"..":31,"./white_button.json":2,"bel":4,"csjs-inject":7,"datdot-ui-graphic":24,"path":28,"ui-domlog":30}],2:[function(require,module,exports){
+module.exports={   
+    "color": "hsl(0, 0%, 0%)",
+    "bgColor": "hsl(0, 0%, 100%)",
+    "colorHover": "hsl(0, 0%, 100%)",
+    "bgColorHover": "hsl(0, 0%, 0%)"
 }
-},{}],4:[function(require,module,exports){
-module.exports={
-    "colorHover": "var(--color-white)",
-    "bgColorHover": "var(--color-red)"
-}
-},{}],5:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
 var trailingSpaceRegex = /[\s]+$/
@@ -443,7 +409,7 @@ module.exports = function appendChild (el, childs) {
   }
 }
 
-},{}],6:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 var hyperx = require('hyperx')
 var appendChild = require('./appendChild')
 
@@ -544,7 +510,7 @@ module.exports = hyperx(belCreateElement, {comments: true})
 module.exports.default = module.exports
 module.exports.createElement = belCreateElement
 
-},{"./appendChild":5,"hyperx":28}],7:[function(require,module,exports){
+},{"./appendChild":3,"hyperx":26}],5:[function(require,module,exports){
 (function (global){(function (){
 'use strict';
 
@@ -563,12 +529,12 @@ function csjsInserter() {
 module.exports = csjsInserter;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"csjs":12,"insert-css":29}],8:[function(require,module,exports){
+},{"csjs":10,"insert-css":27}],6:[function(require,module,exports){
 'use strict';
 
 module.exports = require('csjs/get-css');
 
-},{"csjs/get-css":11}],9:[function(require,module,exports){
+},{"csjs/get-css":9}],7:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -577,17 +543,17 @@ module.exports = csjs;
 module.exports.csjs = csjs;
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":7,"./get-css":8}],10:[function(require,module,exports){
+},{"./csjs":5,"./get-css":6}],8:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/csjs');
 
-},{"./lib/csjs":16}],11:[function(require,module,exports){
+},{"./lib/csjs":14}],9:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/get-css');
 
-},{"./lib/get-css":20}],12:[function(require,module,exports){
+},{"./lib/get-css":18}],10:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -597,7 +563,7 @@ module.exports.csjs = csjs;
 module.exports.noScope = csjs({ noscope: true });
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":10,"./get-css":11}],13:[function(require,module,exports){
+},{"./csjs":8,"./get-css":9}],11:[function(require,module,exports){
 'use strict';
 
 /**
@@ -619,7 +585,7 @@ module.exports = function encode(integer) {
   return str;
 };
 
-},{}],14:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -663,7 +629,7 @@ function getClassChain(obj) {
   return acc;
 }
 
-},{"./composition":15}],15:[function(require,module,exports){
+},{"./composition":13}],13:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -743,7 +709,7 @@ function ignoreComposition(values) {
  */
 function Composition() {}
 
-},{}],16:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 var extractExtends = require('./css-extract-extends');
@@ -821,7 +787,7 @@ function without(obj, unwanted) {
   }, {});
 }
 
-},{"./build-exports":14,"./composition":15,"./css-extract-extends":17,"./css-key":18,"./extract-exports":19,"./scopeify":25}],17:[function(require,module,exports){
+},{"./build-exports":12,"./composition":13,"./css-extract-extends":15,"./css-key":16,"./extract-exports":17,"./scopeify":23}],15:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -874,7 +840,7 @@ function getClassName(str) {
   return trimmed[0] === '.' ? trimmed.substr(1) : trimmed;
 }
 
-},{"./composition":15}],18:[function(require,module,exports){
+},{"./composition":13}],16:[function(require,module,exports){
 'use strict';
 
 /**
@@ -884,7 +850,7 @@ function getClassName(str) {
 
 module.exports = ' css ';
 
-},{}],19:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 var regex = require('./regex');
@@ -911,7 +877,7 @@ function getExport(css, regex) {
   return prop;
 }
 
-},{"./regex":22}],20:[function(require,module,exports){
+},{"./regex":20}],18:[function(require,module,exports){
 'use strict';
 
 var cssKey = require('./css-key');
@@ -920,7 +886,7 @@ module.exports = function getCss(csjs) {
   return csjs[cssKey];
 };
 
-},{"./css-key":18}],21:[function(require,module,exports){
+},{"./css-key":16}],19:[function(require,module,exports){
 'use strict';
 
 /**
@@ -938,7 +904,7 @@ module.exports = function hashStr(str) {
   return hash >>> 0;
 };
 
-},{}],22:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var findClasses = /(\.)(?!\d)([^\s\.,{\[>+~#:)]*)(?![^{]*})/.source;
@@ -954,7 +920,7 @@ module.exports = {
   ignoreComments: ignoreComments,
 };
 
-},{}],23:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 var ignoreComments = require('./regex').ignoreComments;
 
 module.exports = replaceAnimations;
@@ -985,7 +951,7 @@ function replaceAnimations(result) {
   return result;
 }
 
-},{"./regex":22}],24:[function(require,module,exports){
+},{"./regex":20}],22:[function(require,module,exports){
 'use strict';
 
 var encode = require('./base62-encode');
@@ -999,7 +965,7 @@ module.exports = function fileScoper(fileSrc) {
   }
 };
 
-},{"./base62-encode":13,"./hash-string":21}],25:[function(require,module,exports){
+},{"./base62-encode":11,"./hash-string":19}],23:[function(require,module,exports){
 'use strict';
 
 var fileScoper = require('./scoped-name');
@@ -1040,7 +1006,7 @@ function scopify(css, ignores) {
   return replaceAnimations(result);
 }
 
-},{"./regex":22,"./replace-animations":23,"./scoped-name":24}],26:[function(require,module,exports){
+},{"./regex":20,"./replace-animations":21,"./scoped-name":22}],24:[function(require,module,exports){
 module.exports = svg
 
 function svg(opts) {
@@ -1068,7 +1034,7 @@ function svg(opts) {
     
     return el
 }   
-},{}],27:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -1089,7 +1055,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],28:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -1386,7 +1352,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":27}],29:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":25}],27:[function(require,module,exports){
 var inserted = {};
 
 module.exports = function (css, options) {
@@ -1410,7 +1376,7 @@ module.exports = function (css, options) {
     }
 };
 
-},{}],30:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function (process){(function (){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -1716,7 +1682,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this)}).call(this,require('_process'))
-},{"_process":31}],31:[function(require,module,exports){
+},{"_process":29}],29:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -1902,7 +1868,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],32:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 
@@ -1980,7 +1946,7 @@ const css = csjs`
 }
 .info {}
 `
-},{"bel":6,"csjs-inject":9}],33:[function(require,module,exports){
+},{"bel":4,"csjs-inject":7}],31:[function(require,module,exports){
 (function (__filename){(function (){
 const bel = require('bel')
 const csjs = require('csjs-inject')
@@ -1992,7 +1958,7 @@ module.exports = button
 // button ({page, flow = null, name, content, style, color, custom, isActive, disabled = false}, protocol
 function button (option, protocol) {
     const widget = 'ui-button'
-    const {page, flow, name, content = 'Button', theme, isActive, isDisabled} = option
+    const {page, flow, name, content = 'Button', custom, theme, isActive, isDisabled} = option
 
     const ui_element = (css) => {
         let state = 'inactive'
@@ -2000,7 +1966,8 @@ function button (option, protocol) {
         send2Parent({page, from: name, flow: flow ? `${flow}/${widget}` : widget, type: 'init', filename, line: 11})
         // for tab to check isActive is true then set button state to active
         if (isActive) setState('active')
-        const element = bel`<button role="button" class="${css.button} ${isActive ? css.active : ''} ${isDisabled ? css.disabled : '' }" data-name="${name}">${content}</button>`
+        const element = bel`<button role="button" class="${css.button}${custom ? ` ${custom}` : ''}${isActive ? ` ${css.active}` : ''}${isDisabled ? ` ${css.disabled}` : ''}" data-name="${name}">${content}</button>`
+        
         element.onclick = (e) => click(element)
         return element
 
@@ -2028,44 +1995,90 @@ function button (option, protocol) {
 
     // if theme is entering as a property then set apply CSS styles
     if (theme) 
-        var {width, minWidth, maxWidth, 
+        var {
+            width, minWidth, maxWidth, 
             height, minHeight, maxHeight, 
-            fontSize, fontWeight, textAlign, 
+            fontFamily, fontSize, fontWeight, 
+            textAlign, textTransform,
             borderWidth,  borderColor, borderStyle,
-            padding, rounder, 
+            padding, borderRadius, 
             color, bgColor, colorHover, bgColorHover, colorActive, bgColorActive,
-            shadow } = theme
+            boxShadow, position, zIndex, top, bottom, left, right, cursor
+        } = theme
+
+    document.documentElement.style.setProperty('--button-black', 'hsl(0, 0%, 0%')
+    document.documentElement.style.setProperty('--button-white', 'hsl(0, 0%, 100%')
+    document.documentElement.style.setProperty('--button-grey', 'hsl(0, 0%, 20%')
+    document.documentElement.style.setProperty('--button-color', 'var(--button-white)')
+    document.documentElement.style.setProperty('--button-color-hover', 'var(--button-white)')
+    document.documentElement.style.setProperty('--button-color-active', 'var(--button-white)')
+    document.documentElement.style.setProperty('--button-bg-color', 'var(--button-black)')
+    document.documentElement.style.setProperty('--button-bg-color-hover', 'var(--button-grey)')
+    document.documentElement.style.setProperty('--button-bg-color-active', 'var(--button-black)')
+    document.documentElement.style.setProperty('--button-position', 'inherit')
+    document.documentElement.style.setProperty('--button-z-index', 'inherit')
+    document.documentElement.style.setProperty('--button-position-top', 'unset')
+    document.documentElement.style.setProperty('--button-position-bottom', 'unset')
+    document.documentElement.style.setProperty('--button-position-left', 'unset')
+    document.documentElement.style.setProperty('--button-position-right', 'unset')
+    document.documentElement.style.setProperty('--button-width', 'auto')
+    document.documentElement.style.setProperty('--button-min-width', 'auto')
+    document.documentElement.style.setProperty('--button-max-width', 'inherfit')
+    document.documentElement.style.setProperty('--button-height', 'auto')
+    document.documentElement.style.setProperty('--button-min-height', 'auto')
+    document.documentElement.style.setProperty('--button-max-height', 'inherfit')
+    document.documentElement.style.setProperty('--button-font-family', 'initial')
+    document.documentElement.style.setProperty('--button-font-size', '1.4rem')
+    document.documentElement.style.setProperty('--button-font-weight', '300')
+    document.documentElement.style.setProperty('--button-border-width', '0')
+    document.documentElement.style.setProperty('--button-border-color', 'unset')
+    document.documentElement.style.setProperty('--button-border-style', 'unset')
+    document.documentElement.style.setProperty('--button-border-radius', '0')
+    document.documentElement.style.setProperty('--button-box-shadow', 'none')
+    document.documentElement.style.setProperty('--button-padding', '8px 12px')
+    document.documentElement.style.setProperty('--button-text-align', 'center')
+    document.documentElement.style.setProperty('--button-text-transform', 'unset')
+    document.documentElement.style.setProperty('--button-cursor', 'pointer')
 
     const style = csjs`
     .button {
-        width: ${width ? width : 'auto'};
-        min-width: ${minWidth ? minWidth : 'auto'};
-        max-width: ${maxWidth ? maxWidth : 'inherit'};
-        height: ${height ? height : 'auto'};
-        min-height: ${minHeight ? minHeight : 'auto'};
-        max-height: ${maxHeight ? maxHeight : 'inherit'};
-        font-size: ${fontSize ? fontSize : 'var(--font-primary)'};
-        font-weight: ${fontWeight ? fontWeight : 'var(--font-weight-primary)'};
-        color: ${color ? color : 'hsl(0, 0%, 0%)' };
-        background-color: ${bgColor ? bgColor : 'hsl(0, 0%, 100%)'};
-        border-width: ${borderWidth ? borderWidth : 'var(--border-width)'};
-        border-color: ${borderColor ? borderColor : 'var(--border-color)'};
-        border-style: ${borderStyle ? borderStyle : 'var(--border-style)'};
-        border-radius: ${rounder ? rounder : 'var(--rounder0)'};
-        box-shadow: ${shadow ? shadow : 'none'};
+        position: ${position ? position : 'var(--button-position)'};
+        z-index: ${zIndex ? zIndex : 'var(--button-z-index)'};
+        top: ${top ? top : 'var(--button-position-top)'};
+        bottom: ${bottom ? bottom : 'var(--button-position-bottom)'};
+        left: ${left ? left : 'var(--button-position-left)' };
+        right: ${right ? right : 'var(--button-position-right)'};
+        width: ${width ? width : 'var(--button-width)'};
+        min-width: ${minWidth ? minWidth : 'var(--button-min-width)'};
+        max-width: ${maxWidth ? maxWidth : 'var(--button-max-width)'};
+        height: ${height ? height : 'var(--button-height)'};
+        min-height: ${minHeight ? minHeight : 'var(--button-min-height)'};
+        max-height: ${maxHeight ? maxHeight : 'var(--button-max-height)'};
+        font-family: ${maxHeight ? maxHeight : 'var(--button-font-family)'};
+        font-size: ${fontSize ? fontSize : 'var(--button-font-size)'};
+        font-weight: ${fontWeight ? fontWeight : 'var(--button-font-weight)'};
+        color: ${color ? color : 'var(--button-color)'};
+        background-color: ${bgColor ? bgColor : 'var(--button-bg-color)'};
+        border-width: ${borderWidth ? borderWidth : 'var(--button-border-width)'};
+        border-color: ${borderColor ? borderColor : 'var(--button-border-color)'};
+        border-style: ${borderStyle ? borderStyle : 'var(--button-border-style)'};
+        border-radius: ${borderRadius ? borderRadius : 'var(--button-border-radius)'};
+        box-shadow: ${boxShadow ? boxShadow : 'var(--button-box-shadow)'};
         padding: ${padding ? padding : 'var(--button-padding)'};
-        text-align: ${textAlign ? textAlign : 'var(--button-text-align)'};
-        white-space: nowrap;
-        transition: color .5s, background .5s ease-in-out;
-        cursor: pointer;
+        text-align:  ${textAlign ? textAlign : 'var(--button-text-align)'};
+        text-transform: ${textTransform ? textTransform: 'var(--button-text-transform)'};
+        white-space: pre-wrap;
+        overflow-wrap: break-word;
+        transition: color .3s, background-color .3s ease-in-out;
+        cursor: ${cursor ? cursor: 'var(--button-cursor)'};
     }
     .button:hover {
-        color: ${colorHover ? colorHover : 'hsl(0, 0%, 100%)' };
-        background: ${bgColorHover ? bgColorHover : 'hsl(0, 0%, 40%)'};
+        color: ${colorHover ? colorHover : 'var(--button-color-hover)'};
+        background-color: ${bgColorHover ? bgColorHover : 'var(--button-bg-color-hover)'};
     }
     .active {
-        color: ${colorActive ? colorActive : 'hsl(0, 0%, 100%)' };
-        background-color: ${bgColorActive ? bgColorActive : 'hsl(0, 0%, 0%)'};
+        color: ${colorActive ? colorActive : 'var(--button-color-active)'};
+        background-color: ${bgColorActive ? bgColorActive : 'var(--button-bg-color-active)'}
     }
     .disabled {
         opacity: .2;
@@ -2075,4 +2088,4 @@ function button (option, protocol) {
     return ui_element(style)
 }
 }).call(this)}).call(this,"/src/index.js")
-},{"bel":6,"csjs-inject":9,"path":30}]},{},[2]);
+},{"bel":4,"csjs-inject":7,"path":28}]},{},[1]);

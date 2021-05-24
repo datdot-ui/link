@@ -1,4 +1,6 @@
-{
-    "colorHover": "var(--color-white)",
-    "bgColorHover": "var(--color-red)"
+{   
+    "color": "hsl(0, 0%, 0%)",
+    "bgColor": "hsl(0, 0%, 100%)",
+    "colorHover": "hsl(0, 0%, 100%)",
+    "bgColorHover": "hsl(0, 0%, 0%)"
 }
