@@ -7,22 +7,27 @@ const filename = path.basename(__filename)
 const button = require('..')
 const svg = require('datdot-ui-graphic')
 const domlog = require('ui-domlog')
-const white_button = require('./white_button.json')
 
 function demoComponent() {
     let recipients = []
+    // icons
+    let iconCancel = svg({css: css.icon, path: 'assets/cancel.svg'})
+    let iconConfirm = svg({css: css.icon, path: 'assets/check.svg'})
     // UI element settings
     let option = {
         page: 'USER',
         name: 'button1',
-        content: 'Black',
+        content: 'Confirm',
+        themeName: 'default',
+        widgetTheme: 'confirm'
     }
 
     let option1 = {
         page: 'demo',
         name: 'button2',
-        content: 'White',
-        theme: {...white_button}
+        content: 'Cancel',
+        themeName: 'default',
+        widgetTheme: 'cancel',
     }
 
     let option2 = {
@@ -30,14 +35,9 @@ function demoComponent() {
         flow: 'toggle',
         name: 'date',
         content: 'Date',
-        custom: css.toggle,
-        theme: {
-            width: '100%',
-            textAlign: 'right',
-            colorHover: 'hsl(0, 0%, 100%)',
-            bgColorHover: 'hsl(0, 0%, 65%)',
-            textTransform: 'uppercase'
-        }
+        themeName: 'default',
+        widgetTheme: 'toggle',
+        isActive: true,
     }
 
     let tabOption1 = {
@@ -45,10 +45,9 @@ function demoComponent() {
         flow: 'tab',
         name: 'hourly',
         content: '1H',
-        theme: {
-            ...white_button,
-        },
-        isActive: true,
+        themeName: 'default',
+        widgetTheme: 'tab',
+        isActive: true
     }
 
     let tabOption2 = {
@@ -56,9 +55,8 @@ function demoComponent() {
         flow: 'tab',
         name: 'daily',
         content: '1D',
-        theme: {
-            ...white_button,
-        }
+        themeName: 'default',
+        widgetTheme: 'tab'
     }
 
     let tabOption3 = {
@@ -66,9 +64,8 @@ function demoComponent() {
         flow: 'tab',
         name: 'monthly',
         content: '1M',
-        theme: {
-            ...white_button,
-        }
+        themeName: 'default',
+        widgetTheme: 'tab'
     }
 
     let tabOption4 = {
@@ -76,12 +73,26 @@ function demoComponent() {
         flow: 'tab',
         name: 'yearly',
         content: '1Y',
-        theme: {
-            ...white_button,
-        },
+        themeName: 'default',
+        widgetTheme: 'tab',
         isDisabled: true
     }
 
+    let confirmOption = {
+        page: 'PLAN',
+        name: 'confirm',
+        content: iconConfirm,
+        themeName: 'default',
+        widgetTheme: 'confirm'
+    }
+
+    let cancelOption = {
+        page: 'PLAN',
+        name: 'cancel',
+        content: iconCancel,
+        themeName: 'default',
+        widgetTheme: 'cancel'
+    }
 
     // UI elements
     // primary
@@ -94,6 +105,15 @@ function demoComponent() {
     const tab2 = button({...tabOption2}, protocol(tabOption2.name))
     const tab3 = button({...tabOption3}, protocol(tabOption3.name))
     const tab4 = button({...tabOption4}, protocol(tabOption4.name))
+    // icon
+    const confirm = button({...confirmOption}, protocol(confirmOption.name))
+    const cancel = button({...cancelOption}, protocol(cancelOption.name))
+
+    // define css variables
+    // document.documentElement.style.setProperty('--button-bg-color', 'hsl(223, 100%, 61%)')
+    // document.documentElement.style.setProperty('--button-bg-color-hover', 'hsl(223, 100%, 48%)')
+    tab1.style.setProperty('--button-bg-color-active', 'hsl(223, 100%, 61%)')
+    // document.body.style.backgroundColor = '#000'
 
     // content
     const content = bel`
@@ -109,6 +129,10 @@ function demoComponent() {
         <section>
             <h2>Tab</h2>
             <div class=${css.tab}>${tab1}${tab2}${tab3}${tab4}</div>
+        </section>
+        <section>
+            <h2>Icon</h2>
+            <div>${confirm}${cancel}</div>
         </section>
     </div>`
 
@@ -207,8 +231,6 @@ function demoComponent() {
     }
 }
 
-
-
 const css = csjs`
 :root {
     --h: 0;
@@ -264,19 +286,12 @@ body {
     overflow-y: auto;
 }
 .tab {}
-.toggle {}
+.icon {}
 `
 
 document.body.append( demoComponent() )
 }).call(this)}).call(this,"/demo/demo.js")
-},{"..":31,"./white_button.json":2,"bel":4,"csjs-inject":7,"datdot-ui-graphic":24,"path":28,"ui-domlog":30}],2:[function(require,module,exports){
-module.exports={   
-    "color": "hsl(0, 0%, 0%)",
-    "bgColor": "hsl(0, 0%, 100%)",
-    "colorHover": "hsl(0, 0%, 100%)",
-    "bgColorHover": "hsl(0, 0%, 0%)"
-}
-},{}],3:[function(require,module,exports){
+},{"..":30,"bel":3,"csjs-inject":6,"datdot-ui-graphic":23,"path":27,"ui-domlog":29}],2:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
 var trailingSpaceRegex = /[\s]+$/
@@ -409,7 +424,7 @@ module.exports = function appendChild (el, childs) {
   }
 }
 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var hyperx = require('hyperx')
 var appendChild = require('./appendChild')
 
@@ -510,7 +525,7 @@ module.exports = hyperx(belCreateElement, {comments: true})
 module.exports.default = module.exports
 module.exports.createElement = belCreateElement
 
-},{"./appendChild":3,"hyperx":26}],5:[function(require,module,exports){
+},{"./appendChild":2,"hyperx":25}],4:[function(require,module,exports){
 (function (global){(function (){
 'use strict';
 
@@ -529,12 +544,12 @@ function csjsInserter() {
 module.exports = csjsInserter;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"csjs":10,"insert-css":27}],6:[function(require,module,exports){
+},{"csjs":9,"insert-css":26}],5:[function(require,module,exports){
 'use strict';
 
 module.exports = require('csjs/get-css');
 
-},{"csjs/get-css":9}],7:[function(require,module,exports){
+},{"csjs/get-css":8}],6:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -543,17 +558,17 @@ module.exports = csjs;
 module.exports.csjs = csjs;
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":5,"./get-css":6}],8:[function(require,module,exports){
+},{"./csjs":4,"./get-css":5}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/csjs');
 
-},{"./lib/csjs":14}],9:[function(require,module,exports){
+},{"./lib/csjs":13}],8:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/get-css');
 
-},{"./lib/get-css":18}],10:[function(require,module,exports){
+},{"./lib/get-css":17}],9:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -563,7 +578,7 @@ module.exports.csjs = csjs;
 module.exports.noScope = csjs({ noscope: true });
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":8,"./get-css":9}],11:[function(require,module,exports){
+},{"./csjs":7,"./get-css":8}],10:[function(require,module,exports){
 'use strict';
 
 /**
@@ -585,7 +600,7 @@ module.exports = function encode(integer) {
   return str;
 };
 
-},{}],12:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -629,7 +644,7 @@ function getClassChain(obj) {
   return acc;
 }
 
-},{"./composition":13}],13:[function(require,module,exports){
+},{"./composition":12}],12:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -709,7 +724,7 @@ function ignoreComposition(values) {
  */
 function Composition() {}
 
-},{}],14:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 var extractExtends = require('./css-extract-extends');
@@ -787,7 +802,7 @@ function without(obj, unwanted) {
   }, {});
 }
 
-},{"./build-exports":12,"./composition":13,"./css-extract-extends":15,"./css-key":16,"./extract-exports":17,"./scopeify":23}],15:[function(require,module,exports){
+},{"./build-exports":11,"./composition":12,"./css-extract-extends":14,"./css-key":15,"./extract-exports":16,"./scopeify":22}],14:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -840,7 +855,7 @@ function getClassName(str) {
   return trimmed[0] === '.' ? trimmed.substr(1) : trimmed;
 }
 
-},{"./composition":13}],16:[function(require,module,exports){
+},{"./composition":12}],15:[function(require,module,exports){
 'use strict';
 
 /**
@@ -850,7 +865,7 @@ function getClassName(str) {
 
 module.exports = ' css ';
 
-},{}],17:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 var regex = require('./regex');
@@ -877,7 +892,7 @@ function getExport(css, regex) {
   return prop;
 }
 
-},{"./regex":20}],18:[function(require,module,exports){
+},{"./regex":19}],17:[function(require,module,exports){
 'use strict';
 
 var cssKey = require('./css-key');
@@ -886,7 +901,7 @@ module.exports = function getCss(csjs) {
   return csjs[cssKey];
 };
 
-},{"./css-key":16}],19:[function(require,module,exports){
+},{"./css-key":15}],18:[function(require,module,exports){
 'use strict';
 
 /**
@@ -904,7 +919,7 @@ module.exports = function hashStr(str) {
   return hash >>> 0;
 };
 
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 var findClasses = /(\.)(?!\d)([^\s\.,{\[>+~#:)]*)(?![^{]*})/.source;
@@ -920,7 +935,7 @@ module.exports = {
   ignoreComments: ignoreComments,
 };
 
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 var ignoreComments = require('./regex').ignoreComments;
 
 module.exports = replaceAnimations;
@@ -951,7 +966,7 @@ function replaceAnimations(result) {
   return result;
 }
 
-},{"./regex":20}],22:[function(require,module,exports){
+},{"./regex":19}],21:[function(require,module,exports){
 'use strict';
 
 var encode = require('./base62-encode');
@@ -965,7 +980,7 @@ module.exports = function fileScoper(fileSrc) {
   }
 };
 
-},{"./base62-encode":11,"./hash-string":19}],23:[function(require,module,exports){
+},{"./base62-encode":10,"./hash-string":18}],22:[function(require,module,exports){
 'use strict';
 
 var fileScoper = require('./scoped-name');
@@ -1006,7 +1021,7 @@ function scopify(css, ignores) {
   return replaceAnimations(result);
 }
 
-},{"./regex":20,"./replace-animations":21,"./scoped-name":22}],24:[function(require,module,exports){
+},{"./regex":19,"./replace-animations":20,"./scoped-name":21}],23:[function(require,module,exports){
 module.exports = svg
 
 function svg(opts) {
@@ -1034,7 +1049,7 @@ function svg(opts) {
     
     return el
 }   
-},{}],25:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -1055,7 +1070,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],26:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -1352,7 +1367,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":25}],27:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":24}],26:[function(require,module,exports){
 var inserted = {};
 
 module.exports = function (css, options) {
@@ -1376,7 +1391,7 @@ module.exports = function (css, options) {
     }
 };
 
-},{}],28:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 (function (process){(function (){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -1682,7 +1697,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this)}).call(this,require('_process'))
-},{"_process":29}],29:[function(require,module,exports){
+},{"_process":28}],28:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -1868,7 +1883,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],30:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 
@@ -1946,19 +1961,21 @@ const css = csjs`
 }
 .info {}
 `
-},{"bel":4,"csjs-inject":7}],31:[function(require,module,exports){
+},{"bel":3,"csjs-inject":6}],30:[function(require,module,exports){
 (function (__filename){(function (){
 const bel = require('bel')
 const csjs = require('csjs-inject')
 const path = require('path')
 const filename = path.basename(__filename)
+// themes
+const mainTheme = require('themes/main-theme')
+const whiteTheme = require('themes/dark-theme')
 
 module.exports = button
 
-// button ({page, flow = null, name, content, style, color, custom, isActive, disabled = false}, protocol
 function button (option, protocol) {
     const widget = 'ui-button'
-    const {page, flow, name, content = 'Button', custom, theme, isActive, isDisabled} = option
+    const {page, flow, name, content = 'Button', custom, widgetTheme, theme, themeName = 'default', isActive, isDisabled} = option
 
     const ui_element = (css) => {
         let state = 'inactive'
@@ -1966,10 +1983,12 @@ function button (option, protocol) {
         send2Parent({page, from: name, flow: flow ? `${flow}/${widget}` : widget, type: 'init', filename, line: 11})
         // for tab to check isActive is true then set button state to active
         if (isActive) setState('active')
-        const element = bel`<button role="button" class="${css.button}${custom ? ` ${custom}` : ''}${isActive ? ` ${css.active}` : ''}${isDisabled ? ` ${css.disabled}` : ''}" data-name="${name}">${content}</button>`
+        const button = bel`<button role="button" class="${css.button}${custom ? ` ${custom}` : ''}${isActive ? ` ${css.active}` : ''}${isDisabled ? ` ${css.disabled}` : ''}${widgetTheme ? ` ${css[widgetTheme]}` : ''}" data-name="${name}">${content}</button>`
         
-        element.onclick = (e) => click(element)
-        return element
+        setTheme(themeName, button)
+
+        button.onclick = (e) => click(button)
+        return button
 
         /*************************
         * ------ Actions -------
@@ -1987,8 +2006,8 @@ function button (option, protocol) {
         function receive(message) {
             const { from, type, state } = message
             console.log('message received from main component:', message)
-            if (state === 'inactive') element.classList.remove(css.active)
-            if (state === 'active') element.classList.add(css.active)
+            if (state === 'inactive') button.classList.remove(css.active)
+            if (state === 'active') button.classList.add(css.active)
             return setState(state)
         }
     }
@@ -2003,42 +2022,17 @@ function button (option, protocol) {
             borderWidth,  borderColor, borderStyle,
             padding, borderRadius, 
             color, bgColor, colorHover, bgColorHover, colorActive, bgColorActive,
-            boxShadow, position, zIndex, top, bottom, left, right, cursor
+            colorDisabled, bgColorDisabled,
+            bgImage, bgImageHover, bgImageActive,
+            boxShadow, position, zIndex, top, bottom, left, right, cursor,
+            iconSize, iconFillColor, iconStrokeColor
         } = theme
 
-    document.documentElement.style.setProperty('--button-black', 'hsl(0, 0%, 0%')
-    document.documentElement.style.setProperty('--button-white', 'hsl(0, 0%, 100%')
-    document.documentElement.style.setProperty('--button-grey', 'hsl(0, 0%, 20%')
-    document.documentElement.style.setProperty('--button-color', 'var(--button-white)')
-    document.documentElement.style.setProperty('--button-color-hover', 'var(--button-white)')
-    document.documentElement.style.setProperty('--button-color-active', 'var(--button-white)')
-    document.documentElement.style.setProperty('--button-bg-color', 'var(--button-black)')
-    document.documentElement.style.setProperty('--button-bg-color-hover', 'var(--button-grey)')
-    document.documentElement.style.setProperty('--button-bg-color-active', 'var(--button-black)')
-    document.documentElement.style.setProperty('--button-position', 'inherit')
-    document.documentElement.style.setProperty('--button-z-index', 'inherit')
-    document.documentElement.style.setProperty('--button-position-top', 'unset')
-    document.documentElement.style.setProperty('--button-position-bottom', 'unset')
-    document.documentElement.style.setProperty('--button-position-left', 'unset')
-    document.documentElement.style.setProperty('--button-position-right', 'unset')
-    document.documentElement.style.setProperty('--button-width', 'auto')
-    document.documentElement.style.setProperty('--button-min-width', 'auto')
-    document.documentElement.style.setProperty('--button-max-width', 'inherfit')
-    document.documentElement.style.setProperty('--button-height', 'auto')
-    document.documentElement.style.setProperty('--button-min-height', 'auto')
-    document.documentElement.style.setProperty('--button-max-height', 'inherfit')
-    document.documentElement.style.setProperty('--button-font-family', 'initial')
-    document.documentElement.style.setProperty('--button-font-size', '1.4rem')
-    document.documentElement.style.setProperty('--button-font-weight', '300')
-    document.documentElement.style.setProperty('--button-border-width', '0')
-    document.documentElement.style.setProperty('--button-border-color', 'unset')
-    document.documentElement.style.setProperty('--button-border-style', 'unset')
-    document.documentElement.style.setProperty('--button-border-radius', '0')
-    document.documentElement.style.setProperty('--button-box-shadow', 'none')
-    document.documentElement.style.setProperty('--button-padding', '8px 12px')
-    document.documentElement.style.setProperty('--button-text-align', 'center')
-    document.documentElement.style.setProperty('--button-text-transform', 'unset')
-    document.documentElement.style.setProperty('--button-cursor', 'pointer')
+
+    function setTheme(themeName, target) {
+        if (themeName === 'default') return mainTheme(document.documentElement)
+        if (themeName === 'dark') return whiteTheme(target)
+    }
 
     const style = csjs`
     .button {
@@ -2054,11 +2048,12 @@ function button (option, protocol) {
         height: ${height ? height : 'var(--button-height)'};
         min-height: ${minHeight ? minHeight : 'var(--button-min-height)'};
         max-height: ${maxHeight ? maxHeight : 'var(--button-max-height)'};
-        font-family: ${maxHeight ? maxHeight : 'var(--button-font-family)'};
+        font-family: ${fontFamily ? fontFamily : 'var(--button-font-family)'};
         font-size: ${fontSize ? fontSize : 'var(--button-font-size)'};
         font-weight: ${fontWeight ? fontWeight : 'var(--button-font-weight)'};
         color: ${color ? color : 'var(--button-color)'};
         background-color: ${bgColor ? bgColor : 'var(--button-bg-color)'};
+        background-image: ${bgImage ? bgImage : 'var(--button-bg-image)'};
         border-width: ${borderWidth ? borderWidth : 'var(--button-border-width)'};
         border-color: ${borderColor ? borderColor : 'var(--button-border-color)'};
         border-style: ${borderStyle ? borderStyle : 'var(--button-border-style)'};
@@ -2075,17 +2070,225 @@ function button (option, protocol) {
     .button:hover {
         color: ${colorHover ? colorHover : 'var(--button-color-hover)'};
         background-color: ${bgColorHover ? bgColorHover : 'var(--button-bg-color-hover)'};
+        background-image: ${bgImageHover ? bgImageHover : 'var(--button-bg-image-hover)'};
     }
-    .active {
+    .button > div {
+        width: ${iconSize ? iconSize : 'var(--button-icon-size)'};
+    }
+    .button > div svg {
+        width: 100%;
+        height: auto;
+    }
+    .active, .active:hover {
         color: ${colorActive ? colorActive : 'var(--button-color-active)'};
-        background-color: ${bgColorActive ? bgColorActive : 'var(--button-bg-color-active)'}
+        background-color: ${bgColorActive ? bgColorActive : 'var(--button-bg-color-active)'};
+        background-image: ${bgImageActive ? bgImageActive : 'var(--button-bg-image-active)'};
     }
     .disabled {
-        opacity: .2;
+        color: ${colorDisabled ? colorDisabled : 'var(--button-color-disabled)'};
+        background-color: ${bgColorDisabled ? bgColorDisabled : 'var(--button-bg-color-disabled)'};
+        pointer-events: none;
+    }
+    .cancel {
+        color: ${color ? color : 'var(--cancel-color)'};
+        background-color: ${bgColor ? bgColor : 'var(--cancel-bg-color)'};
+    }
+    .cancel:hover {
+        color: ${colorHover ? colorHover : 'var(--cancel-color-hover)'};
+        background-color: ${bgColorHover ? bgColorHover : 'var(--cancel-bg-color-hover)'};
+    }
+    .cancel > div svg path {
+        fill: none;
+        stroke: ${iconStrokeColor ? iconStrokeColor : 'var(--cancel-icon-stroke-color)'};
+    }
+    .confirm > div svg path {
+        fill: none;
+        stroke: ${iconStrokeColor ? iconStrokeColor : 'var(--confirm-icon-stroke-color)'};
+    }
+    .toggle {
+        color: ${color ? color : 'var(--toggle-color)'};
+        background-color: ${bgColor ? bgColor : 'var(--toggle-bg-color)'};
+    }
+    .toggle.active, .toggle.active:hover {
+        color: ${colorActive ? colorActive : 'var(--button-color-active)'};
+        background-color: ${bgColorActive ? bgColorActive : 'var(--button-bg-color-active)'};
+    }
+    .toggle.active.disabled {
+        color: ${colorDisabled ? colorDisabled : 'var(--toggle-color-active-disabled)'};
+        background-color: ${bgColorDisabled ? bgColorDisabled : 'var(--toggle-bg-color-active-disabled)'};
+    }
+    .tab {
+        color: ${color ? color : 'var(--tab-color)'};
+        background-color: ${bgColor ? bgColor : 'var(--tab-bg-color)'};
+    }
+    .tab.active {
+        color: ${color ? color : 'var(--button-color-active)'};
+        background-color: ${bgColor ? bgColor : 'var(--button-bg-color-active)'};
+        cursor: default;
+    }
+    .tab.disabled {
+        color: ${colorDisabled ? colorDisabled : 'var(--button-color-disabled)'};
+        background-color: ${bgColorDisabled ? bgColorDisabled : 'var(--button-bg-color-disabled)'};
         pointer-events: none;
     }
     `
     return ui_element(style)
 }
 }).call(this)}).call(this,"/src/index.js")
-},{"bel":4,"csjs-inject":7,"path":28}]},{},[1]);
+},{"bel":3,"csjs-inject":6,"path":27,"themes/dark-theme":31,"themes/main-theme":32}],31:[function(require,module,exports){
+const themes = (el) => {
+    // color define
+    el.style.setProperty('--button-black', 'hsl(0, 0%, 0%)')
+    el.style.setProperty('--button-white', 'hsl(0, 0%, 100%)')
+    el.style.setProperty('--button-grey', 'hsl(0, 0%, 80%)')
+    // primary
+    el.style.setProperty('--button-color', 'var(--button-black)')
+    el.style.setProperty('--button-bg-color', 'var(--button-white)')
+    // hover
+    el.style.setProperty('--button-color-hover', 'var(--button-black)')
+    el.style.setProperty('--button-bg-color-hover', 'var(--button-grey)')
+    // active
+    el.style.setProperty('--button-color-active', 'var(--button-black)')
+    el.style.setProperty('--button-bg-color-active', 'var(--button-white)')
+    // disabled
+    el.style.setProperty('--button-color-disabled', 'hsla(0, 0%, 100%, .5)')
+    el.style.setProperty('--button-bg-color-disabled', 'hsl(0, 0%, 50%)')
+    // image
+    el.style.setProperty('--button-bg-image', 'unset')
+    el.style.setProperty('--button-bg-image-hover', 'unset')
+    el.style.setProperty('--button-bg-image-active', 'unset')
+    // position
+    el.style.setProperty('--button-position', 'inherit')
+    el.style.setProperty('--button-z-index', 'inherit')
+    el.style.setProperty('--button-position-top', 'unset')
+    el.style.setProperty('--button-position-bottom', 'unset')
+    el.style.setProperty('--button-position-left', 'unset')
+    el.style.setProperty('--button-position-right', 'unset')
+    // width
+    el.style.setProperty('--button-width', 'auto')
+    el.style.setProperty('--button-min-width', 'auto')
+    el.style.setProperty('--button-max-width', 'inherfit')
+    // height
+    el.style.setProperty('--button-height', 'auto')
+    el.style.setProperty('--button-min-height', 'auto')
+    el.style.setProperty('--button-max-height', 'inherfit')
+    // font
+    el.style.setProperty('--button-font-family', 'initial')
+    el.style.setProperty('--button-font-size', '1.4rem')
+    el.style.setProperty('--button-font-weight', '300')
+    el.style.setProperty('--button-text-align', 'center')
+    el.style.setProperty('--button-text-transform', 'unset')
+    // border
+    el.style.setProperty('--button-border-width', '0')
+    el.style.setProperty('--button-border-color', 'unset')
+    el.style.setProperty('--button-border-style', 'unset')
+    el.style.setProperty('--button-border-radius', '0')
+    el.style.setProperty('--button-box-shadow', 'none')
+    // spacing
+    el.style.setProperty('--button-padding', '8px 12px')
+    // mouse
+    el.style.setProperty('--button-cursor', 'pointer')
+    // icon
+    el.style.setProperty('--button-icon-size', '1.6rem')
+    el.style.setProperty('--button-icon-fill-color', 'var(--button-white)')
+    el.style.setProperty('--button-icon-stroke-color', 'var(--button-white)')
+    // widget theme
+    // cancel
+    el.style.setProperty('--cancel-color', 'var(--button-black)')
+    el.style.setProperty('--cancel-color-hover', 'var(--button-white)')
+    el.style.setProperty('--cancel-bg-color', 'hsl(0, 0%, 85%)')
+    el.style.setProperty('--cancel-bg-color-hover', 'hsl(0, 0%, 90%)')
+    el.style.setProperty('--cancel-icon-stroke-color', 'var(--button-black)')
+    // confirm
+    el.style.setProperty('--confirm-icon-stroke-color', 'var(--button-black)')
+    // toggle
+    el.style.setProperty('--toggle-color', 'var(--button-black)')
+    el.style.setProperty('--toggle-bg-color', 'var(--button-white)')
+    // tab
+    el.style.setProperty('--tab-color', 'var(--button-black)')
+    el.style.setProperty('--tab-bg-color', 'var(--button-grey)')
+    el.style.setProperty('--tab-color-disabled', 'hsla(0, 0%, 100%, .5)')
+    el.style.setProperty('--tab-bg-color-disabled', 'hsl(0, 0%, 50%)')
+}
+
+module.exports = themes
+},{}],32:[function(require,module,exports){
+const themes = (el) => {
+    // color define
+    el.style.setProperty('--button-black', '#000')
+    el.style.setProperty('--button-white', 'hsl(0, 0%, 100%)')
+    el.style.setProperty('--button-grey', 'hsl(0, 0%, 30%)')
+    // primary
+    el.style.setProperty('--button-color', 'var(--button-white)')
+    el.style.setProperty('--button-bg-color', 'var(--button-black)')
+    // hover
+    el.style.setProperty('--button-color-hover', 'var(--button-white)')
+    el.style.setProperty('--button-bg-color-hover', 'var(--button-grey)')
+    // active
+    el.style.setProperty('--button-color-active', 'var(--button-white)')
+    el.style.setProperty('--button-bg-color-active', 'var(--button-black)')
+    // disabled
+    el.style.setProperty('--button-color-disabled', 'hsl(0, 0%, 90%)')
+    el.style.setProperty('--button-bg-color-disabled', 'hsl(0, 0%, 75%)')
+    // image
+    el.style.setProperty('--button-bg-image', 'unset')
+    el.style.setProperty('--button-bg-image-hover', 'unset')
+    el.style.setProperty('--button-bg-image-active', 'unset')
+    // position
+    el.style.setProperty('--button-position', 'inherit')
+    el.style.setProperty('--button-z-index', 'inherit')
+    el.style.setProperty('--button-position-top', 'unset')
+    el.style.setProperty('--button-position-bottom', 'unset')
+    el.style.setProperty('--button-position-left', 'unset')
+    el.style.setProperty('--button-position-right', 'unset')
+    // width
+    el.style.setProperty('--button-width', 'auto')
+    el.style.setProperty('--button-min-width', 'auto')
+    el.style.setProperty('--button-max-width', 'inherfit')
+    // height
+    el.style.setProperty('--button-height', 'auto')
+    el.style.setProperty('--button-min-height', 'auto')
+    el.style.setProperty('--button-max-height', 'inherfit')
+    // font
+    el.style.setProperty('--button-font-family', 'initial')
+    el.style.setProperty('--button-font-size', '1.4rem')
+    el.style.setProperty('--button-font-weight', '300')
+    el.style.setProperty('--button-text-align', 'center')
+    el.style.setProperty('--button-text-transform', 'unset')
+    // border
+    el.style.setProperty('--button-border-width', '0')
+    el.style.setProperty('--button-border-color', 'unset')
+    el.style.setProperty('--button-border-style', 'unset')
+    el.style.setProperty('--button-border-radius', '0')
+    el.style.setProperty('--button-box-shadow', 'none')
+    // spacing
+    el.style.setProperty('--button-padding', '8px 12px')
+    // mouse
+    el.style.setProperty('--button-cursor', 'pointer')
+    // icon
+    el.style.setProperty('--button-icon-size', '1.6rem')
+    el.style.setProperty('--button-icon-fill-color', 'var(--button-white)')
+    el.style.setProperty('--button-icon-stroke-color', 'var(--button-white)')
+    // widget theme
+    // cancel
+    el.style.setProperty('--cancel-color', 'var(--button-black)')
+    el.style.setProperty('--cancel-color-hover', 'var(--button-white)')
+    el.style.setProperty('--cancel-bg-color', 'hsl(0, 0%, 85%)')
+    el.style.setProperty('--cancel-bg-color-hover', 'hsl(0, 0%, 70%)')
+    el.style.setProperty('--cancel-icon-stroke-color', 'var(--button-black)')
+    // confirm
+    el.style.setProperty('--confirm-icon-stroke-color', 'var(--button-white)')
+    // toggle
+    el.style.setProperty('--toggle-color', 'var(--button-black)')
+    el.style.setProperty('--toggle-bg-color', 'var(--button-white)')
+    el.style.setProperty('--toggle-color-active-disabled', 'var(--button-color-disabled)')
+    el.style.setProperty('--toggle-bg-color-active-disabled', 'var(--button-bg-color-disabled)')
+    // tab
+    el.style.setProperty('--tab-color', 'var(--button-black)')
+    el.style.setProperty('--tab-bg-color', 'var(--button-white)')
+    el.style.setProperty('--tab-color-disabled', 'hsla(0, 0%, 100%, .5)')
+    el.style.setProperty('--tab-bg-color-disabled', 'hsl(0, 0%, 50%)')
+}
+
+module.exports = themes
+},{}]},{},[1]);

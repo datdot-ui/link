@@ -2,13 +2,15 @@ const bel = require('bel')
 const csjs = require('csjs-inject')
 const path = require('path')
 const filename = path.basename(__filename)
+// themes
+const mainTheme = require('themes/main-theme')
+const whiteTheme = require('themes/dark-theme')
 
 module.exports = button
 
-// button ({page, flow = null, name, content, style, color, custom, isActive, disabled = false}, protocol
 function button (option, protocol) {
     const widget = 'ui-button'
-    const {page, flow, name, content = 'Button', custom, theme, isActive, isDisabled} = option
+    const {page, flow, name, content = 'Button', custom, widgetTheme, theme, themeName = 'default', isActive, isDisabled} = option
 
     const ui_element = (css) => {
         let state = 'inactive'
@@ -16,10 +18,12 @@ function button (option, protocol) {
         send2Parent({page, from: name, flow: flow ? `${flow}/${widget}` : widget, type: 'init', filename, line: 11})
         // for tab to check isActive is true then set button state to active
         if (isActive) setState('active')
-        const element = bel`<button role="button" class="${css.button}${custom ? ` ${custom}` : ''}${isActive ? ` ${css.active}` : ''}${isDisabled ? ` ${css.disabled}` : ''}" data-name="${name}">${content}</button>`
+        const button = bel`<button role="button" class="${css.button}${custom ? ` ${custom}` : ''}${isActive ? ` ${css.active}` : ''}${isDisabled ? ` ${css.disabled}` : ''}${widgetTheme ? ` ${css[widgetTheme]}` : ''}" data-name="${name}">${content}</button>`
         
-        element.onclick = (e) => click(element)
-        return element
+        setTheme(themeName, button)
+
+        button.onclick = (e) => click(button)
+        return button
 
         /*************************
         * ------ Actions -------
@@ -37,8 +41,8 @@ function button (option, protocol) {
         function receive(message) {
             const { from, type, state } = message
             console.log('message received from main component:', message)
-            if (state === 'inactive') element.classList.remove(css.active)
-            if (state === 'active') element.classList.add(css.active)
+            if (state === 'inactive') button.classList.remove(css.active)
+            if (state === 'active') button.classList.add(css.active)
             return setState(state)
         }
     }
@@ -53,42 +57,17 @@ function button (option, protocol) {
             borderWidth,  borderColor, borderStyle,
             padding, borderRadius, 
             color, bgColor, colorHover, bgColorHover, colorActive, bgColorActive,
-            boxShadow, position, zIndex, top, bottom, left, right, cursor
+            colorDisabled, bgColorDisabled,
+            bgImage, bgImageHover, bgImageActive,
+            boxShadow, position, zIndex, top, bottom, left, right, cursor,
+            iconSize, iconFillColor, iconStrokeColor
         } = theme
 
-    document.documentElement.style.setProperty('--button-black', 'hsl(0, 0%, 0%')
-    document.documentElement.style.setProperty('--button-white', 'hsl(0, 0%, 100%')
-    document.documentElement.style.setProperty('--button-grey', 'hsl(0, 0%, 20%')
-    document.documentElement.style.setProperty('--button-color', 'var(--button-white)')
-    document.documentElement.style.setProperty('--button-color-hover', 'var(--button-white)')
-    document.documentElement.style.setProperty('--button-color-active', 'var(--button-white)')
-    document.documentElement.style.setProperty('--button-bg-color', 'var(--button-black)')
-    document.documentElement.style.setProperty('--button-bg-color-hover', 'var(--button-grey)')
-    document.documentElement.style.setProperty('--button-bg-color-active', 'var(--button-black)')
-    document.documentElement.style.setProperty('--button-position', 'inherit')
-    document.documentElement.style.setProperty('--button-z-index', 'inherit')
-    document.documentElement.style.setProperty('--button-position-top', 'unset')
-    document.documentElement.style.setProperty('--button-position-bottom', 'unset')
-    document.documentElement.style.setProperty('--button-position-left', 'unset')
-    document.documentElement.style.setProperty('--button-position-right', 'unset')
-    document.documentElement.style.setProperty('--button-width', 'auto')
-    document.documentElement.style.setProperty('--button-min-width', 'auto')
-    document.documentElement.style.setProperty('--button-max-width', 'inherfit')
-    document.documentElement.style.setProperty('--button-height', 'auto')
-    document.documentElement.style.setProperty('--button-min-height', 'auto')
-    document.documentElement.style.setProperty('--button-max-height', 'inherfit')
-    document.documentElement.style.setProperty('--button-font-family', 'initial')
-    document.documentElement.style.setProperty('--button-font-size', '1.4rem')
-    document.documentElement.style.setProperty('--button-font-weight', '300')
-    document.documentElement.style.setProperty('--button-border-width', '0')
-    document.documentElement.style.setProperty('--button-border-color', 'unset')
-    document.documentElement.style.setProperty('--button-border-style', 'unset')
-    document.documentElement.style.setProperty('--button-border-radius', '0')
-    document.documentElement.style.setProperty('--button-box-shadow', 'none')
-    document.documentElement.style.setProperty('--button-padding', '8px 12px')
-    document.documentElement.style.setProperty('--button-text-align', 'center')
-    document.documentElement.style.setProperty('--button-text-transform', 'unset')
-    document.documentElement.style.setProperty('--button-cursor', 'pointer')
+
+    function setTheme(themeName, target) {
+        if (themeName === 'default') return mainTheme(document.documentElement)
+        if (themeName === 'dark') return whiteTheme(target)
+    }
 
     const style = csjs`
     .button {
@@ -104,11 +83,12 @@ function button (option, protocol) {
         height: ${height ? height : 'var(--button-height)'};
         min-height: ${minHeight ? minHeight : 'var(--button-min-height)'};
         max-height: ${maxHeight ? maxHeight : 'var(--button-max-height)'};
-        font-family: ${maxHeight ? maxHeight : 'var(--button-font-family)'};
+        font-family: ${fontFamily ? fontFamily : 'var(--button-font-family)'};
         font-size: ${fontSize ? fontSize : 'var(--button-font-size)'};
         font-weight: ${fontWeight ? fontWeight : 'var(--button-font-weight)'};
         color: ${color ? color : 'var(--button-color)'};
         background-color: ${bgColor ? bgColor : 'var(--button-bg-color)'};
+        background-image: ${bgImage ? bgImage : 'var(--button-bg-image)'};
         border-width: ${borderWidth ? borderWidth : 'var(--button-border-width)'};
         border-color: ${borderColor ? borderColor : 'var(--button-border-color)'};
         border-style: ${borderStyle ? borderStyle : 'var(--button-border-style)'};
@@ -125,13 +105,65 @@ function button (option, protocol) {
     .button:hover {
         color: ${colorHover ? colorHover : 'var(--button-color-hover)'};
         background-color: ${bgColorHover ? bgColorHover : 'var(--button-bg-color-hover)'};
+        background-image: ${bgImageHover ? bgImageHover : 'var(--button-bg-image-hover)'};
     }
-    .active {
+    .button > div {
+        width: ${iconSize ? iconSize : 'var(--button-icon-size)'};
+    }
+    .button > div svg {
+        width: 100%;
+        height: auto;
+    }
+    .active, .active:hover {
         color: ${colorActive ? colorActive : 'var(--button-color-active)'};
-        background-color: ${bgColorActive ? bgColorActive : 'var(--button-bg-color-active)'}
+        background-color: ${bgColorActive ? bgColorActive : 'var(--button-bg-color-active)'};
+        background-image: ${bgImageActive ? bgImageActive : 'var(--button-bg-image-active)'};
     }
     .disabled {
-        opacity: .2;
+        color: ${colorDisabled ? colorDisabled : 'var(--button-color-disabled)'};
+        background-color: ${bgColorDisabled ? bgColorDisabled : 'var(--button-bg-color-disabled)'};
+        pointer-events: none;
+    }
+    .cancel {
+        color: ${color ? color : 'var(--cancel-color)'};
+        background-color: ${bgColor ? bgColor : 'var(--cancel-bg-color)'};
+    }
+    .cancel:hover {
+        color: ${colorHover ? colorHover : 'var(--cancel-color-hover)'};
+        background-color: ${bgColorHover ? bgColorHover : 'var(--cancel-bg-color-hover)'};
+    }
+    .cancel > div svg path {
+        fill: none;
+        stroke: ${iconStrokeColor ? iconStrokeColor : 'var(--cancel-icon-stroke-color)'};
+    }
+    .confirm > div svg path {
+        fill: none;
+        stroke: ${iconStrokeColor ? iconStrokeColor : 'var(--confirm-icon-stroke-color)'};
+    }
+    .toggle {
+        color: ${color ? color : 'var(--toggle-color)'};
+        background-color: ${bgColor ? bgColor : 'var(--toggle-bg-color)'};
+    }
+    .toggle.active, .toggle.active:hover {
+        color: ${colorActive ? colorActive : 'var(--button-color-active)'};
+        background-color: ${bgColorActive ? bgColorActive : 'var(--button-bg-color-active)'};
+    }
+    .toggle.active.disabled {
+        color: ${colorDisabled ? colorDisabled : 'var(--toggle-color-active-disabled)'};
+        background-color: ${bgColorDisabled ? bgColorDisabled : 'var(--toggle-bg-color-active-disabled)'};
+    }
+    .tab {
+        color: ${color ? color : 'var(--tab-color)'};
+        background-color: ${bgColor ? bgColor : 'var(--tab-bg-color)'};
+    }
+    .tab.active {
+        color: ${color ? color : 'var(--button-color-active)'};
+        background-color: ${bgColor ? bgColor : 'var(--button-bg-color-active)'};
+        cursor: default;
+    }
+    .tab.disabled {
+        color: ${colorDisabled ? colorDisabled : 'var(--button-color-disabled)'};
+        background-color: ${bgColorDisabled ? bgColorDisabled : 'var(--button-bg-color-disabled)'};
         pointer-events: none;
     }
     `

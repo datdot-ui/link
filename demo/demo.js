@@ -5,22 +5,27 @@ const filename = path.basename(__filename)
 const button = require('..')
 const svg = require('datdot-ui-graphic')
 const domlog = require('ui-domlog')
-const white_button = require('./white_button.json')
 
 function demoComponent() {
     let recipients = []
+    // icons
+    let iconCancel = svg({css: css.icon, path: 'assets/cancel.svg'})
+    let iconConfirm = svg({css: css.icon, path: 'assets/check.svg'})
     // UI element settings
     let option = {
         page: 'USER',
         name: 'button1',
-        content: 'Black',
+        content: 'Confirm',
+        themeName: 'default',
+        widgetTheme: 'confirm'
     }
 
     let option1 = {
         page: 'demo',
         name: 'button2',
-        content: 'White',
-        theme: {...white_button}
+        content: 'Cancel',
+        themeName: 'default',
+        widgetTheme: 'cancel',
     }
 
     let option2 = {
@@ -28,14 +33,9 @@ function demoComponent() {
         flow: 'toggle',
         name: 'date',
         content: 'Date',
-        custom: css.toggle,
-        theme: {
-            width: '100%',
-            textAlign: 'right',
-            colorHover: 'hsl(0, 0%, 100%)',
-            bgColorHover: 'hsl(0, 0%, 65%)',
-            textTransform: 'uppercase'
-        }
+        themeName: 'default',
+        widgetTheme: 'toggle',
+        isActive: true,
     }
 
     let tabOption1 = {
@@ -43,10 +43,9 @@ function demoComponent() {
         flow: 'tab',
         name: 'hourly',
         content: '1H',
-        theme: {
-            ...white_button,
-        },
-        isActive: true,
+        themeName: 'default',
+        widgetTheme: 'tab',
+        isActive: true
     }
 
     let tabOption2 = {
@@ -54,9 +53,8 @@ function demoComponent() {
         flow: 'tab',
         name: 'daily',
         content: '1D',
-        theme: {
-            ...white_button,
-        }
+        themeName: 'default',
+        widgetTheme: 'tab'
     }
 
     let tabOption3 = {
@@ -64,9 +62,8 @@ function demoComponent() {
         flow: 'tab',
         name: 'monthly',
         content: '1M',
-        theme: {
-            ...white_button,
-        }
+        themeName: 'default',
+        widgetTheme: 'tab'
     }
 
     let tabOption4 = {
@@ -74,12 +71,26 @@ function demoComponent() {
         flow: 'tab',
         name: 'yearly',
         content: '1Y',
-        theme: {
-            ...white_button,
-        },
+        themeName: 'default',
+        widgetTheme: 'tab',
         isDisabled: true
     }
 
+    let confirmOption = {
+        page: 'PLAN',
+        name: 'confirm',
+        content: iconConfirm,
+        themeName: 'default',
+        widgetTheme: 'confirm'
+    }
+
+    let cancelOption = {
+        page: 'PLAN',
+        name: 'cancel',
+        content: iconCancel,
+        themeName: 'default',
+        widgetTheme: 'cancel'
+    }
 
     // UI elements
     // primary
@@ -92,6 +103,15 @@ function demoComponent() {
     const tab2 = button({...tabOption2}, protocol(tabOption2.name))
     const tab3 = button({...tabOption3}, protocol(tabOption3.name))
     const tab4 = button({...tabOption4}, protocol(tabOption4.name))
+    // icon
+    const confirm = button({...confirmOption}, protocol(confirmOption.name))
+    const cancel = button({...cancelOption}, protocol(cancelOption.name))
+
+    // define css variables
+    // document.documentElement.style.setProperty('--button-bg-color', 'hsl(223, 100%, 61%)')
+    // document.documentElement.style.setProperty('--button-bg-color-hover', 'hsl(223, 100%, 48%)')
+    tab1.style.setProperty('--button-bg-color-active', 'hsl(223, 100%, 61%)')
+    // document.body.style.backgroundColor = '#000'
 
     // content
     const content = bel`
@@ -107,6 +127,10 @@ function demoComponent() {
         <section>
             <h2>Tab</h2>
             <div class=${css.tab}>${tab1}${tab2}${tab3}${tab4}</div>
+        </section>
+        <section>
+            <h2>Icon</h2>
+            <div>${confirm}${cancel}</div>
         </section>
     </div>`
 
@@ -205,8 +229,6 @@ function demoComponent() {
     }
 }
 
-
-
 const css = csjs`
 :root {
     --h: 0;
@@ -262,7 +284,7 @@ body {
     overflow-y: auto;
 }
 .tab {}
-.toggle {}
+.icon {}
 `
 
 document.body.append( demoComponent() )
