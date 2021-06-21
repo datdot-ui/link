@@ -1,290 +1,194 @@
 const bel = require('bel')
 const csjs = require('csjs-inject')
-const path = require('path')
-const filename = path.basename(__filename)
+const file = require('path').basename(__filename)
 const button = require('..')
 const svg = require('datdot-ui-graphic')
-const domlog = require('ui-domlog')
+const logs = require('datdot-ui-logs')
 
-function demoComponent() {
+function widget() {
+    // save protocol callbacks
     let recipients = []
+     // logs must be initialized first before components
+     const logList = logs(protocol('logs'))
     // icons
     let iconCancel = svg({css: css.icon, path: 'assets/cancel.svg'})
     let iconConfirm = svg({css: css.icon, path: 'assets/check.svg'})
-    // UI element settings
-    let option = {
-        page: 'USER',
-        name: 'button1',
-        content: 'Confirm',
-        themeName: 'default',
-        widgetTheme: 'confirm'
-    }
-
-    let option1 = {
-        page: 'demo',
-        name: 'button2',
-        content: 'Cancel',
-        themeName: 'default',
-        widgetTheme: 'cancel',
-    }
-
-    let option2 = {
-        page: 'demo',
-        flow: 'toggle',
-        name: 'date',
-        content: 'Date',
-        themeName: 'default',
-        widgetTheme: 'toggle',
-        isActive: true,
-    }
-
-    let tabOption1 = {
-        page: 'demo',
-        flow: 'tab',
-        name: 'hourly',
-        content: '1H',
-        themeName: 'default',
-        widgetTheme: 'tab',
-        isActive: true
-    }
-
-    let tabOption2 = {
-        page: 'demo',
-        flow: 'tab',
-        name: 'daily',
-        content: '1D',
-        themeName: 'default',
-        widgetTheme: 'tab'
-    }
-
-    let tabOption3 = {
-        page: 'demo',
-        flow: 'tab',
-        name: 'monthly',
-        content: '1M',
-        themeName: 'default',
-        widgetTheme: 'tab'
-    }
-
-    let tabOption4 = {
-        page: 'demo',
-        flow: 'tab',
-        name: 'yearly',
-        content: '1Y',
-        themeName: 'default',
-        widgetTheme: 'tab',
-        isDisabled: true
-    }
-
-    let confirmOption = {
-        page: 'PLAN',
-        name: 'confirm',
-        content: iconConfirm,
-        themeName: 'default',
-        widgetTheme: 'confirm'
-    }
-
-    let cancelOption = {
-        page: 'PLAN',
-        name: 'cancel',
-        content: iconCancel,
-        themeName: 'default',
-        widgetTheme: 'cancel'
-    }
-
-    // UI elements
-    // primary
-    const btn1 = button({...option}, protocol(option.name))
-    const btn2 = button({...option1}, protocol(option1.name))
-    // toggle
-    const btn3 = button({...option2}, protocol(option2.name))
-    // tab
-    const tab1 = button({...tabOption1}, protocol(tabOption1.name))
-    const tab2 = button({...tabOption2}, protocol(tabOption2.name))
-    const tab3 = button({...tabOption3}, protocol(tabOption3.name))
-    const tab4 = button({...tabOption4}, protocol(tabOption4.name))
-    // icon
-    const confirm = button({...confirmOption}, protocol(confirmOption.name))
-    const cancel = button({...cancelOption}, protocol(cancelOption.name))
-
-    // define css variables
-    // document.documentElement.style.setProperty('--button-bg-color', 'hsl(223, 100%, 61%)')
-    // document.documentElement.style.setProperty('--button-bg-color-hover', 'hsl(223, 100%, 48%)')
-    tab1.style.setProperty('--button-bg-color-active', 'hsl(223, 100%, 61%)')
-    // document.body.style.backgroundColor = '#000'
 
     // content
     const content = bel`
     <div class=${css.content}>
         <section>
             <h2>Button</h2>
-            <div>${btn1}${btn2}</div>
-        </section>
-        <section>
-            <h2>Toggle</h2>
-            <div>${btn3}</div>
-        </section>
-        <section>
-            <h2>Tab</h2>
-            <div class=${css.tab}>${tab1}${tab2}${tab3}${tab4}</div>
-        </section>
-        <section>
-            <h2>Icon</h2>
-            <div>${confirm}${cancel}</div>
+            ${button({name: 'default', content: 'Default'}, protocol('default'))}
         </section>
     </div>`
 
-    // show logs
-    let terminal = bel`<div class=${css.terminal}></div>`
-    // container
-    const container = wrap(content, terminal)
-    return container
+    const container = bel`
+    <div class="${css.container}">
+        ${content}
+    </div>
+    `
 
-    function wrap (content, terminal) {
-        const container = bel`
-        <div class=${css.wrap}>
-            <section class=${css.container}>
-                ${content}
-            </section>
-            ${terminal}
-        </div>
-        `
+    const app = bel`
+    <div class="${css.wrap}" data-state="debug">
+        ${container}${logList}
+    </div>`
 
-        return container
+    return app
+
+    function handleClickEvent(msg) {
+        const {page, from} = msg
+        recipients['logs']({page, from, flow: 'button', type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 41})
     }
 
-    /*************************
-    * ------ Actions -------
-    *************************/
-    function toggle(message) {
-        const { page, from, flow, type, action, state, body } = message
-        let update
-        if (state === 'inactive') update = 'active' 
-        if (state === 'active') update = 'inactive'
-        return recipients[from]({page, from, flow, type: 'clicked', state: update })
+    function get (msg) {
+        const { page, from, flow, type, body } = msg
+        recipients['logs'](msg)
+        if (type === 'click') return handleClickEvent(msg)
     }
 
-    function tab(message) {
-        const { page, from, flow, type, action, state, body } = message
-        const tab = document.querySelector(`.${css.tab}`)
-        const { children } = tab
-        const items = [...children]
-        // if tab is active then do nothing
-        if (state === 'active') return
-        items.forEach( item => {
-            let name = item.dataset.name
-            // make all tabs are inactive, expact current one 
-            recipients[name]({page, from, flow, type: 'clicked', state: 'inactive' })
-            // make tab active
-            if (name === from) recipients[name]({page, from, flow, type: 'clicked', state: 'active' })
-            
-        })
-    }
-
-    /*************************
-    * ------ Receivers -------
-    *************************/
-    function receive (message) {
-        const { page, from, flow, type, body } = message
-        showLog(message)
-        if (type === 'init') return showLog({page, from, flow, type: 'ready', body, filename, line: 51})
-        if (type === 'click') { 
-            // send log to child module and require to do actions
-            if (flow.split('/').includes('toggle')) return toggle(message)
-            if (flow.split('/').includes('tab')) return tab(message)
-            recipients[from](message)
-            showLog({page, from, flow, type: 'clicked', body, filename, line: 52})
-        }
-    }
-
-    /*************************
-    * ------ Protocols -------
-    *************************/
-    // original protocol for all use
     function protocol (name) {
-        return send => {
-            recipients[name] = send
-            return receive
+        return sender => {
+            recipients[name] = sender
+            return get
         }
-    }
-
-    /*********************************
-    * ------ Promise() Element -------
-    *********************************/
-    // keep the scroll on bottom when the log displayed on the terminal
-    function showLog (message) { 
-        sendMessage(message)
-        .then( log => {
-            terminal.append(log)
-            terminal.scrollTop = terminal.scrollHeight
-        }
-    )}
-
-    async function sendMessage (message) {
-        return await new Promise( (resolve, reject) => {
-            if (message === undefined) reject('no message import')
-            const log = domlog(message)
-            return resolve(log)
-        }).catch( err => { throw new Error(err) } )
     }
 }
 
 const css = csjs`
 :root {
-    --h: 0;
-    --s: 0%;
-    --l: 50%;
-    --color: var(--h), var(--s);
-    --color-black: hsl(var(--color), calc(var(--l) - 50%));
-    --color-white: hsl(var(--color), calc(var(--l) + 50%));
-    --color-red: hsl(358, 99%, calc(var(--l) + 3%));
-    --color-blue: hsl(223, 100%, 61%);
-    --font-primary: 1.6rem;
-    --font-smaller: calc(var(--font-primary) - 0.4rem);
-    --font-small: calc(var(--font-primary) - 0.2rem);
-    --font-mediuem: calc(var(--font-primary) + 0.2rem);
-    --font-big: calc(var(--font-primary) + 0.4rem);
-    --font-bigger: calc(var(--font-primary) + 0.6rem);
-    --font-large: calc(var(--font-primary) + 0.8rem);
-    --font-larger: calc(var(--font-primary) + 1rem);
-    --position-abs: absolute;
+    --b: 0, 0%;
+    --r: 100%, 50%;
+    --color-white: var(--b), 100%;
+    --color-black: var(--b), 0%;
+    --color-dark: 223, 13%, 20%;
+    --color-deep-black: 222, 18%, 11%;
+    --color-blue: 214, var(--r);
+    --color-red: 358, 99%, 53%;
+    --color-orange: 35, 100%, 58%;
+    --color-deep-saffron: 31, 100%, 56%;
+    --color-ultra-red: 348, 96%, 71%;
+    --color-flame: 15, 80%, 50%;
+    --color-verdigris: 180, 54%, 43%;
+    --color-maya-blue: 205, 96%, 72%;
+    --color-slate-blue: 248, 56%, 59%;
+    --color-blue-jeans: 204, 96%, 61%;
+    --color-dodger-blue: 213, 90%, 59%;
+    --color-slimy-green: 108, 100%, 28%;
+    --color-maximum-blue-green: 180, 54%, 51%;
+    --color-green-pigment: 136, 81%, 34%;
+    --color-yellow: 44, 100%, 55%;
+    --color-chrome-yellow: 39, var(--r);
+    --color-bright-yellow-crayola: 35, 100%, 58%;
+    --color-purple: 283, var(--r);
+    --color-medium-purple: 269, 100%, 70%;
+    --color-grey33: var(--b), 20%;
+    --color-grey66: var(--b), 40%;
+    --color-grey70: var(--b), 44%;
+    --color-grey88: var(--b), 53%;
+    --color-greyA2: var(--b), 64%;
+    --color-greyC3: var(--b), 76%;
+    --color-greyCB: var(--b), 80%;
+    --color-greyD8: var(--b), 85%;
+    --color-greyD9: var(--b), 85%;
+    --color-greyE2: var(--b), 89%;
+    --color-greyEB: var(--b), 92%;
+    --color-greyED: var(--b), 93%;
+    --color-greyEF: var(--b), 94%;
+    --color-greyF2: var(--b), 95%;
+    --color-green: 136, 81%, 34%;
+    --transparent: transparent;
+    --define-font: *---------------------------------------------*;
+    --snippet-font: Segoe UI Mono, Monospace, Cascadia Mono, Courier New, ui-monospace, Liberation Mono, Menlo, Monaco, Consolas;
+    --size12: 1.2rem;
+    --size14: 1.4rem;
+    --size16: 1.6rem;
+    --size18: 1.8rem;
+    --size20: 2rem;
+    --size22: 2.2rem;
+    --size24: 2.4rem;
+    --size26: 2.6rem;
+    --size28: 2.8rem;
+    --size30: 3rem;
+    --size32: 3.2rem;
+    --size36: 3.6rem;
+    --size40: 4rem;
+    --weight100: 100;
+    --weight300: 300;
+    --weight400: 400;
+    --weight600: 600;
+    --weight800: 800;
+    --define-primary: *---------------------------------------------*;
+    --primary-color: var(--color-black);
+    --primary-bgColor: var(--color-greyF2);
+    --primary-font: Arial, sens-serif;
+    --primary-font-size: var(--size16);
+    --primary-input-radius: 8px;
 }
 html {
-    box-sizing: border-box;
-    height: 100%;
     font-size: 62.5%;
+    height: 100%;
 }
 *, *:before, *:after {
-    box-sizing: inherit;
+    box-sizing: border-box;
 }
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 1.6rem;
-    background-color: rgba(0, 0, 0, .1);
+    font-size: var(--primary-font-size);
+    -webkit-text-size-adjust:100%;
+    font-family: var(--primary-font);
+    background-color: hsl( var(--primary-bgColor) );
     height: 100%;
+    overflow: hidden;
 }
 .wrap {
     display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 75vh 25vh;
+}
+.content {
+    
+}
+[data-state="view"] {
+    height: 100%;
+}
+[data-state="view"] i-log {
+    display: none;
+}
+[data-state="debug"] {
+    grid-template-rows: auto;
+    grid-template-columns: 62% auto;
+    height: 100%;
+}
+[data-state="debug"] i-log {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 40%;
+    height: 100%;
 }
 .container {
-    padding: 25px;
-    overflow-y: auto;
+    display: grid;
+    grid-template-rows: min-content;
+    grid-template-columns: 90%;
+    justify-content: center;
+    align-items: start;
+    background-color: var(--color-white);
+    height: 100%;
+    overflow: hidden auto;
 }
-.content > div {
-    margin-bottom: 20px;
+@media (max-width: 768px) {
+    [data-state="debug"] {
+        grid-template-rows: 65% 35%;
+        grid-template-columns: auto;
+    }
+    [data-state="debug"] i-log {
+        position: inherit;
+        width: 100%;
+    }
+    .container {
+        grid-template-rows: 80px auto;
+    }
 }
-.terminal {
-    background-color: #212121;
-    color: #f2f2f2;
-    font-size: 13px;
-    overflow-y: auto;
-}
-.tab {}
-.icon {}
 `
 
-document.body.append( demoComponent() )
+document.body.append( widget() )

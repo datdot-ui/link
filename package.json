@@ -1,7 +1,7 @@
 {
   "name": "datdot-ui-button",
-  "version": "0.2.1",
-  "description": "example ui components",
+  "version": "1.0.0",
+  "description": "datdot ui widget",
   "main": "src/index.js",
   "scripts": {
     "start": "budo demo/demo.js:bundle.js --open --live",
@@ -18,20 +18,19 @@
     "widget",
     "button"
   ],
-  "author": "",
+  "author": "fionataeyang",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/playproject-io/datdot-ui-button/issues"
   },
   "homepage": "https://github.com/playproject-io/datdot-ui-button#readme",
   "devDependencies": {
-    "budo": "^11.6.4",
-    "ui-domlog": "github:fionataeyang/ui-domlog"
+    "budo": "^11.6.4"
   },
   "dependencies": {
     "bel": "^6.0.0",
     "csjs-inject": "^1.0.1",
     "datdot-ui-graphic": "github:fionataeyang/datdot-ui-graphic",
-    "debug": "^4.1.1"
+    "datdot-ui-logs": "git+https://github.com/fionataeyang/datdot-ui-logs.git"
   }
 }
