@@ -15,13 +15,52 @@ function widget() {
     // icons
     let iconCancel = svg({css: css.icon, path: 'assets/cancel.svg'})
     let iconConfirm = svg({css: css.icon, path: 'assets/check.svg'})
+    // buttons
+    const Default = new button({name: 'default', body: 'Default', theme: { 
+        style: `
+        
+        `, 
+        props: {
+            // borderWidth: '2px',
+            // borderStyle: 'dashed',
+            // borderColor: 'var(--color-yellow)',
+            // colorHover: 'var(--color-white)',
+            sizeHover: 'var(--size16)',
+            bgColorHover: 'var(--color-black)',
+        }
+
+    }}, protocol('default'))
+    
+    const Disabled = new button({name: 'disable', body: 'Disable', isDisabled: true, theme: {
+        // style: `
+        // :host(i-button) button[disabled] {
+        //     --colorOpacity: 1;
+        //     --bgColorOpacity: 0.2;
+        // }
+        // `,
+        props: {
+            // bgColor: 'var(--color-slimy-green)'
+        }
+    }}, protocol('disable'))
+
+    const Tab1 = new button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', isCurrent: true}, protocol('tab1'))
+    const Tab2 = new button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab'}, protocol('tab2'))
+    const Tab3 = new button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab'}, protocol('tab3'))
+    const demoTab = bel`
+    <nav class=${css.tabs}>
+        ${Tab1}${Tab2}${Tab3}
+    </nav>`
 
     // content
     const content = bel`
     <div class=${css.content}>
         <section>
             <h2>Button</h2>
-            ${button({name: 'default', content: 'Default'}, protocol('default'))}
+            ${Default}${Disabled}
+        </section>
+        <section>
+            <h2>Tab</h2>
+            ${demoTab}
         </section>
     </div>`
 
@@ -38,13 +77,27 @@ function widget() {
 
     return app
 
-    function handleClickEvent(msg) {
-        const {page, from} = msg
-        recipients['logs']({page, from, flow: 'button', type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 41})
+    function handleClickEvent({page, from, flow}) {
+        const role = flow.split('-')[1]
+        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 80})
+        if (role === 'tab') return handleTabEvent(page, from, role)
+    }
+
+    function handleTabEvent(page, from, flow) {
+        const tabs = [...demoTab.children]
+        tabs.map( tab => {
+            if (from === tab.dataset.name) {
+                recipients[from]({from, flow, type: 'active'})
+                recipients['logs']({page, from, flow, type: 'active', body: 'tab event', fn: 'handleTabEvent', file, line: 89})
+            } else {
+                recipients[tab.dataset.name]({from: tab.dataset.name, flow, type: 'inactive'})
+                recipients['logs']({page, from: tab.dataset.name, flow, type: 'inactive', body: 'tab event', fn: 'handleTabEvent', file, line: 92})
+            }
+        })
     }
 
     function get (msg) {
-        const { page, from, flow, type, body } = msg
+        const { type } = msg
         recipients['logs'](msg)
         if (type === 'click') return handleClickEvent(msg)
     }
@@ -67,6 +120,8 @@ const css = csjs`
     --color-deep-black: 222, 18%, 11%;
     --color-blue: 214, var(--r);
     --color-red: 358, 99%, 53%;
+    --color-amaranth-pink: 331, 86%, 78%;
+    --color-persian-rose: 323, 100%, 56%;
     --color-orange: 35, 100%, 58%;
     --color-deep-saffron: 31, 100%, 56%;
     --color-ultra-red: 348, 96%, 71%;
@@ -177,6 +232,10 @@ body {
     background-color: var(--color-white);
     height: 100%;
     overflow: hidden auto;
+}
+.tabs {
+    display: grid;
+    grid-auto-flow: column;
 }
 @media (max-width: 768px) {
     [data-state="debug"] {
@@ -1987,102 +2046,160 @@ const bel = require('bel')
 const file = require('path').basename(__filename)
 const styleSheet = require('supportCSSStyleSheet')
 
-module.exports = widget
+module.exports = ibutton
 
-function widget (option, protocol) {
-    const {page, flow = 'ui-button', name, iconLeft, iconRight, content = 'Button', role = 'button', state, isCurrent, isActive, isDisabled = false} = option
-    const sender = protocol( get )
-    sender({page, from: name, flow, type: 'ready', file, fn: 'widget', line: 10})
+function ibutton (option, protocol) {
+    const {page, flow = 'ui-button', name, iconLeft, iconRight, body = 'Button', role = 'button', state, isCurrent = false, isSelected = false, isActive = false, isDisabled, theme} = option
     let current = isCurrent
     let active = isActive
     let disabled = isDisabled
-    const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handleClick(button)}">${iconLeft && iconLeft}${content}${iconRight && iconRight}</button>`
-    const ibutton = document.createElement('i-button')
-    // define conditions
-    if (state) {
-        button.dataset.state = state
-        button.ariaLive = 'assertive'
-    }
-    if (role === 'tab') {
-        button.ariaSelected = false
-        button.ariaCurrent = false
-    }
-    if (role === 'toggle') {
-        button.ariaActive = false
-    }
-    if (isDisabled) {
-        button.ariaDisabled = isDisabled
-        button.disabled = true
-    }
-    const root = ibutton.attachShadow({mode: 'closed'})
+    let selected = isSelected
+    function widget () {
+        const sender = protocol( get )
+        sender({page, from: name, flow, type: 'ready', file, fn: 'ibutton', line: 10})
+        const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handleClick(button)}">${iconLeft && iconLeft}${body}${iconRight && iconRight}</button>`
+        const el = document.createElement('i-button')
+        el.dataset.name = name
+        el.dataset.ui = role
+        el.dataset.current = isCurrent
+        const root = el.attachShadow({mode: 'closed'})
+        styleSheet(root, style)
+        root.append(button)
 
-    styleSheet(root, style)
-    root.append(button)
+        // define conditions
+        if (state) {
+            button.dataset.state = state
+            button.ariaLive = 'assertive'
+        }
+        if (role === 'tab') {
+            button.ariaSelected = false
+        }
+        if (role === 'toggle') {
+            if (isActive) button.setAttribute('aria-active', isActive)
+            else button.setAttribute('aria-active', isActive)
+        }
+        if (isDisabled) {
+            button.ariaDisabled = isDisabled
+            button.disabled = true
+        } else {
+            button.removeAttribute('aria-disabled')
+            button.removeAttribute('disabled')
+        }
+        if (isActive) {
+            button.setAttribute('aria-active', isActive)
+        }
+        if (isCurrent) {
+            button.ariaCurrent = isCurrent
+            button.ariaSelected = true
+        }
+        if (isSelected) {
+            button.ariaSelected = isSelected
+        }
+        return el
+
+        function activeEvent() {
+            current = true
+            button.ariaSelected = true
+            button.setAttribute('aria-current', true)
+            el.dataset.current = current
+        }
+        function inactivedEvent() {
+            current = false
+            button.ariaSelected = false
+            button.removeAttribute('aria-current')
+            el.dataset.current = current
+        }
+        function handleClick(target) {
+            if (current) return
+            sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handleClick', file, line: 68})
+        }
+        function get (msg) {
+            const { type } = msg
+            if (type === 'active') return activeEvent()
+            if (type === 'inactive') return inactivedEvent()
+        }
+    }
+   
+    // insert CSS style
+    const customStyle = theme ? theme.style : ''
+    // set CSS variables
+    if (theme && theme.props) {
+        var {size, color, bgColor, sizeHover, colorHover, bgColorHover, currentColor, currentBgColor, borderWidth, borderStyle, borderOpacity, borderColor, borderColorHover, borderRadius, padding, width, height, opacity } = theme.props
+    }
     
-    return ibutton
-
-    function handleClick(target) {
-        sender({page, from: name, flow: 'ui-button', type: 'click', fn: 'handleClick', file, line: 40})
+    const style = `
+    :host(i-button) button {
+        --size: ${size ? size : 'var(--size12)'};
+        --color: ${color ? color : 'var(--color-black)'};
+        --bgColor: ${bgColor ? bgColor : 'var(--color-white)'};
+        --width: ${width ? width : 'unset'};
+        --height: ${height ? height : 'unset'};
+        --opacity: ${opacity ? opacity : '1'};
+        --padding: ${padding ? padding : '12px'};
+        --borderWidth: ${borderWidth ? borderWidth : '0px'};
+        --borderStyle: ${borderStyle ? borderStyle : 'solid'};
+        --borderColor: ${borderColor ? borderColor : 'var(--color-black)'};
+        --borderOpacity: ${borderOpacity ? borderOpacity : '1'};
+        --border: var(--borderWidth) var(--borderStyle) hsla( var(--borderColor), var(--borderOpacity) );
+        --borderRadius: ${borderRadius ? borderRadius : '8px'};
+        display: grid;
+        grid-auto-flow: column;
+        grid-column-gap: 5px;
+        justify-content: center;
+        align-items: center;
+        ${width && 'width: var(--width)'};
+        ${height && 'height: var(--height)'};
+        color: hsl( var(--color) );
+        background-color: hsla( var(--bgColor), var(--opacity) );
+        border: var(--border);
+        border-radius: var(--borderRadius);
+        padding: var(--padding);
+        transition: color .25s, background-color .25s ease-in-out;
+        cursor: pointer;
     }
-    
-    function get (msg) {
-        const { from, type, state } = msg
+    :host(i-button) button:hover {
+        --size: ${sizeHover ? sizeHover : 'inherit'};
+        --color: ${colorHover ? colorHover : 'var(--color-white)'};
+        --bgColor: ${bgColorHover ? bgColorHover : 'var(--color-black)'};
+        --borderColor: ${borderColorHover ? borderColorHover : 'var(-color-black)'};
     }
-    
+    :host(i-button) button > span {
+    }
+    :host(i-button) button > span svg {
+        width: 100%;
+        height: auto;
+    }
+    :host(i-button) [role="button"] {
 
-    // if theme is entering as a property then set apply CSS styles
-    // if (theme) 
-    //     var {
-    //         width, minWidth, maxWidth, 
-    //         height, minHeight, maxHeight, 
-    //         fontFamily, fontSize, fontWeight, 
-    //         textAlign, textTransform,
-    //         borderWidth,  borderColor, borderStyle,
-    //         padding, borderRadius, 
-    //         color, bgColor, colorHover, bgColorHover, colorActive, bgColorActive,
-    //         colorDisabled, bgColorDisabled,
-    //         bgImage, bgImageHover, bgImageActive,
-    //         boxShadow, position, zIndex, top, bottom, left, right, cursor,
-    //         iconSize, iconFillColor, iconStrokeColor
-    //     } = theme
-}
+    }
+    :host(i-button) [role="tab"] {
+        --width: ${width ? width : '100%'};
+        --color: ${color ? color : 'var(--primary-color)'};
+        --bgColor: ${bgColor ? bgcolor : 'var(--color-white)'};
+        --borderRadius: ${borderRadius ? borderRadius : '0'};
+        --borderWidth: ${borderWidth ? borderWidth : '0'};
+        --borderStyle: ${borderStyle ? borderStyle : 'solid'};
+        --borderColor: ${borderColor ? borderColor : 'var(--primary-color)'};
+        width: var(--width);
+    }
+    :host(i-button) [aria-current="true"] {
+        --color: ${currentColor ? currentColor : 'var(--color-white)'};
+        --bgColor: ${currentBgColor ? currentBgColor : 'var(--primary-color)'};
+    }
+    :host(i-button) button[disabled]  {
+        --color: ${color ? color : 'var(--color-dark)'};
+        --bgColor: ${bgColor ? bgColor : 'var(--color-white)'};
+        --colorOpacity: .6;
+        --bgColorOpacity: .3;
+        color: hsla( var(--color), var(--colorOpacity));
+        background-color: hsla( var(--bgColor), var(--bgColorOpacity));
+        cursor: not-allowed;
+    }
+    ${customStyle}
+    `
 
-const style = `
-:host(i-button) button {
-    --size: var(--size12);
-    --color: var(--color-black);
-    --bgColor: var(--color-white);
-    display: grid;
-    grid-auto-flow: column;
-    grid-column-gap: 5px;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    color: hsl( var(--color) );
-    background-color: hsl( var(--bgColor) );
-    border: none;
-    border-radius: 8px;
-    padding: 12px;
-    transition: color .25s, background-color .25s ease-in-out;
-    cursor: pointer;
+    return widget()
 }
-:host(i-button) button:hover {
-    --color: var(--color-white);
-    --bgColor: var(--color-black);
-}
-:host(i-button) button > span {
-}
-:host(i-button) button > span svg {
-    width: 100%;
-    height: auto;
-}
-:host(i-button) [role="button"] {
-
-}
-:host(i-button) [role="tab"] {
-
-}
-`
 }).call(this)}).call(this,"/src/index.js")
 },{"bel":3,"path":29,"supportCSSStyleSheet":32}],32:[function(require,module,exports){
 arguments[4][25][0].apply(exports,arguments)

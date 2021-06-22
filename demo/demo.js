@@ -13,13 +13,52 @@ function widget() {
     // icons
     let iconCancel = svg({css: css.icon, path: 'assets/cancel.svg'})
     let iconConfirm = svg({css: css.icon, path: 'assets/check.svg'})
+    // buttons
+    const Default = new button({name: 'default', body: 'Default', theme: { 
+        style: `
+        
+        `, 
+        props: {
+            // borderWidth: '2px',
+            // borderStyle: 'dashed',
+            // borderColor: 'var(--color-yellow)',
+            // colorHover: 'var(--color-white)',
+            sizeHover: 'var(--size16)',
+            bgColorHover: 'var(--color-black)',
+        }
+
+    }}, protocol('default'))
+    
+    const Disabled = new button({name: 'disable', body: 'Disable', isDisabled: true, theme: {
+        // style: `
+        // :host(i-button) button[disabled] {
+        //     --colorOpacity: 1;
+        //     --bgColorOpacity: 0.2;
+        // }
+        // `,
+        props: {
+            // bgColor: 'var(--color-slimy-green)'
+        }
+    }}, protocol('disable'))
+
+    const Tab1 = new button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', isCurrent: true}, protocol('tab1'))
+    const Tab2 = new button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab'}, protocol('tab2'))
+    const Tab3 = new button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab'}, protocol('tab3'))
+    const demoTab = bel`
+    <nav class=${css.tabs}>
+        ${Tab1}${Tab2}${Tab3}
+    </nav>`
 
     // content
     const content = bel`
     <div class=${css.content}>
         <section>
             <h2>Button</h2>
-            ${button({name: 'default', content: 'Default'}, protocol('default'))}
+            ${Default}${Disabled}
+        </section>
+        <section>
+            <h2>Tab</h2>
+            ${demoTab}
         </section>
     </div>`
 
@@ -36,13 +75,27 @@ function widget() {
 
     return app
 
-    function handleClickEvent(msg) {
-        const {page, from} = msg
-        recipients['logs']({page, from, flow: 'button', type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 41})
+    function handleClickEvent({page, from, flow}) {
+        const role = flow.split('-')[1]
+        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 80})
+        if (role === 'tab') return handleTabEvent(page, from, role)
+    }
+
+    function handleTabEvent(page, from, flow) {
+        const tabs = [...demoTab.children]
+        tabs.map( tab => {
+            if (from === tab.dataset.name) {
+                recipients[from]({from, flow, type: 'active'})
+                recipients['logs']({page, from, flow, type: 'active', body: 'tab event', fn: 'handleTabEvent', file, line: 89})
+            } else {
+                recipients[tab.dataset.name]({from: tab.dataset.name, flow, type: 'inactive'})
+                recipients['logs']({page, from: tab.dataset.name, flow, type: 'inactive', body: 'tab event', fn: 'handleTabEvent', file, line: 92})
+            }
+        })
     }
 
     function get (msg) {
-        const { page, from, flow, type, body } = msg
+        const { type } = msg
         recipients['logs'](msg)
         if (type === 'click') return handleClickEvent(msg)
     }
@@ -65,6 +118,8 @@ const css = csjs`
     --color-deep-black: 222, 18%, 11%;
     --color-blue: 214, var(--r);
     --color-red: 358, 99%, 53%;
+    --color-amaranth-pink: 331, 86%, 78%;
+    --color-persian-rose: 323, 100%, 56%;
     --color-orange: 35, 100%, 58%;
     --color-deep-saffron: 31, 100%, 56%;
     --color-ultra-red: 348, 96%, 71%;
@@ -175,6 +230,10 @@ body {
     background-color: var(--color-white);
     height: 100%;
     overflow: hidden auto;
+}
+.tabs {
+    display: grid;
+    grid-auto-flow: column;
 }
 @media (max-width: 768px) {
     [data-state="debug"] {
