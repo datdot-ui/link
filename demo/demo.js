@@ -2,22 +2,18 @@ const bel = require('bel')
 const csjs = require('csjs-inject')
 const file = require('path').basename(__filename)
 const button = require('..')
-const svg = require('datdot-ui-graphic')
+// datdot-ui dependences
 const logs = require('datdot-ui-logs')
+const Icon = require('datdot-ui-icon')
 
 function widget() {
     // save protocol callbacks
     let recipients = []
      // logs must be initialized first before components
      const logList = logs(protocol('logs'))
-    // icons
-    let iconCancel = svg({css: css.icon, path: 'assets/cancel.svg'})
-    let iconConfirm = svg({css: css.icon, path: 'assets/check.svg'})
     // buttons
-    const Default = new button({name: 'default', body: 'Default', theme: { 
-        style: `
-        
-        `, 
+    const Default = button({name: 'default', body: 'Default', theme: { 
+        style: ` `, 
         props: {
             // borderWidth: '2px',
             // borderStyle: 'dashed',
@@ -28,8 +24,8 @@ function widget() {
         }
 
     }}, protocol('default'))
-    
-    const Disabled = new button({name: 'disable', body: 'Disable', isDisabled: true, theme: {
+
+    const Disabled = button({name: 'disable', body: 'Disable', isDisabled: true, theme: {
         // style: `
         // :host(i-button) button[disabled] {
         //     --colorOpacity: 1;
@@ -41,20 +37,72 @@ function widget() {
         }
     }}, protocol('disable'))
 
-    const Tab1 = new button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', isCurrent: true}, protocol('tab1'))
-    const Tab2 = new button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab'}, protocol('tab2'))
-    const Tab3 = new button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab'}, protocol('tab3'))
+    const Toggle = button({name: 'toggle', body: 'Toggle', role: 'switch', isChecked: false, theme : {
+        style: ``,
+        props: {
+
+        }
+    }}, protocol('toggle'))
+
+    // Tab element
+    const Tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', isCurrent: true}, protocol('tab1'))
+    const Tab2 = button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab'}, protocol('tab2'))
+    const Tab3 = button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab'}, protocol('tab3'))
     const demoTab = bel`
     <nav class=${css.tabs}>
         ${Tab1}${Tab2}${Tab3}
     </nav>`
 
+    // Use icon
+    // icons
+    let iconCancel = Icon({name: 'cross', path: 'assets', isRoot: false})
+    let iconConfirm = Icon({name: 'check', path: 'assets', isRoot: false})
+    let iconPrevious = Icon({name: 'arrow-left', path: 'assets', isRoot: false})
+    let iconNext = Icon({name: 'arrow-right', path: 'assets', isRoot: false})
+    // buttons
+    const cancel = button({name: 'cancel', body: iconCancel, theme: {
+        style: ``,
+        props: {
+            iconFill: 'var(--color-red)',
+            bgColorHover: 'var(--color-flame)'
+        }
+    }}, protocol('cancel'))
+    const confirm = button({name: 'confirm', body: iconConfirm, theme: {
+        props: {
+            iconFill: 'var(--color-green)',
+            bgColorHover: 'var(--color-lincoln-green)',
+            iconFillHover: 'var(--color-light-green)'
+        }
+    }}, protocol('confirm'))
+    const previous = button({name: 'previous', body: bel`<div class="col2 icon-left"><span>Previous</span>${iconPrevious}</div>`, theme: {
+        style: ``,
+        // props: {
+        //     iconFill: 'var(--color-red)',
+        //     iconFillHover: 'var(--color-dodger-blue)'
+        // }
+    }}, protocol('previous'))
+    const next = button({name: 'next', body: bel`<div class="col2 icon-right"><span>Next</span>${iconNext}</div>`, theme: {
+        // props: {
+        //     iconFill: 'var(--color-green)',
+        //     iconFillHover: 'var(--color-bright-yellow-crayola)'
+        // }
+    }}, protocol('next'))
+
     // content
     const content = bel`
     <div class=${css.content}>
         <section>
-            <h2>Button</h2>
-            ${Default}${Disabled}
+            <h2>Text</h2>
+            <div class=${css.text}>
+                ${Default}${Disabled}${Toggle}
+            </div>
+        </section>
+        <section>
+            <h2>Icon</h2>
+            <div class=${css.icon}>
+                ${cancel}${confirm}
+                ${previous}${next}
+            </div>
         </section>
         <section>
             <h2>Tab</h2>
@@ -75,23 +123,27 @@ function widget() {
 
     return app
 
-    function handleClickEvent({page, from, flow}) {
+    function handleClickEvent({page, from, flow, body}) {
         const role = flow.split('-')[1]
-        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 80})
+        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 86})
         if (role === 'tab') return handleTabEvent(page, from, role)
+        if (role === 'switch') return handleToggleEvent(page, from, role, body)
     }
 
     function handleTabEvent(page, from, flow) {
         const tabs = [...demoTab.children]
         tabs.map( tab => {
-            if (from === tab.dataset.name) {
-                recipients[from]({from, flow, type: 'active'})
-                recipients['logs']({page, from, flow, type: 'active', body: 'tab event', fn: 'handleTabEvent', file, line: 89})
-            } else {
-                recipients[tab.dataset.name]({from: tab.dataset.name, flow, type: 'inactive'})
-                recipients['logs']({page, from: tab.dataset.name, flow, type: 'inactive', body: 'tab event', fn: 'handleTabEvent', file, line: 92})
-            }
+            let current = from === tab.dataset.name ? from : tab.dataset.name
+            let type = from === tab.dataset.name ? 'checked' : 'unchecked'
+            recipients[current]({from: current, flow, type})
+            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handleTabEvent', file, line: 97})
         })
+    }
+
+    function handleToggleEvent(page, from, flow, body) {
+        const type = body ? 'unchecked' : 'checked'
+        recipients[from]({page, from, type})
+        recipients['logs']({page, from, flow, type, body: 'toggle event', fn: 'handleToggleEvent', file, line: 105})
     }
 
     function get (msg) {
@@ -129,9 +181,13 @@ const css = csjs`
     --color-slate-blue: 248, 56%, 59%;
     --color-blue-jeans: 204, 96%, 61%;
     --color-dodger-blue: 213, 90%, 59%;
+    --color-light-green: 127, 86%, 77%;
+    --color-lime-green: 127, 100%, 40%;
     --color-slimy-green: 108, 100%, 28%;
     --color-maximum-blue-green: 180, 54%, 51%;
-    --color-green-pigment: 136, 81%, 34%;
+    --color-green: 136, 81%, 34%;
+    --color-light-green: 97, 86%, 77%;
+    --color-lincoln-green: 97, 100%, 18%;
     --color-yellow: 44, 100%, 55%;
     --color-chrome-yellow: 39, var(--r);
     --color-bright-yellow-crayola: 35, 100%, 58%;
@@ -151,7 +207,6 @@ const css = csjs`
     --color-greyED: var(--b), 93%;
     --color-greyEF: var(--b), 94%;
     --color-greyF2: var(--b), 95%;
-    --color-green: 136, 81%, 34%;
     --transparent: transparent;
     --define-font: *---------------------------------------------*;
     --snippet-font: Segoe UI Mono, Monospace, Cascadia Mono, Courier New, ui-monospace, Liberation Mono, Menlo, Monaco, Consolas;
@@ -200,8 +255,15 @@ body {
 .wrap {
     display: grid;
 }
-.content {
-    
+.content {}
+.text, .icon {
+    display: flex;
+}
+.text i-button {
+    margin-right: 10px;
+}
+.icon i-button {
+    margin-right: 10px;
 }
 [data-state="view"] {
     height: 100%;

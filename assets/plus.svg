@@ -5,9 +5,6 @@
     </clipPath>
   </defs>
   <g id="plus" clip-path="url(#clip-plus)">
-    <g id="Group_2067" data-name="Group 2067" transform="translate(2 2)">
-      <path id="Path_333" data-name="Path 333" d="M1111.829-376.248h12" transform="translate(-1111.829 382.481)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="2"/>
-      <path id="Path_334" data-name="Path 334" d="M1122.674-387.623v12" transform="translate(-1116.657 387.623)" fill="none" stroke="#000" stroke-linecap="round" stroke-width="2"/>
-    </g>
+    <path id="plus-2" data-name="plus" d="M6.017,13V8.233H1a1,1,0,1,1,0-2H6.017V1a1,1,0,0,1,2,0V6.233H13a1,1,0,1,1,0,2H8.017V13a1,1,0,1,1-2,0Z" transform="translate(1 1)"/>
   </g>
 </svg>

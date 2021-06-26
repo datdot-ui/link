@@ -5,8 +5,6 @@
     </clipPath>
   </defs>
   <g id="check" clip-path="url(#clip-check)">
-    <g id="checked" transform="translate(2 4)">
-      <path id="Path_1779" data-name="Path 1779" d="M5240.5,12190.582l3.84,4.923,8.16-9" transform="translate(-5240.5 -12186.505)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-    </g>
+    <path id="check-2" data-name="check" d="M5244.34,12196.5h-.037a1,1,0,0,1-.751-.384l-3.84-4.923a1,1,0,0,1,1.577-1.23l3.109,3.986,7.362-8.12a1,1,0,1,1,1.481,1.344l-8.16,9A1,1,0,0,1,5244.34,12196.5Z" transform="translate(-5238.5 -12182.505)"/>
   </g>
 </svg>

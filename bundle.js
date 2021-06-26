@@ -4,22 +4,18 @@ const bel = require('bel')
 const csjs = require('csjs-inject')
 const file = require('path').basename(__filename)
 const button = require('..')
-const svg = require('datdot-ui-graphic')
+// datdot-ui dependences
 const logs = require('datdot-ui-logs')
+const Icon = require('datdot-ui-icon')
 
 function widget() {
     // save protocol callbacks
     let recipients = []
      // logs must be initialized first before components
      const logList = logs(protocol('logs'))
-    // icons
-    let iconCancel = svg({css: css.icon, path: 'assets/cancel.svg'})
-    let iconConfirm = svg({css: css.icon, path: 'assets/check.svg'})
     // buttons
-    const Default = new button({name: 'default', body: 'Default', theme: { 
-        style: `
-        
-        `, 
+    const Default = button({name: 'default', body: 'Default', theme: { 
+        style: ` `, 
         props: {
             // borderWidth: '2px',
             // borderStyle: 'dashed',
@@ -30,8 +26,8 @@ function widget() {
         }
 
     }}, protocol('default'))
-    
-    const Disabled = new button({name: 'disable', body: 'Disable', isDisabled: true, theme: {
+
+    const Disabled = button({name: 'disable', body: 'Disable', isDisabled: true, theme: {
         // style: `
         // :host(i-button) button[disabled] {
         //     --colorOpacity: 1;
@@ -43,20 +39,72 @@ function widget() {
         }
     }}, protocol('disable'))
 
-    const Tab1 = new button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', isCurrent: true}, protocol('tab1'))
-    const Tab2 = new button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab'}, protocol('tab2'))
-    const Tab3 = new button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab'}, protocol('tab3'))
+    const Toggle = button({name: 'toggle', body: 'Toggle', role: 'switch', isChecked: false, theme : {
+        style: ``,
+        props: {
+
+        }
+    }}, protocol('toggle'))
+
+    // Tab element
+    const Tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', isCurrent: true}, protocol('tab1'))
+    const Tab2 = button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab'}, protocol('tab2'))
+    const Tab3 = button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab'}, protocol('tab3'))
     const demoTab = bel`
     <nav class=${css.tabs}>
         ${Tab1}${Tab2}${Tab3}
     </nav>`
 
+    // Use icon
+    // icons
+    let iconCancel = Icon({name: 'cross', path: 'assets', isRoot: false})
+    let iconConfirm = Icon({name: 'check', path: 'assets', isRoot: false})
+    let iconPrevious = Icon({name: 'arrow-left', path: 'assets', isRoot: false})
+    let iconNext = Icon({name: 'arrow-right', path: 'assets', isRoot: false})
+    // buttons
+    const cancel = button({name: 'cancel', body: iconCancel, theme: {
+        style: ``,
+        props: {
+            iconFill: 'var(--color-red)',
+            bgColorHover: 'var(--color-flame)'
+        }
+    }}, protocol('cancel'))
+    const confirm = button({name: 'confirm', body: iconConfirm, theme: {
+        props: {
+            iconFill: 'var(--color-green)',
+            bgColorHover: 'var(--color-lincoln-green)',
+            iconFillHover: 'var(--color-light-green)'
+        }
+    }}, protocol('confirm'))
+    const previous = button({name: 'previous', body: bel`<div class="col2 icon-left"><span>Previous</span>${iconPrevious}</div>`, theme: {
+        style: ``,
+        // props: {
+        //     iconFill: 'var(--color-red)',
+        //     iconFillHover: 'var(--color-dodger-blue)'
+        // }
+    }}, protocol('previous'))
+    const next = button({name: 'next', body: bel`<div class="col2 icon-right"><span>Next</span>${iconNext}</div>`, theme: {
+        // props: {
+        //     iconFill: 'var(--color-green)',
+        //     iconFillHover: 'var(--color-bright-yellow-crayola)'
+        // }
+    }}, protocol('next'))
+
     // content
     const content = bel`
     <div class=${css.content}>
         <section>
-            <h2>Button</h2>
-            ${Default}${Disabled}
+            <h2>Text</h2>
+            <div class=${css.text}>
+                ${Default}${Disabled}${Toggle}
+            </div>
+        </section>
+        <section>
+            <h2>Icon</h2>
+            <div class=${css.icon}>
+                ${cancel}${confirm}
+                ${previous}${next}
+            </div>
         </section>
         <section>
             <h2>Tab</h2>
@@ -77,23 +125,27 @@ function widget() {
 
     return app
 
-    function handleClickEvent({page, from, flow}) {
+    function handleClickEvent({page, from, flow, body}) {
         const role = flow.split('-')[1]
-        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 80})
+        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 86})
         if (role === 'tab') return handleTabEvent(page, from, role)
+        if (role === 'switch') return handleToggleEvent(page, from, role, body)
     }
 
     function handleTabEvent(page, from, flow) {
         const tabs = [...demoTab.children]
         tabs.map( tab => {
-            if (from === tab.dataset.name) {
-                recipients[from]({from, flow, type: 'active'})
-                recipients['logs']({page, from, flow, type: 'active', body: 'tab event', fn: 'handleTabEvent', file, line: 89})
-            } else {
-                recipients[tab.dataset.name]({from: tab.dataset.name, flow, type: 'inactive'})
-                recipients['logs']({page, from: tab.dataset.name, flow, type: 'inactive', body: 'tab event', fn: 'handleTabEvent', file, line: 92})
-            }
+            let current = from === tab.dataset.name ? from : tab.dataset.name
+            let type = from === tab.dataset.name ? 'checked' : 'unchecked'
+            recipients[current]({from: current, flow, type})
+            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handleTabEvent', file, line: 97})
         })
+    }
+
+    function handleToggleEvent(page, from, flow, body) {
+        const type = body ? 'unchecked' : 'checked'
+        recipients[from]({page, from, type})
+        recipients['logs']({page, from, flow, type, body: 'toggle event', fn: 'handleToggleEvent', file, line: 105})
     }
 
     function get (msg) {
@@ -131,9 +183,13 @@ const css = csjs`
     --color-slate-blue: 248, 56%, 59%;
     --color-blue-jeans: 204, 96%, 61%;
     --color-dodger-blue: 213, 90%, 59%;
+    --color-light-green: 127, 86%, 77%;
+    --color-lime-green: 127, 100%, 40%;
     --color-slimy-green: 108, 100%, 28%;
     --color-maximum-blue-green: 180, 54%, 51%;
-    --color-green-pigment: 136, 81%, 34%;
+    --color-green: 136, 81%, 34%;
+    --color-light-green: 97, 86%, 77%;
+    --color-lincoln-green: 97, 100%, 18%;
     --color-yellow: 44, 100%, 55%;
     --color-chrome-yellow: 39, var(--r);
     --color-bright-yellow-crayola: 35, 100%, 58%;
@@ -153,7 +209,6 @@ const css = csjs`
     --color-greyED: var(--b), 93%;
     --color-greyEF: var(--b), 94%;
     --color-greyF2: var(--b), 95%;
-    --color-green: 136, 81%, 34%;
     --transparent: transparent;
     --define-font: *---------------------------------------------*;
     --snippet-font: Segoe UI Mono, Monospace, Cascadia Mono, Courier New, ui-monospace, Liberation Mono, Menlo, Monaco, Consolas;
@@ -202,8 +257,15 @@ body {
 .wrap {
     display: grid;
 }
-.content {
-    
+.content {}
+.text, .icon {
+    display: flex;
+}
+.text i-button {
+    margin-right: 10px;
+}
+.icon i-button {
+    margin-right: 10px;
 }
 [data-state="view"] {
     height: 100%;
@@ -254,7 +316,7 @@ body {
 
 document.body.append( widget() )
 }).call(this)}).call(this,"/demo/demo.js")
-},{"..":31,"bel":3,"csjs-inject":6,"datdot-ui-graphic":23,"datdot-ui-logs":24,"path":29}],2:[function(require,module,exports){
+},{"..":33,"bel":3,"csjs-inject":6,"datdot-ui-icon":23,"datdot-ui-logs":26,"path":31}],2:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
 var trailingSpaceRegex = /[\s]+$/
@@ -488,7 +550,7 @@ module.exports = hyperx(belCreateElement, {comments: true})
 module.exports.default = module.exports
 module.exports.createElement = belCreateElement
 
-},{"./appendChild":2,"hyperx":27}],4:[function(require,module,exports){
+},{"./appendChild":2,"hyperx":29}],4:[function(require,module,exports){
 (function (global){(function (){
 'use strict';
 
@@ -507,7 +569,7 @@ function csjsInserter() {
 module.exports = csjsInserter;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"csjs":9,"insert-css":28}],5:[function(require,module,exports){
+},{"csjs":9,"insert-css":30}],5:[function(require,module,exports){
 'use strict';
 
 module.exports = require('csjs/get-css');
@@ -985,34 +1047,103 @@ function scopify(css, ignores) {
 }
 
 },{"./regex":19,"./replace-animations":20,"./scoped-name":21}],23:[function(require,module,exports){
+const styleSheet = require('supportCSSStyleSheet')
+const svg = require('svg')
+
+module.exports = ({name, path, isRoot = true, theme}) => {
+    const url = path ? path : './src/svg'
+    const symbol = svg(`${url}/${name}.svg`)
+    // if not use shadowDOM return icon that support hover effect
+    if (!isRoot) return symbol
+
+    /* use closed mode of shadwoDOM is not allowed to catch shadowDOM elemnt, 
+       and any element cannot support customizing :hover style when parent triggered hover
+    */
+    function layout(style) {
+        const icon = document.createElement('i-icon')
+        const root = icon.attachShadow({mode: 'closed'})
+        const slot = document.createElement('slot')
+        slot.name = 'icon'
+        styleSheet(root, style)
+        slot.append(symbol)
+        root.append(slot)
+        return icon
+    }
+    // insert CSS style
+    const customStyle = theme ? theme.style : ''
+    // set CSS variables
+    if (theme && theme.props) {
+        var { fill, size } = theme.props
+    }
+    const style = `
+    :host(i-icon) {
+        --size: ${size ? size : '20px'};
+        --fill: ${fill ? fill : 'var(--primary-color)'};
+        display: block;
+    }
+    slot[name='icon'] {
+        display: grid;
+        justify-content: center;
+        align-items: center;
+    }
+    slot[name='icon'] span {
+        display: block;
+        width: var(--size);
+        height: var(--size);
+    }
+    slot[name='icon'] svg {
+        width: 100%;
+        height: auto;
+    }
+    slot[name='icon'] g {
+        fill: hsl(var(--fill));
+        transition: fill .3s ease-in-out;
+    }
+    ${customStyle}
+    `
+    return layout(style)
+}
+
+},{"supportCSSStyleSheet":24,"svg":25}],24:[function(require,module,exports){
+module.exports = supportCSSStyleSheet
+function supportCSSStyleSheet (root, style) {
+    return (() => {
+        try {
+            const sheet = new CSSStyleSheet()
+            sheet.replaceSync(style)
+            root.adoptedStyleSheets = [sheet]
+            return true 
+        } catch (error) { 
+            const injectStyle = `<style>${style}</style>`
+            root.innerHTML = `${injectStyle}`
+            return false
+        }
+    })()
+}
+},{}],25:[function(require,module,exports){
 module.exports = svg
 
-function svg(opts) {
-    var { css = null, path }  = opts
-    
-    const el = document.createElement('div')
+function svg(path) {
+    const el = document.createElement('span')
     
     async function load(done) {
         const res = await fetch(path)
         const parse = document.createElement('div')
 
         if (res.status == 200) {
-            let graphic = await res.text()
-            parse.innerHTML = graphic
+            let data = await res.text()
+            parse.innerHTML = data
             return done(null, parse.children[0])
         }
         throw new Error(res.status)
     }
-
     load((err, svg) => {
         if (err) console.error(err)
-        if (css) el.className = css
         el.append(svg)
     })
-    
     return el
 }   
-},{}],24:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 (function (__filename){(function (){
 const styleSheet = require('supportCSSStyleSheet')
 const bel = require('bel')
@@ -1154,9 +1285,9 @@ const style = `
     --opacity: 1;
 }
 :host(i-log) [aria-type="triggered"] {
-    --color: var(--color-dark);
+    --color: var(--color-white);
     --bgColor: var(--color-blue-jeans);
-    --opacity: 1;
+    --opacity: .5;
 }
 :host(i-log) [aria-type="opened"] {
     --bgColor: var(--color-slate-blue);
@@ -1176,6 +1307,25 @@ const style = `
     --bgColor: var(--color-deep-saffron);
     --opacity: 1;
 }
+:host(i-log) [aria-type="checked"] {
+    --color: var(--color-dark);
+    --bgColor: var(--color-blue-jeans);
+    --opacity: 1;
+}
+:host(i-log) [aria-type="unchecked"] {
+    --bgColor: var(--color-blue-jeans);
+    --opacity: .3;
+}
+:host(i-log) [aria-type="selected"] {
+    --color: var(--color-dark);
+    --bgColor: var(--color-lime-green);
+    --opacity: 1;
+}
+:host(i-log) [aria-type="unselected"] {
+    --bgColor: var(--color-lime-green);
+    --opacity: .25;
+}
+
 :host(i-log) log-list .list:last-child [aria-type="ready"] {
     --bgColor: var(--color-deep-black);
     --opacity: 0.3;
@@ -1190,23 +1340,9 @@ const style = `
 :host(i-log) [aria-label="demo"] {}
 `
 }).call(this)}).call(this,"/node_modules/datdot-ui-logs/src/index.js")
-},{"bel":3,"path":29,"supportCSSStyleSheet":25}],25:[function(require,module,exports){
-module.exports = supportCSSStyleSheet
-function supportCSSStyleSheet (root, style) {
-    return (() => {
-        try {
-            const sheet = new CSSStyleSheet()
-            sheet.replaceSync(style)
-            root.adoptedStyleSheets = [sheet]
-            return true 
-        } catch (error) { 
-            const injectStyle = `<style>${style}</style>`
-            root.innerHTML = `${injectStyle}`
-            return false
-        }
-    })()
-}
-},{}],26:[function(require,module,exports){
+},{"bel":3,"path":31,"supportCSSStyleSheet":27}],27:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"dup":24}],28:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -1227,7 +1363,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],27:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -1524,7 +1660,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":26}],28:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":28}],30:[function(require,module,exports){
 var inserted = {};
 
 module.exports = function (css, options) {
@@ -1548,7 +1684,7 @@ module.exports = function (css, options) {
     }
 };
 
-},{}],29:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 (function (process){(function (){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -1854,7 +1990,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this)}).call(this,require('_process'))
-},{"_process":30}],30:[function(require,module,exports){
+},{"_process":32}],32:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2040,7 +2176,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],31:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 (function (__filename){(function (){
 const bel = require('bel')
 const file = require('path').basename(__filename)
@@ -2049,19 +2185,19 @@ const styleSheet = require('supportCSSStyleSheet')
 module.exports = ibutton
 
 function ibutton (option, protocol) {
-    const {page, flow = 'ui-button', name, iconLeft, iconRight, body = 'Button', role = 'button', state, isCurrent = false, isSelected = false, isActive = false, isDisabled, theme} = option
+    const {page, flow = 'ui-button', name, body, role = 'button', reverse = 'right',  state, isCurrent = false, isSelected, isChecked, isDisabled, theme} = option
     let current = isCurrent
-    let active = isActive
+    let checked = isChecked
     let disabled = isDisabled
     let selected = isSelected
+
     function widget () {
         const sender = protocol( get )
         sender({page, from: name, flow, type: 'ready', file, fn: 'ibutton', line: 10})
-        const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handleClick(button)}">${iconLeft && iconLeft}${body}${iconRight && iconRight}</button>`
+        const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handleClick()}">${body}</button>`
         const el = document.createElement('i-button')
         el.dataset.name = name
         el.dataset.ui = role
-        el.dataset.current = isCurrent
         const root = el.attachShadow({mode: 'closed'})
         styleSheet(root, style)
         root.append(button)
@@ -2073,62 +2209,80 @@ function ibutton (option, protocol) {
         }
         if (role === 'tab') {
             button.ariaSelected = false
+            el.dataset.current = isCurrent
         }
-        if (role === 'toggle') {
-            if (isActive) button.setAttribute('aria-active', isActive)
-            else button.setAttribute('aria-active', isActive)
+        if (role === 'switch') {
+            el.dataset.checked = checked
+            button.setAttribute('aria-checked', checked)
         }
         if (isDisabled) {
-            button.ariaDisabled = isDisabled
-            button.disabled = true
+            button.ariaDisabled = disabled
+            button.disabled = disabled
         } else {
             button.removeAttribute('aria-disabled')
             button.removeAttribute('disabled')
         }
-        if (isActive) {
-            button.setAttribute('aria-active', isActive)
+        if (isChecked) {
+            button.setAttribute('aria-checked', checked)
         }
         if (isCurrent) {
-            button.ariaCurrent = isCurrent
-            button.ariaSelected = true
+            button.ariaCurrent = current
+            button.ariaSelected = selected
         }
         if (isSelected) {
-            button.ariaSelected = isSelected
+            button.ariaSelected = selected
         }
         return el
 
-        function activeEvent() {
+        function checkedEvent() {
+            if (role === 'switch') {
+                checked = true
+                el.dataset.checked = checked
+                return button.setAttribute('aria-checked', checked)
+            }
             current = true
             button.ariaSelected = true
             button.setAttribute('aria-current', true)
             el.dataset.current = current
+           
         }
-        function inactivedEvent() {
+        function uncheckedEvent() {
+            if (role === 'switch') {
+                checked = false
+                el.dataset.checked = checked
+                return button.setAttribute('aria-checked', checked)
+            }
             current = false
             button.ariaSelected = false
             button.removeAttribute('aria-current')
             el.dataset.current = current
         }
-        function handleClick(target) {
+        function handleClick() {
             if (current) return
-            sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handleClick', file, line: 68})
+            if (role === 'switch') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: checked, fn: 'handleClick', file, line: 81})
+            sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handleClick', file, line: 82})
         }
         function get (msg) {
             const { type } = msg
-            if (type === 'active') return activeEvent()
-            if (type === 'inactive') return inactivedEvent()
+            if (type === 'checked') return checkedEvent()
+            if (type === 'unchecked') return uncheckedEvent()
         }
     }
    
-    // insert CSS style
-    const customStyle = theme ? theme.style : ''
-    // set CSS variables
-    if (theme && theme.props) {
-        var {size, color, bgColor, sizeHover, colorHover, bgColorHover, currentColor, currentBgColor, borderWidth, borderStyle, borderOpacity, borderColor, borderColorHover, borderRadius, padding, width, height, opacity } = theme.props
-    }
-    
+     // insert CSS style
+     const customStyle = theme ? theme.style : ''
+     // set CSS variables
+     if (theme && theme.props) {
+        var {size, color, bgColor, currentColor, currentBgColor,
+            sizeHover, colorHover, bgColorHover, borderColorHover,
+            borderWidth, borderStyle, borderOpacity, borderColor, borderRadius, 
+            padding, width, height, opacity,
+            iconFill, iconFillHover, 
+        } = theme.props
+     }
+
     const style = `
-    :host(i-button) button {
+    :host(i-button) {
         --size: ${size ? size : 'var(--size12)'};
         --color: ${color ? color : 'var(--color-black)'};
         --bgColor: ${bgColor ? bgColor : 'var(--color-white)'};
@@ -2142,6 +2296,10 @@ function ibutton (option, protocol) {
         --borderOpacity: ${borderOpacity ? borderOpacity : '1'};
         --border: var(--borderWidth) var(--borderStyle) hsla( var(--borderColor), var(--borderOpacity) );
         --borderRadius: ${borderRadius ? borderRadius : '8px'};
+        --fill: ${iconFill ? iconFill : 'var(--color-black)'};
+        --fillHover: ${iconFillHover ? iconFillHover : 'var(--color-white)'};
+    }
+    :host(i-button) button {
         display: grid;
         grid-auto-flow: column;
         grid-column-gap: 5px;
@@ -2154,8 +2312,12 @@ function ibutton (option, protocol) {
         border: var(--border);
         border-radius: var(--borderRadius);
         padding: var(--padding);
-        transition: color .25s, background-color .25s ease-in-out;
+        transition: color .3s, background-color .3s ease-in-out;
         cursor: pointer;
+    }
+    :host(i-button) button *  {
+        justify-content: center;
+        align-items: center;
     }
     :host(i-button) button:hover {
         --size: ${sizeHover ? sizeHover : 'inherit'};
@@ -2163,11 +2325,13 @@ function ibutton (option, protocol) {
         --bgColor: ${bgColorHover ? bgColorHover : 'var(--color-black)'};
         --borderColor: ${borderColorHover ? borderColorHover : 'var(-color-black)'};
     }
-    :host(i-button) button > span {
+    :host(i-button) button * > g {
+        fill: hsl(var(--fill));
+        transition: fill 0.3s ease-in-out;
     }
-    :host(i-button) button > span svg {
-        width: 100%;
-        height: auto;
+    :host(i-button) button:hover * > g {
+        --fillHover: ${iconFillHover ? iconFillHover : 'var(--color-white)'};
+        fill: hsl(var(--fillHover));
     }
     :host(i-button) [role="button"] {
 
@@ -2182,7 +2346,21 @@ function ibutton (option, protocol) {
         --borderColor: ${borderColor ? borderColor : 'var(--primary-color)'};
         width: var(--width);
     }
+    :host(i-button) [role="switch"] {
+        --width: ${width ? width : 'unset'};
+        --color: ${color ? color : 'var(--primary-color)'};
+        --bgColor: ${bgColor ? bgcolor : 'var(--color-white)'};
+        --borderRadius: ${borderRadius ? borderRadius : '8px'};
+        --borderWidth: ${borderWidth ? borderWidth : '0'};
+        --borderStyle: ${borderStyle ? borderStyle : 'solid'};
+        --borderColor: ${borderColor ? borderColor : 'var(--primary-color)'};
+        width: var(--width);
+    }
     :host(i-button) [aria-current="true"] {
+        --color: ${currentColor ? currentColor : 'var(--color-white)'};
+        --bgColor: ${currentBgColor ? currentBgColor : 'var(--primary-color)'};
+    }
+    :host(i-button) [aria-checked="true"] {
         --color: ${currentColor ? currentColor : 'var(--color-white)'};
         --bgColor: ${currentBgColor ? currentBgColor : 'var(--primary-color)'};
     }
@@ -2191,9 +2369,22 @@ function ibutton (option, protocol) {
         --bgColor: ${bgColor ? bgColor : 'var(--color-white)'};
         --colorOpacity: .6;
         --bgColorOpacity: .3;
-        color: hsla( var(--color), var(--colorOpacity));
-        background-color: hsla( var(--bgColor), var(--bgColorOpacity));
+        color: hsla(var(--color), var(--colorOpacity));
+        background-color: hsla(var(--bgColor), var(--bgColorOpacity));
         cursor: not-allowed;
+    }
+    :host(i-button) span {
+        display: grid;
+        margin-right: 2px;
+    }
+    :host(i-button) .col2 {
+        display: flex;
+    }
+    :host(i-button) .icon-right {
+        flex-direction: row;
+    }
+    :host(i-button) .icon-left {
+        flex-direction: row-reverse;
     }
     ${customStyle}
     `
@@ -2201,6 +2392,6 @@ function ibutton (option, protocol) {
     return widget()
 }
 }).call(this)}).call(this,"/src/index.js")
-},{"bel":3,"path":29,"supportCSSStyleSheet":32}],32:[function(require,module,exports){
-arguments[4][25][0].apply(exports,arguments)
-},{"dup":25}]},{},[1]);
+},{"bel":3,"path":31,"supportCSSStyleSheet":34}],34:[function(require,module,exports){
+arguments[4][24][0].apply(exports,arguments)
+},{"dup":24}]},{},[1]);

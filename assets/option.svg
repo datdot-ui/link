@@ -5,10 +5,6 @@
     </clipPath>
   </defs>
   <g id="option" clip-path="url(#clip-option)">
-    <g id="Group_2068" data-name="Group 2068" transform="translate(117 561) rotate(90)">
-      <circle id="Ellipse_358" data-name="Ellipse 358" cx="1.5" cy="1.5" r="1.5" transform="translate(-550 107)"/>
-      <circle id="Ellipse_359" data-name="Ellipse 359" cx="1.5" cy="1.5" r="1.5" transform="translate(-554.5 107)"/>
-      <circle id="Ellipse_360" data-name="Ellipse 360" cx="1.5" cy="1.5" r="1.5" transform="translate(-559 107)"/>
-    </g>
+    <path id="option-2" data-name="option" d="M0,10.5A1.5,1.5,0,1,1,1.5,12,1.5,1.5,0,0,1,0,10.5ZM0,6A1.5,1.5,0,1,1,1.5,7.5,1.5,1.5,0,0,1,0,6ZM0,1.5A1.5,1.5,0,1,1,1.5,3,1.5,1.5,0,0,1,0,1.5Z" transform="translate(7 2)"/>
   </g>
 </svg>
