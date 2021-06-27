@@ -42,53 +42,82 @@ function widget() {
     const Toggle = button({name: 'toggle', body: 'Toggle', role: 'switch', isChecked: false, theme : {
         style: ``,
         props: {
-
+            currentBgColor: 'var(--color-green)'
         }
     }}, protocol('toggle'))
 
     // Tab element
-    const Tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', isCurrent: true}, protocol('tab1'))
-    const Tab2 = button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab'}, protocol('tab2'))
-    const Tab3 = button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab'}, protocol('tab3'))
+    const tabTheme = {
+        props: {
+            colorHover: 'var(--color-white)',
+            bgColorHover: 'var(--color-red)',
+            currentBgColor: 'var(--color-yellow)',
+            currentColor: 'var(--primiary-color)'
+        }
+    }
+    const Tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', isCurrent: true, theme: tabTheme }, protocol('tab1'))
+    const Tab2 = button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab', theme: tabTheme}, protocol('tab2'))
+    const Tab3 = button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab', theme: tabTheme}, protocol('tab3'))
     const demoTab = bel`
     <nav class=${css.tabs}>
         ${Tab1}${Tab2}${Tab3}
     </nav>`
 
+    // Tab & icon
+    const iconNotice = Icon({name: 'notice', path: 'assets', isShadow: false})
+    const iconWarning = Icon({name: 'warning', path: 'assets', isShadow: false})
+    const iconSearch = Icon({name: 'search', path: 'assets', isShadow: false})
+    const Tab4 = button({page: 'JOBS', name: 'tab4', icon: iconNotice,  body: bel`<div class="col2">Tab4 ${iconNotice}</div>`, role: 'tab', isCurrent: true, theme: { props: {size: 'var(--szie20)', currentColor: 'var(--color-blue)', fill: 'var(--color-blue)', fillHover:  'var(--color-blue)', iconSize: '32px' }}}, tabProtocol('tab4'))
+    const Tab5 = button({page: 'JOBS', name: 'tab5', icon: iconSearch, body: bel`<div class="col2">Tab5 ${iconWarning}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', currentColor:'var(--color-orange)', fill: 'var(--color-orange)', fillHover: 'var(--color-orange)', iconSize: '32px' }}}, tabProtocol('tab5'))
+    const Tab6 = button({page: 'JOBS', name: 'tab6', iconSearch: iconSearch,body: bel`<div class="col2">Tab6 ${iconSearch}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', iconSize: '32px' }}}, tabProtocol('tab6'))
+    const demoIconTab = bel`
+    <nav class=${css.tabs}>
+        ${Tab4}${Tab5}${Tab6}
+    </nav>`
+
     // Use icon
     // icons
-    let iconCancel = Icon({name: 'cross', path: 'assets', isRoot: false})
-    let iconConfirm = Icon({name: 'check', path: 'assets', isRoot: false})
-    let iconPrevious = Icon({name: 'arrow-left', path: 'assets', isRoot: false})
-    let iconNext = Icon({name: 'arrow-right', path: 'assets', isRoot: false})
+    let iconCancel = Icon({name: 'cross', path: 'assets', isShadow: false})
+    let iconConfirm = Icon({name: 'check', path: 'assets', isShadow: false})
+    let iconPrevious = Icon({name: 'arrow-left', path: 'assets', isShadow: false})
+    let iconNext = Icon({name: 'arrow-right', path: 'assets', isShadow: false})
     // buttons
     const cancel = button({name: 'cancel', body: iconCancel, theme: {
         style: ``,
         props: {
-            iconFill: 'var(--color-red)',
+            fill: 'var(--color-red)',
             bgColorHover: 'var(--color-flame)'
         }
     }}, protocol('cancel'))
     const confirm = button({name: 'confirm', body: iconConfirm, theme: {
         props: {
-            iconFill: 'var(--color-green)',
+            fill: 'var(--color-green)',
             bgColorHover: 'var(--color-lincoln-green)',
-            iconFillHover: 'var(--color-light-green)'
+            fillHover: 'var(--color-light-green)'
         }
     }}, protocol('confirm'))
-    const previous = button({name: 'previous', body: bel`<div class="col2 icon-left"><span>Previous</span>${iconPrevious}</div>`, theme: {
+    const previous = button({name: 'previous', body: bel`<div class="col2 left"><span>Previous</span>${iconPrevious}</div>`, theme: {
         style: ``,
-        // props: {
-        //     iconFill: 'var(--color-red)',
-        //     iconFillHover: 'var(--color-dodger-blue)'
-        // }
+        props: {
+            bgColorHover: 'var(--color-green-yellow-crayola)',
+            colorHover: 'var(--color-purple)',
+            fillHover: 'var(--color-purple)'
+        }
     }}, protocol('previous'))
-    const next = button({name: 'next', body: bel`<div class="col2 icon-right"><span>Next</span>${iconNext}</div>`, theme: {
+    const next = button({name: 'next', body: bel`<div class="col2 right"><span>Next</span>${iconNext}</div>`, theme: {
         // props: {
-        //     iconFill: 'var(--color-green)',
-        //     iconFillHover: 'var(--color-bright-yellow-crayola)'
+        //     fill: 'var(--color-green)',
+        //     fillHover: 'var(--color-bright-yellow-crayola)'
         // }
     }}, protocol('next'))
+
+    const iconOption = Icon({name: 'option', path: 'assets', isShadow: false})
+    const option = button({name: 'option', role: 'listbox', body: iconOption, theme: {
+        props: {
+            fill: 'var(--color-blue)',
+            currentFill: 'var(--color-white)'
+        }
+    }}, protocol('option'))
 
     // content
     const content = bel`
@@ -110,6 +139,14 @@ function widget() {
             <h2>Tab</h2>
             ${demoTab}
         </section>
+        <section>
+            <h2>Tab & Icon</h2>
+            ${demoIconTab}
+        </section>
+        <section>
+            <h2>Dropdown</h2>
+            ${option}
+        </section>
     </div>`
 
     const container = bel`
@@ -127,9 +164,16 @@ function widget() {
 
     function handleClickEvent({page, from, flow, body}) {
         const role = flow.split('-')[1]
-        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 86})
+        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 165})
         if (role === 'tab') return handleTabEvent(page, from, role)
         if (role === 'switch') return handleToggleEvent(page, from, role, body)
+        if (role === 'listbox') return handleDropdownMenuEvent(page, from, role, body)
+    }
+
+    function handleDropdownMenuEvent(page, from, flow, body) {
+        const state = body ? false : true
+        recipients[from]({from, flow, type: 'expanded', body: state})
+        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handleDropdownMenuEvent', line: 174})
     }
 
     function handleTabEvent(page, from, flow) {
@@ -138,14 +182,25 @@ function widget() {
             let current = from === tab.dataset.name ? from : tab.dataset.name
             let type = from === tab.dataset.name ? 'checked' : 'unchecked'
             recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handleTabEvent', file, line: 97})
+            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handleTabEvent', file, line: 183})
+        })
+    }
+
+    function handleTabIconEvent({page, from, flow}) {
+        const role = flow.split('-')[1]
+        const tabs = [...demoIconTab.children]
+        tabs.map( tab => {
+            let current = from === tab.dataset.name ? from : tab.dataset.name
+            let type = from === tab.dataset.name ? 'checked' : 'unchecked'
+            recipients[current]({from: current, flow, type})
+            recipients['logs']({page, from: current, flow: role, type, body: 'tab event', fn: 'handleTabIconEvent', file, line: 194})
         })
     }
 
     function handleToggleEvent(page, from, flow, body) {
         const type = body ? 'unchecked' : 'checked'
-        recipients[from]({page, from, type})
-        recipients['logs']({page, from, flow, type, body: 'toggle event', fn: 'handleToggleEvent', file, line: 105})
+        recipients[from]({page, from, type, body})
+        recipients['logs']({page, from, flow, type, body: 'toggle event', fn: 'handleToggleEvent', file, line: 201})
     }
 
     function get (msg) {
@@ -154,6 +209,16 @@ function widget() {
         if (type === 'click') return handleClickEvent(msg)
     }
 
+    function tabProtocol (name) {
+        return sender => {
+            recipients[name] = sender
+            return (msg) => {
+                const { type } = msg
+                recipients['logs'](msg)
+                if (type === 'click') return handleTabIconEvent(msg)
+            }
+        }
+    }
     function protocol (name) {
         return sender => {
             recipients[name] = sender
@@ -193,6 +258,7 @@ const css = csjs`
     --color-yellow: 44, 100%, 55%;
     --color-chrome-yellow: 39, var(--r);
     --color-bright-yellow-crayola: 35, 100%, 58%;
+    --color-green-yellow-crayola: 51, 100%, 83%;
     --color-purple: 283, var(--r);
     --color-medium-purple: 269, 100%, 70%;
     --color-grey33: var(--b), 20%;
@@ -298,6 +364,9 @@ body {
 .tabs {
     display: grid;
     grid-auto-flow: column;
+}
+.tabs span {
+    width: 40px;
 }
 @media (max-width: 768px) {
     [data-state="debug"] {
@@ -1050,23 +1119,23 @@ function scopify(css, ignores) {
 const styleSheet = require('supportCSSStyleSheet')
 const svg = require('svg')
 
-module.exports = ({name, path, isRoot = true, theme}) => {
+module.exports = ({name, path, isShadow = true, theme}) => {
     const url = path ? path : './src/svg'
     const symbol = svg(`${url}/${name}.svg`)
     // if not use shadowDOM return icon that support hover effect
-    if (!isRoot) return symbol
+    if (!isShadow) return symbol
 
     /* use closed mode of shadwoDOM is not allowed to catch shadowDOM elemnt, 
        and any element cannot support customizing :hover style when parent triggered hover
     */
     function layout(style) {
         const icon = document.createElement('i-icon')
-        const root = icon.attachShadow({mode: 'closed'})
+        const shadow = icon.attachShadow({mode: 'closed'})
         const slot = document.createElement('slot')
         slot.name = 'icon'
-        styleSheet(root, style)
+        styleSheet(shadow, style)
         slot.append(symbol)
-        root.append(slot)
+        shadow.append(slot)
         return icon
     }
     // insert CSS style
@@ -1077,7 +1146,7 @@ module.exports = ({name, path, isRoot = true, theme}) => {
     }
     const style = `
     :host(i-icon) {
-        --size: ${size ? size : '20px'};
+        --size: ${size ? size : '24px'};
         --fill: ${fill ? fill : 'var(--primary-color)'};
         display: block;
     }
@@ -1125,7 +1194,7 @@ module.exports = svg
 
 function svg(path) {
     const el = document.createElement('span')
-    
+    el.classList.add('icon')
     async function load(done) {
         const res = await fetch(path)
         const parse = document.createElement('div')
@@ -1155,13 +1224,13 @@ function logs ( protocol ) {
     const sender = protocol ( get )
     sender({from: 'logs', flow: 'logs-layout', type: 'ready', fn: 'logs', file, line: 8})
     const ilog = document.createElement('i-log')
-    const root = ilog.attachShadow({mode: 'closed'})
+    const shadow = ilog.attachShadow({mode: 'closed'})
     const title = bel`<h4>Logs</h4>`
     const content = bel`<section class="content">${title}</section>`
     const logList = document.createElement('log-list')
-    styleSheet(root, style)
+    styleSheet(shadow, style)
     content.append(logList)
-    root.append(content)
+    shadow.append(content)
 
     document.addEventListener('DOMContentLoaded', () => {
         logList.scrollTop = logList.scrollHeight
@@ -2185,22 +2254,23 @@ const styleSheet = require('supportCSSStyleSheet')
 module.exports = ibutton
 
 function ibutton (option, protocol) {
-    const {page, flow = 'ui-button', name, body, role = 'button', reverse = 'right',  state, isCurrent = false, isSelected, isChecked, isDisabled, theme} = option
+    const {page, flow = 'ui-button', name, body, icon, role = 'button', state, controls, isExpanded = false, isCurrent = false, isSelected, isChecked, isDisabled, theme} = option
     let current = isCurrent
     let checked = isChecked
     let disabled = isDisabled
     let selected = isSelected
+    let expanded = isExpanded
 
     function widget () {
         const sender = protocol( get )
-        sender({page, from: name, flow, type: 'ready', file, fn: 'ibutton', line: 10})
-        const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handleClick()}">${body}</button>`
+        sender({page, from: name, flow, type: 'ready', file, fn: 'ibutton', line: 16})
+        const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handleClick()}">${body} ${icon}</button>`
         const el = document.createElement('i-button')
         el.dataset.name = name
         el.dataset.ui = role
-        const root = el.attachShadow({mode: 'closed'})
-        styleSheet(root, style)
-        root.append(button)
+        const shadow = el.attachShadow({mode: 'closed'})
+        styleSheet(shadow, style)
+        shadow.append(button)
 
         // define conditions
         if (state) {
@@ -2214,6 +2284,12 @@ function ibutton (option, protocol) {
         if (role === 'switch') {
             el.dataset.checked = checked
             button.setAttribute('aria-checked', checked)
+        }
+        if (role === 'listbox') {
+            button.setAttribute('aria-haspopup', role)
+        }
+        if (expanded) {
+            button.setAttribute('aria-expanded', expanded)
         }
         if (isDisabled) {
             button.ariaDisabled = disabled
@@ -2232,9 +2308,21 @@ function ibutton (option, protocol) {
         if (isSelected) {
             button.ariaSelected = selected
         }
+        if (isExpanded) {
+            button.ariaExpanded = expanded
+        }
         return el
 
-        function checkedEvent() {
+        function expandedEvent (body) {
+            expanded = body
+            if (!expanded) {
+                el.removeAttribute('aria-expanded')
+                return button.removeAttribute('aria-expanded')
+            }
+            el.ariaExpanded = expanded
+            button.ariaExpanded = expanded
+        }
+        function checkedEvent () {
             if (role === 'switch') {
                 checked = true
                 el.dataset.checked = checked
@@ -2244,7 +2332,6 @@ function ibutton (option, protocol) {
             button.ariaSelected = true
             button.setAttribute('aria-current', true)
             el.dataset.current = current
-           
         }
         function uncheckedEvent() {
             if (role === 'switch') {
@@ -2259,13 +2346,15 @@ function ibutton (option, protocol) {
         }
         function handleClick() {
             if (current) return
-            if (role === 'switch') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: checked, fn: 'handleClick', file, line: 81})
-            sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handleClick', file, line: 82})
+            if (role === 'switch') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: checked, fn: 'handleClick', file, line: 95})
+            if (role === 'listbox') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: expanded, fn: 'handleClick', file, line: 96})
+            sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handleClick', file, line: 97})
         }
         function get (msg) {
-            const { type } = msg
+            const { type, body } = msg
             if (type === 'checked') return checkedEvent()
             if (type === 'unchecked') return uncheckedEvent()
+            if (type === 'expanded') return expandedEvent(body)
         }
     }
    
@@ -2273,17 +2362,20 @@ function ibutton (option, protocol) {
      const customStyle = theme ? theme.style : ''
      // set CSS variables
      if (theme && theme.props) {
-        var {size, color, bgColor, currentColor, currentBgColor,
-            sizeHover, colorHover, bgColorHover, borderColorHover,
+        var {size, sizeHover, currentSize,
+            weight, weightHover, currentWeight,
+            color, colorHover, currentColor, currentBgColor, 
+            bgColor, bgColorHover, borderColorHover,
             borderWidth, borderStyle, borderOpacity, borderColor, borderRadius, 
             padding, width, height, opacity,
-            iconFill, iconFillHover, 
+            fill, fillHover, iconSize, currentFill, currentIconSize
         } = theme.props
      }
 
     const style = `
     :host(i-button) {
         --size: ${size ? size : 'var(--size12)'};
+        --bold: ${weight ? weight : 'normal'};
         --color: ${color ? color : 'var(--color-black)'};
         --bgColor: ${bgColor ? bgColor : 'var(--color-white)'};
         --width: ${width ? width : 'unset'};
@@ -2296,8 +2388,9 @@ function ibutton (option, protocol) {
         --borderOpacity: ${borderOpacity ? borderOpacity : '1'};
         --border: var(--borderWidth) var(--borderStyle) hsla( var(--borderColor), var(--borderOpacity) );
         --borderRadius: ${borderRadius ? borderRadius : '8px'};
-        --fill: ${iconFill ? iconFill : 'var(--color-black)'};
-        --fillHover: ${iconFillHover ? iconFillHover : 'var(--color-white)'};
+        --fill: ${fill ? fill : 'var(--color-black)'};
+        --fillHover: ${fillHover ? fillHover : 'var(--color-white)'};
+        --iconSize: ${iconSize ? iconSize : '16px'};
     }
     :host(i-button) button {
         display: grid;
@@ -2307,30 +2400,29 @@ function ibutton (option, protocol) {
         align-items: center;
         ${width && 'width: var(--width)'};
         ${height && 'height: var(--height)'};
+        font-size: var(--size);
+        font-weight: var(--bold);
         color: hsl( var(--color) );
         background-color: hsla( var(--bgColor), var(--opacity) );
         border: var(--border);
         border-radius: var(--borderRadius);
         padding: var(--padding);
-        transition: color .3s, background-color .3s ease-in-out;
+        transition: font-size .3s, color .3s, background-color .3s ease-in-out;
         cursor: pointer;
-    }
-    :host(i-button) button *  {
-        justify-content: center;
-        align-items: center;
     }
     :host(i-button) button:hover {
         --size: ${sizeHover ? sizeHover : 'inherit'};
+        --weight: ${weightHover ? weightHover : 'inherit'};
         --color: ${colorHover ? colorHover : 'var(--color-white)'};
         --bgColor: ${bgColorHover ? bgColorHover : 'var(--color-black)'};
         --borderColor: ${borderColorHover ? borderColorHover : 'var(-color-black)'};
     }
-    :host(i-button) button * > g {
+    :host(i-button) button g {
         fill: hsl(var(--fill));
         transition: fill 0.3s ease-in-out;
     }
-    :host(i-button) button:hover * > g {
-        --fillHover: ${iconFillHover ? iconFillHover : 'var(--color-white)'};
+    :host(i-button) button:hover g {
+        --fillHover: ${fillHover ? fillHover : 'var(--color-white)'};
         fill: hsl(var(--fillHover));
     }
     :host(i-button) [role="button"] {
@@ -2356,13 +2448,23 @@ function ibutton (option, protocol) {
         --borderColor: ${borderColor ? borderColor : 'var(--primary-color)'};
         width: var(--width);
     }
-    :host(i-button) [aria-current="true"] {
+    :host(i-button) [aria-current="true"], :host(i-button) [aria-current="true"]:hover{
+        --size: ${currentSize ? currentSize : 'inherit'};
+        --bold: ${currentWeight ? currentWeight : 'inherit'};
         --color: ${currentColor ? currentColor : 'var(--color-white)'};
         --bgColor: ${currentBgColor ? currentBgColor : 'var(--primary-color)'};
     }
-    :host(i-button) [aria-checked="true"] {
+    :host(i-button) [aria-current="true"] g {
+        --fill: ${fill ? fill : 'var(--color-white)'};
+    }
+    :host(i-button) [aria-checked="true"], :host(i-button) [aria-expanded="true"]  {
+        --size: ${currentSize ? currentSize : 'inherit'};
+        --bold: ${currentWeight ? currentWeight : 'inherit'};
         --color: ${currentColor ? currentColor : 'var(--color-white)'};
         --bgColor: ${currentBgColor ? currentBgColor : 'var(--primary-color)'};
+    }
+    :host(i-button) [aria-checked="true"] g {
+        --fill: ${currentFill ? currentFill : 'var(--color-white' };
     }
     :host(i-button) button[disabled]  {
         --color: ${color ? color : 'var(--color-dark)'};
@@ -2373,18 +2475,27 @@ function ibutton (option, protocol) {
         background-color: hsla(var(--bgColor), var(--bgColorOpacity));
         cursor: not-allowed;
     }
-    :host(i-button) span {
-        display: grid;
-        margin-right: 2px;
+    :host(i-button) svg {
+        width: 100%;
+        height: auto;
     }
     :host(i-button) .col2 {
-        display: flex;
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: center;
+        align-items: center;
+        column-gap: 8px;
     }
-    :host(i-button) .icon-right {
-        flex-direction: row;
+    :host(i-button) .icon {
+        display: block;
+        width: var(--iconSize);
+        height: var(--iconSize);
     }
-    :host(i-button) .icon-left {
-        flex-direction: row-reverse;
+    :host(i-button) .right .icon {
+        grid-column-start: 2;
+    }
+    :host(i-button) .left .icon {
+        grid-column-start: 1;
     }
     ${customStyle}
     `

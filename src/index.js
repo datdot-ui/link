@@ -5,22 +5,23 @@ const styleSheet = require('supportCSSStyleSheet')
 module.exports = ibutton
 
 function ibutton (option, protocol) {
-    const {page, flow = 'ui-button', name, body, role = 'button', reverse = 'right',  state, isCurrent = false, isSelected, isChecked, isDisabled, theme} = option
+    const {page, flow = 'ui-button', name, body, icon, role = 'button', state, controls, isExpanded = false, isCurrent = false, isSelected, isChecked, isDisabled, theme} = option
     let current = isCurrent
     let checked = isChecked
     let disabled = isDisabled
     let selected = isSelected
+    let expanded = isExpanded
 
     function widget () {
         const sender = protocol( get )
-        sender({page, from: name, flow, type: 'ready', file, fn: 'ibutton', line: 10})
-        const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handleClick()}">${body}</button>`
+        sender({page, from: name, flow, type: 'ready', file, fn: 'ibutton', line: 16})
+        const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handleClick()}">${body} ${icon}</button>`
         const el = document.createElement('i-button')
         el.dataset.name = name
         el.dataset.ui = role
-        const root = el.attachShadow({mode: 'closed'})
-        styleSheet(root, style)
-        root.append(button)
+        const shadow = el.attachShadow({mode: 'closed'})
+        styleSheet(shadow, style)
+        shadow.append(button)
 
         // define conditions
         if (state) {
@@ -34,6 +35,12 @@ function ibutton (option, protocol) {
         if (role === 'switch') {
             el.dataset.checked = checked
             button.setAttribute('aria-checked', checked)
+        }
+        if (role === 'listbox') {
+            button.setAttribute('aria-haspopup', role)
+        }
+        if (expanded) {
+            button.setAttribute('aria-expanded', expanded)
         }
         if (isDisabled) {
             button.ariaDisabled = disabled
@@ -52,9 +59,21 @@ function ibutton (option, protocol) {
         if (isSelected) {
             button.ariaSelected = selected
         }
+        if (isExpanded) {
+            button.ariaExpanded = expanded
+        }
         return el
 
-        function checkedEvent() {
+        function expandedEvent (body) {
+            expanded = body
+            if (!expanded) {
+                el.removeAttribute('aria-expanded')
+                return button.removeAttribute('aria-expanded')
+            }
+            el.ariaExpanded = expanded
+            button.ariaExpanded = expanded
+        }
+        function checkedEvent () {
             if (role === 'switch') {
                 checked = true
                 el.dataset.checked = checked
@@ -64,7 +83,6 @@ function ibutton (option, protocol) {
             button.ariaSelected = true
             button.setAttribute('aria-current', true)
             el.dataset.current = current
-           
         }
         function uncheckedEvent() {
             if (role === 'switch') {
@@ -79,13 +97,15 @@ function ibutton (option, protocol) {
         }
         function handleClick() {
             if (current) return
-            if (role === 'switch') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: checked, fn: 'handleClick', file, line: 81})
-            sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handleClick', file, line: 82})
+            if (role === 'switch') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: checked, fn: 'handleClick', file, line: 95})
+            if (role === 'listbox') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: expanded, fn: 'handleClick', file, line: 96})
+            sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handleClick', file, line: 97})
         }
         function get (msg) {
-            const { type } = msg
+            const { type, body } = msg
             if (type === 'checked') return checkedEvent()
             if (type === 'unchecked') return uncheckedEvent()
+            if (type === 'expanded') return expandedEvent(body)
         }
     }
    
@@ -93,17 +113,20 @@ function ibutton (option, protocol) {
      const customStyle = theme ? theme.style : ''
      // set CSS variables
      if (theme && theme.props) {
-        var {size, color, bgColor, currentColor, currentBgColor,
-            sizeHover, colorHover, bgColorHover, borderColorHover,
+        var {size, sizeHover, currentSize,
+            weight, weightHover, currentWeight,
+            color, colorHover, currentColor, currentBgColor, 
+            bgColor, bgColorHover, borderColorHover,
             borderWidth, borderStyle, borderOpacity, borderColor, borderRadius, 
             padding, width, height, opacity,
-            iconFill, iconFillHover, 
+            fill, fillHover, iconSize, currentFill, currentIconSize
         } = theme.props
      }
 
     const style = `
     :host(i-button) {
         --size: ${size ? size : 'var(--size12)'};
+        --bold: ${weight ? weight : 'normal'};
         --color: ${color ? color : 'var(--color-black)'};
         --bgColor: ${bgColor ? bgColor : 'var(--color-white)'};
         --width: ${width ? width : 'unset'};
@@ -116,8 +139,9 @@ function ibutton (option, protocol) {
         --borderOpacity: ${borderOpacity ? borderOpacity : '1'};
         --border: var(--borderWidth) var(--borderStyle) hsla( var(--borderColor), var(--borderOpacity) );
         --borderRadius: ${borderRadius ? borderRadius : '8px'};
-        --fill: ${iconFill ? iconFill : 'var(--color-black)'};
-        --fillHover: ${iconFillHover ? iconFillHover : 'var(--color-white)'};
+        --fill: ${fill ? fill : 'var(--color-black)'};
+        --fillHover: ${fillHover ? fillHover : 'var(--color-white)'};
+        --iconSize: ${iconSize ? iconSize : '16px'};
     }
     :host(i-button) button {
         display: grid;
@@ -127,30 +151,29 @@ function ibutton (option, protocol) {
         align-items: center;
         ${width && 'width: var(--width)'};
         ${height && 'height: var(--height)'};
+        font-size: var(--size);
+        font-weight: var(--bold);
         color: hsl( var(--color) );
         background-color: hsla( var(--bgColor), var(--opacity) );
         border: var(--border);
         border-radius: var(--borderRadius);
         padding: var(--padding);
-        transition: color .3s, background-color .3s ease-in-out;
+        transition: font-size .3s, color .3s, background-color .3s ease-in-out;
         cursor: pointer;
-    }
-    :host(i-button) button *  {
-        justify-content: center;
-        align-items: center;
     }
     :host(i-button) button:hover {
         --size: ${sizeHover ? sizeHover : 'inherit'};
+        --weight: ${weightHover ? weightHover : 'inherit'};
         --color: ${colorHover ? colorHover : 'var(--color-white)'};
         --bgColor: ${bgColorHover ? bgColorHover : 'var(--color-black)'};
         --borderColor: ${borderColorHover ? borderColorHover : 'var(-color-black)'};
     }
-    :host(i-button) button * > g {
+    :host(i-button) button g {
         fill: hsl(var(--fill));
         transition: fill 0.3s ease-in-out;
     }
-    :host(i-button) button:hover * > g {
-        --fillHover: ${iconFillHover ? iconFillHover : 'var(--color-white)'};
+    :host(i-button) button:hover g {
+        --fillHover: ${fillHover ? fillHover : 'var(--color-white)'};
         fill: hsl(var(--fillHover));
     }
     :host(i-button) [role="button"] {
@@ -176,13 +199,23 @@ function ibutton (option, protocol) {
         --borderColor: ${borderColor ? borderColor : 'var(--primary-color)'};
         width: var(--width);
     }
-    :host(i-button) [aria-current="true"] {
+    :host(i-button) [aria-current="true"], :host(i-button) [aria-current="true"]:hover{
+        --size: ${currentSize ? currentSize : 'inherit'};
+        --bold: ${currentWeight ? currentWeight : 'inherit'};
         --color: ${currentColor ? currentColor : 'var(--color-white)'};
         --bgColor: ${currentBgColor ? currentBgColor : 'var(--primary-color)'};
     }
-    :host(i-button) [aria-checked="true"] {
+    :host(i-button) [aria-current="true"] g {
+        --fill: ${fill ? fill : 'var(--color-white)'};
+    }
+    :host(i-button) [aria-checked="true"], :host(i-button) [aria-expanded="true"]  {
+        --size: ${currentSize ? currentSize : 'inherit'};
+        --bold: ${currentWeight ? currentWeight : 'inherit'};
         --color: ${currentColor ? currentColor : 'var(--color-white)'};
         --bgColor: ${currentBgColor ? currentBgColor : 'var(--primary-color)'};
+    }
+    :host(i-button) [aria-checked="true"] g {
+        --fill: ${currentFill ? currentFill : 'var(--color-white' };
     }
     :host(i-button) button[disabled]  {
         --color: ${color ? color : 'var(--color-dark)'};
@@ -193,18 +226,27 @@ function ibutton (option, protocol) {
         background-color: hsla(var(--bgColor), var(--bgColorOpacity));
         cursor: not-allowed;
     }
-    :host(i-button) span {
-        display: grid;
-        margin-right: 2px;
+    :host(i-button) svg {
+        width: 100%;
+        height: auto;
     }
     :host(i-button) .col2 {
-        display: flex;
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: center;
+        align-items: center;
+        column-gap: 8px;
     }
-    :host(i-button) .icon-right {
-        flex-direction: row;
+    :host(i-button) .icon {
+        display: block;
+        width: var(--iconSize);
+        height: var(--iconSize);
     }
-    :host(i-button) .icon-left {
-        flex-direction: row-reverse;
+    :host(i-button) .right .icon {
+        grid-column-start: 2;
+    }
+    :host(i-button) .left .icon {
+        grid-column-start: 1;
     }
     ${customStyle}
     `
