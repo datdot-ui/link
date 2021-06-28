@@ -68,16 +68,19 @@ function ibutton (option, protocol) {
         }
         return el
 
+        // toggle
         function switchedEvent (body) {
             checked = body
             if (!checked) return el.removeAttribute('aria-checked')
             el.setAttribute('aria-checked', checked)
         }
+        // dropdown menu
         function expandedEvent (body) {
             expanded = body
-            if (!expanded)  return el.removeAttribute('aria-expanded')
+            if (!expanded) return el.removeAttribute('aria-expanded')
             el.ariaExpanded = expanded
         }
+        // tab checked
         function checkedEvent () {
             checked = true
             current = checked
@@ -85,6 +88,7 @@ function ibutton (option, protocol) {
             el.setAttribute('aria-current', checked)
             el.dataset.current = current
         }
+        // tab unchecked
         function uncheckedEvent() {
             checked = false
             current = checked
@@ -92,12 +96,14 @@ function ibutton (option, protocol) {
             el.removeAttribute('aria-current')
             el.dataset.current = current
         }
+        // button click
         function handleClick() {
             if (current) return
             if (role === 'switch') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: checked, fn: 'handleClick', file, line: 102})
             if (role === 'listbox') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: expanded, fn: 'handleClick', file, line: 103})
             sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handleClick', file, line: 97})
         }
+        // protocol get msg
         function get (msg) {
             const { type, body } = msg
             if (type === 'checked') return checkedEvent()
