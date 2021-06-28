@@ -101,7 +101,7 @@ function ibutton (option, protocol) {
             if (current) return
             if (role === 'switch') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: checked, fn: 'handleClick', file, line: 102})
             if (role === 'listbox') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: expanded, fn: 'handleClick', file, line: 103})
-            sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handleClick', file, line: 97})
+            sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handleClick', file, line: 104})
         }
         // protocol get msg
         function get (msg) {
