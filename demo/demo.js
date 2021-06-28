@@ -50,7 +50,7 @@ function widget() {
             colorHover: 'var(--color-white)',
             bgColorHover: 'var(--color-red)',
             currentBgColor: 'var(--color-yellow)',
-            currentColor: 'var(--primiary-color)'
+            currentColor: 'var(--primary-color)'
         }
     }
     const Tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', isCurrent: true, theme: tabTheme }, protocol('tab1'))
@@ -168,12 +168,6 @@ function widget() {
         if (role === 'listbox') return handleDropdownMenuEvent(page, from, role, body)
     }
 
-    function handleDropdownMenuEvent(page, from, flow, body) {
-        const state = body ? false : true
-        recipients[from]({from, flow, type: 'expanded', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handleDropdownMenuEvent', line: 174})
-    }
-
     function handleTabEvent(page, from, flow) {
         const tabs = [...demoTab.children]
         tabs.map( tab => {
@@ -196,9 +190,15 @@ function widget() {
     }
 
     function handleToggleEvent(page, from, flow, body) {
-        const type = body ? 'unchecked' : 'checked'
-        recipients[from]({page, from, type, body})
-        recipients['logs']({page, from, flow, type, body: 'toggle event', fn: 'handleToggleEvent', file, line: 201})
+        const state = !body
+        recipients[from]({page, from, type: 'switched', body: state})
+        recipients['logs']({page, from, flow, type: 'triggered', body: `toggle ${body ? 'on' : 'off'}`, fn: 'handleToggleEvent', file, line: 195})
+    }
+
+    function handleDropdownMenuEvent(page, from, flow, body) {
+        const state = !body 
+        recipients[from]({from, flow, type: 'expanded', body: state})
+        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handleDropdownMenuEvent', line: 201})
     }
 
     function get (msg) {
@@ -300,6 +300,7 @@ const css = csjs`
     --primary-font: Arial, sens-serif;
     --primary-font-size: var(--size16);
     --primary-input-radius: 8px;
+    --primary-button-radius: 8px;
 }
 html {
     font-size: 62.5%;
