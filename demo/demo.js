@@ -2,120 +2,145 @@ const bel = require('bel')
 const csjs = require('csjs-inject')
 const file = require('path').basename(__filename)
 const button = require('..')
+const head = require('head')()
 // datdot-ui dependences
 const logs = require('datdot-ui-logs')
-const Icon = require('datdot-ui-icon')
+const icon = require('datdot-ui-icon')
+const list = require('list')
 
-function widget() {
+function demo () {
     // save protocol callbacks
     let recipients = []
      // logs must be initialized first before components
-     const logList = logs(protocol('logs'))
+     const log_list = logs(protocol('logs'))
     // buttons
-    const Default = button({name: 'default', body: 'Default', theme: { 
+    const primary = button({name: 'primary', body: 'Primary', theme: { 
         style: ` `, 
         props: {
-            // borderWidth: '2px',
-            // borderStyle: 'dashed',
-            // borderColor: 'var(--color-yellow)',
-            // colorHover: 'var(--color-white)',
-            sizeHover: 'var(--size16)',
-            bgColorHover: 'var(--color-black)',
+            // border_width: '2px',
+            // border_style: 'dashed',
+            // border_color: 'var(--color-yellow)',
+            // color_hover: 'var(--color-white)',
+            size_hover: 'var(--size16)',
+            bg_color_hover: 'var(--color-black)',
         }
 
-    }}, protocol('default'))
+    }}, protocol('primary'))
 
-    const Disabled = button({name: 'disable', body: 'Disable', isDisabled: true, theme: {
+    const disabled = button({name: 'disable', body: 'Disable', is_disabled: true, theme: {
         // style: `
         // :host(i-button) button[disabled] {
-        //     --colorOpacity: 1;
-        //     --bgColorOpacity: 0.2;
+        //     --color-opacity: 1;
+        //     --bg-color-opacity: 0.2;
         // }
         // `,
         props: {
-            // bgColor: 'var(--color-slimy-green)'
+            // bg_color: 'var(--color-slimy-green)'
         }
     }}, protocol('disable'))
 
-    const Toggle = button({name: 'toggle', body: 'Toggle', role: 'switch', isChecked: false, theme : {
+    const toggle = button({name: 'toggle', body: 'Toggle', role: 'switch', is_checked: false, theme : {
         style: ``,
         props: {
-            currentBgColor: 'var(--color-green)'
+            current_bg_color: 'var(--color-green)'
         }
     }}, protocol('toggle'))
 
     // Tab element
-    const tabTheme = {
+    const tab_theme = {
         props: {
-            colorHover: 'var(--color-white)',
-            bgColorHover: 'var(--color-red)',
-            currentBgColor: 'var(--color-yellow)',
-            currentColor: 'var(--primary-color)'
+            color_hover: 'var(--color-white)',
+            bg_color_hover: 'var(--color-red)',
+            current_bg_color: 'var(--color-yellow)',
+            current_color: 'var(--primary-color)'
         }
     }
-    const Tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', isCurrent: true, theme: tabTheme }, protocol('tab1'))
-    const Tab2 = button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab', theme: tabTheme}, protocol('tab2'))
-    const Tab3 = button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab', theme: tabTheme}, protocol('tab3'))
-    const demoTab = bel`
+    const tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', is_current: true, theme: tab_theme }, protocol('tab1'))
+    const tab2 = button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab', theme: tab_theme}, protocol('tab2'))
+    const tab3 = button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab', theme: tab_theme}, protocol('tab3'))
+    const demo_tab = bel`
     <nav class=${css.tabs}>
-        ${Tab1}${Tab2}${Tab3}
+        ${tab1}${tab2}${tab3}
     </nav>`
 
-    // Tab & icon
-    const iconNotice = Icon({name: 'notice', path: 'assets'})
-    const iconWarning = Icon({name: 'warning', path: 'assets'})
-    const iconSearch = Icon({name: 'search', path: 'assets'})
-    const Tab4 = button({page: 'JOBS', name: 'tab4', icon: iconNotice,  body: bel`<div class="col2">Tab4 ${iconNotice}</div>`, role: 'tab', isCurrent: true, theme: { props: {size: 'var(--szie20)', currentColor: 'var(--color-blue)', fill: 'var(--color-blue)', fillHover:  'var(--color-blue)', iconSize: '32px' }}}, tabProtocol('tab4'))
-    const Tab5 = button({page: 'JOBS', name: 'tab5', icon: iconSearch, body: bel`<div class="col2">Tab5 ${iconWarning}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', currentColor:'var(--color-orange)', fill: 'var(--color-orange)', fillHover: 'var(--color-orange)', iconSize: '32px' }}}, tabProtocol('tab5'))
-    const Tab6 = button({page: 'JOBS', name: 'tab6', iconSearch: iconSearch,body: bel`<div class="col2">Tab6 ${iconSearch}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', iconSize: '32px' }}}, tabProtocol('tab6'))
-    const demoIconTab = bel`
+    // Tab & icon_
+    const icon_notice = icon({name: 'notice', path: 'assets'})
+    const icon_warning = icon({name: 'warning', path: 'assets'})
+    const icon_search = icon({name: 'search', path: 'assets'})
+    const tab4 = button({page: 'JOBS', name: 'tab4', icon: icon_notice, body: bel`<div class="col2">Tab4 ${icon_notice}</div>`, role: 'tab', is_current: true, theme: { props: {size: 'var(--szie20)', current_color: 'var(--color-blue)', fill: 'var(--color-blue)', fill_hover:  'var(--color-blue)', icon_Size: '32px' }}}, tab_protocol('tab4'))
+    const tab5 = button({page: 'JOBS', name: 'tab5', icon: icon_search, body: bel`<div class="col2">Tab5 ${icon_warning}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', current_color:'var(--color-orange)', fill: 'var(--color-orange)', fill_hover: 'var(--color-orange)', icon_Size: '32px' }}}, tab_protocol('tab5'))
+    const tab6 = button({page: 'JOBS', name: 'tab6', icon: icon_search, body: bel`<div class="col2">Tab6 ${icon_search}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', icon_Size: '32px' }}}, tab_protocol('tab6'))
+    const demo_icon_tab = bel`
     <nav class=${css.tabs}>
-        ${Tab4}${Tab5}${Tab6}
+        ${tab4}${tab5}${tab6}
     </nav>`
 
-    // Use icon
-    // icons
-    let iconCancel = Icon({name: 'cross', path: 'assets'})
-    let iconConfirm = Icon({name: 'check', path: 'assets'})
-    let iconPrevious = Icon({name: 'arrow-left', path: 'assets'})
-    let iconNext = Icon({name: 'arrow-right', path: 'assets'})
+    // Use icon_
+    // icon_s
+    let icon_cancel = icon({name: 'cross', path: 'assets'})
+    let icon_confirm = icon({name: 'check', path: 'assets'})
+    let icon_previous = icon({name: 'arrow-left', path: 'assets'})
+    let icon_next = icon({name: 'arrow-right', path: 'assets'})
     // buttons
-    const cancel = button({name: 'cancel', body: iconCancel, theme: {
+    const cancel = button({name: 'cancel', body: icon_cancel, theme: {
         style: ``,
         props: {
             fill: 'var(--color-red)',
-            bgColorHover: 'var(--color-flame)'
+            bg_color_hover: 'var(--color-flame)'
         }
     }}, protocol('cancel'))
-    const confirm = button({name: 'confirm', body: iconConfirm, theme: {
+    const confirm = button({name: 'confirm', body: icon_confirm, theme: {
         props: {
             fill: 'var(--color-green)',
-            bgColorHover: 'var(--color-lincoln-green)',
-            fillHover: 'var(--color-light-green)'
+            bg_color_hover: 'var(--color-lincoln-green)',
+            fill_hover: 'var(--color-light-green)'
         }
     }}, protocol('confirm'))
-    const previous = button({name: 'previous', body: bel`<div class="col2 left"><span>Previous</span>${iconPrevious}</div>`, theme: {
+    const previous = button({name: 'previous', body: bel`<div class="col2 left"><span>Previous</span>${icon_previous}</div>`, theme: {
         style: ``,
         props: {
-            bgColorHover: 'var(--color-green-yellow-crayola)',
-            colorHover: 'var(--color-purple)',
-            fillHover: 'var(--color-purple)'
+            bg_color_hover: 'var(--color-green-yellow-crayola)',
+            color_hover: 'var(--color-purple)',
+            fill_hover: 'var(--color-purple)'
         }
     }}, protocol('previous'))
-    const next = button({name: 'next', body: bel`<div class="col2 right"><span>Next</span>${iconNext}</div>`, theme: {
+    const next = button({name: 'next', body: bel`<div class="col2 right"><span>Next</span>${icon_next}</div>`, theme: {
         // props: {
         //     fill: 'var(--color-green)',
-        //     fillHover: 'var(--color-bright-yellow-crayola)'
+        //     fill_hover: 'var(--color-bright-yellow-crayola)'
         // }
     }}, protocol('next'))
 
-    const iconOption = Icon({name: 'option', path: 'assets'})
-    const option = button({name: 'option', role: 'listbox', body: iconOption, theme: {
+    const icon_option = icon({name: 'option', path: 'assets'})
+    const option = button({name: 'option', role: 'listbox', body: icon_option, theme: {
         props: {
             fill: 'var(--color-blue)',
             currentFill: 'var(--color-white)'
         }
     }}, protocol('option'))
+
+    const filter_list = list({name: 'filter-list', body: [
+        {
+            text: 'Available',
+            icon: icon({name: 'check', path: 'assets'})
+        },
+        {
+            text: 'Not Available',
+            icon: icon({name: 'check', path: 'assets'})
+        },
+        {
+            text: 'Core',
+            icon: icon({name: 'check', path: 'assets'})
+        },
+        {
+            text: 'Drive',
+            icon: icon({name: 'check', path: 'assets'})
+        },
+        {
+            text: 'Cabal',
+            icon: icon({name: 'check', path: 'assets'})
+        },
+    ]}, protocol('filter-list') )
 
     // content
     const content = bel`
@@ -123,7 +148,7 @@ function widget() {
         <section>
             <h2>Text</h2>
             <div class=${css.text}>
-                ${Default}${Disabled}${Toggle}
+                ${primary}${disabled}${toggle}
             </div>
         </section>
         <section>
@@ -135,15 +160,15 @@ function widget() {
         </section>
         <section>
             <h2>Tab</h2>
-            ${demoTab}
+            ${demo_tab}
         </section>
         <section>
-            <h2>Tab & Icon</h2>
-            ${demoIconTab}
+            <h2>Tab & icon</h2>
+            ${demo_icon_tab}
         </section>
         <section>
             <h2>Dropdown</h2>
-            ${option}
+            ${option}${filter_list}
         </section>
     </div>`
 
@@ -155,65 +180,65 @@ function widget() {
 
     const app = bel`
     <div class="${css.wrap}" data-state="debug">
-        ${container}${logList}
+        ${container}${log_list}
     </div>`
 
     return app
 
-    function handleClickEvent({page, from, flow, body}) {
+    function handle_click_event ({page, from, flow, body}) {
         const role = flow.split('-')[1]
-        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 165})
-        if (role === 'tab') return handleTabEvent(page, from, role)
-        if (role === 'switch') return handleToggleEvent(page, from, role, body)
-        if (role === 'listbox') return handleDropdownMenuEvent(page, from, role, body)
+        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handle_click_event', file, line: 165})
+        if (role === 'tab') return handle_tab_event(page, from, role)
+        if (role === 'switch') return handle_toggle_event(page, from, role, body)
+        if (role === 'listbox') return handle_dropdown_menu_event(page, from, role, body)
     }
 
-    function handleTabEvent(page, from, flow) {
-        const tabs = [...demoTab.children]
+    function handle_tab_event (page, from, flow) {
+        const tabs = [...demo_tab.children]
         tabs.map( tab => {
             let current = from === tab.dataset.name ? from : tab.dataset.name
             let type = from === tab.dataset.name ? 'checked' : 'unchecked'
             recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handleTabEvent', file, line: 183})
+            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handle_tab_event', file, line: 183})
         })
     }
 
-    function handleTabIconEvent({page, from, flow}) {
+    function handle_tab_icon_event ({page, from, flow}) {
         const role = flow.split('-')[1]
-        const tabs = [...demoIconTab.children]
+        const tabs = [...demo_icon_tab.children]
         tabs.map( tab => {
             let current = from === tab.dataset.name ? from : tab.dataset.name
             let type = from === tab.dataset.name ? 'checked' : 'unchecked'
             recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow: role, type, body: 'tab event', fn: 'handleTabIconEvent', file, line: 194})
+            recipients['logs']({page, from: current, flow: role, type, body: 'tab event', fn: 'handle_tab_icon_event', file, line: 194})
         })
     }
 
-    function handleToggleEvent(page, from, flow, body) {
+    function handle_toggle_event (page, from, flow, body) {
         const state = !body
         recipients[from]({page, from, type: 'switched', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `toggle ${body ? 'on' : 'off'}`, fn: 'handleToggleEvent', file, line: 195})
+        recipients['logs']({page, from, flow, type: 'triggered', body: `toggle ${body ? 'on' : 'off'}`, fn: 'handle_toggle_event', file, line: 195})
     }
 
-    function handleDropdownMenuEvent(page, from, flow, body) {
+    function handle_dropdown_menu_event (page, from, flow, body) {
         const state = !body 
         recipients[from]({from, flow, type: 'expanded', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handleDropdownMenuEvent', line: 201})
+        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handle_dropdown_menu_event', line: 201})
     }
 
     function get (msg) {
         const { type } = msg
         recipients['logs'](msg)
-        if (type === 'click') return handleClickEvent(msg)
+        if (type === 'click') return handle_click_event(msg)
     }
 
-    function tabProtocol (name) {
+    function tab_protocol (name) {
         return sender => {
             recipients[name] = sender
             return (msg) => {
                 const { type } = msg
                 recipients['logs'](msg)
-                if (type === 'click') return handleTabIconEvent(msg)
+                if (type === 'click') return handle_tab_icon_event(msg)
             }
         }
     }
@@ -296,7 +321,7 @@ const css = csjs`
     --weight800: 800;
     --define-primary: *---------------------------------------------*;
     --primary-color: var(--color-black);
-    --primary-bgColor: var(--color-greyF2);
+    --primary-bg_color: var(--color-greyF2);
     --primary-font: Arial, sens-serif;
     --primary-font-size: var(--size16);
     --primary-input-radius: 8px;
@@ -315,7 +340,7 @@ body {
     font-size: var(--primary-font-size);
     -webkit-text-size-adjust:100%;
     font-family: var(--primary-font);
-    background-color: hsl( var(--primary-bgColor) );
+    background-color: hsl( var(--primary-bg_color) );
     height: 100%;
     overflow: hidden;
 }
@@ -382,4 +407,4 @@ body {
 }
 `
 
-document.body.append( widget() )
+document.body.append(demo())

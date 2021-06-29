@@ -4,120 +4,145 @@ const bel = require('bel')
 const csjs = require('csjs-inject')
 const file = require('path').basename(__filename)
 const button = require('..')
+const head = require('head')()
 // datdot-ui dependences
 const logs = require('datdot-ui-logs')
-const Icon = require('datdot-ui-icon')
+const icon = require('datdot-ui-icon')
+const list = require('list')
 
-function widget() {
+function demo () {
     // save protocol callbacks
     let recipients = []
      // logs must be initialized first before components
-     const logList = logs(protocol('logs'))
+     const log_list = logs(protocol('logs'))
     // buttons
-    const Default = button({name: 'default', body: 'Default', theme: { 
+    const primary = button({name: 'primary', body: 'Primary', theme: { 
         style: ` `, 
         props: {
-            // borderWidth: '2px',
-            // borderStyle: 'dashed',
-            // borderColor: 'var(--color-yellow)',
-            // colorHover: 'var(--color-white)',
-            sizeHover: 'var(--size16)',
-            bgColorHover: 'var(--color-black)',
+            // border_width: '2px',
+            // border_style: 'dashed',
+            // border_color: 'var(--color-yellow)',
+            // color_hover: 'var(--color-white)',
+            size_hover: 'var(--size16)',
+            bg_color_hover: 'var(--color-black)',
         }
 
-    }}, protocol('default'))
+    }}, protocol('primary'))
 
-    const Disabled = button({name: 'disable', body: 'Disable', isDisabled: true, theme: {
+    const disabled = button({name: 'disable', body: 'Disable', is_disabled: true, theme: {
         // style: `
         // :host(i-button) button[disabled] {
-        //     --colorOpacity: 1;
-        //     --bgColorOpacity: 0.2;
+        //     --color-opacity: 1;
+        //     --bg-color-opacity: 0.2;
         // }
         // `,
         props: {
-            // bgColor: 'var(--color-slimy-green)'
+            // bg_color: 'var(--color-slimy-green)'
         }
     }}, protocol('disable'))
 
-    const Toggle = button({name: 'toggle', body: 'Toggle', role: 'switch', isChecked: false, theme : {
+    const toggle = button({name: 'toggle', body: 'Toggle', role: 'switch', is_checked: false, theme : {
         style: ``,
         props: {
-            currentBgColor: 'var(--color-green)'
+            current_bg_color: 'var(--color-green)'
         }
     }}, protocol('toggle'))
 
     // Tab element
-    const tabTheme = {
+    const tab_theme = {
         props: {
-            colorHover: 'var(--color-white)',
-            bgColorHover: 'var(--color-red)',
-            currentBgColor: 'var(--color-yellow)',
-            currentColor: 'var(--primary-color)'
+            color_hover: 'var(--color-white)',
+            bg_color_hover: 'var(--color-red)',
+            current_bg_color: 'var(--color-yellow)',
+            current_color: 'var(--primary-color)'
         }
     }
-    const Tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', isCurrent: true, theme: tabTheme }, protocol('tab1'))
-    const Tab2 = button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab', theme: tabTheme}, protocol('tab2'))
-    const Tab3 = button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab', theme: tabTheme}, protocol('tab3'))
-    const demoTab = bel`
+    const tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', is_current: true, theme: tab_theme }, protocol('tab1'))
+    const tab2 = button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab', theme: tab_theme}, protocol('tab2'))
+    const tab3 = button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab', theme: tab_theme}, protocol('tab3'))
+    const demo_tab = bel`
     <nav class=${css.tabs}>
-        ${Tab1}${Tab2}${Tab3}
+        ${tab1}${tab2}${tab3}
     </nav>`
 
-    // Tab & icon
-    const iconNotice = Icon({name: 'notice', path: 'assets'})
-    const iconWarning = Icon({name: 'warning', path: 'assets'})
-    const iconSearch = Icon({name: 'search', path: 'assets'})
-    const Tab4 = button({page: 'JOBS', name: 'tab4', icon: iconNotice,  body: bel`<div class="col2">Tab4 ${iconNotice}</div>`, role: 'tab', isCurrent: true, theme: { props: {size: 'var(--szie20)', currentColor: 'var(--color-blue)', fill: 'var(--color-blue)', fillHover:  'var(--color-blue)', iconSize: '32px' }}}, tabProtocol('tab4'))
-    const Tab5 = button({page: 'JOBS', name: 'tab5', icon: iconSearch, body: bel`<div class="col2">Tab5 ${iconWarning}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', currentColor:'var(--color-orange)', fill: 'var(--color-orange)', fillHover: 'var(--color-orange)', iconSize: '32px' }}}, tabProtocol('tab5'))
-    const Tab6 = button({page: 'JOBS', name: 'tab6', iconSearch: iconSearch,body: bel`<div class="col2">Tab6 ${iconSearch}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', iconSize: '32px' }}}, tabProtocol('tab6'))
-    const demoIconTab = bel`
+    // Tab & icon_
+    const icon_notice = icon({name: 'notice', path: 'assets'})
+    const icon_warning = icon({name: 'warning', path: 'assets'})
+    const icon_search = icon({name: 'search', path: 'assets'})
+    const tab4 = button({page: 'JOBS', name: 'tab4', icon: icon_notice, body: bel`<div class="col2">Tab4 ${icon_notice}</div>`, role: 'tab', is_current: true, theme: { props: {size: 'var(--szie20)', current_color: 'var(--color-blue)', fill: 'var(--color-blue)', fill_hover:  'var(--color-blue)', icon_Size: '32px' }}}, tab_protocol('tab4'))
+    const tab5 = button({page: 'JOBS', name: 'tab5', icon: icon_search, body: bel`<div class="col2">Tab5 ${icon_warning}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', current_color:'var(--color-orange)', fill: 'var(--color-orange)', fill_hover: 'var(--color-orange)', icon_Size: '32px' }}}, tab_protocol('tab5'))
+    const tab6 = button({page: 'JOBS', name: 'tab6', icon: icon_search, body: bel`<div class="col2">Tab6 ${icon_search}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', icon_Size: '32px' }}}, tab_protocol('tab6'))
+    const demo_icon_tab = bel`
     <nav class=${css.tabs}>
-        ${Tab4}${Tab5}${Tab6}
+        ${tab4}${tab5}${tab6}
     </nav>`
 
-    // Use icon
-    // icons
-    let iconCancel = Icon({name: 'cross', path: 'assets'})
-    let iconConfirm = Icon({name: 'check', path: 'assets'})
-    let iconPrevious = Icon({name: 'arrow-left', path: 'assets'})
-    let iconNext = Icon({name: 'arrow-right', path: 'assets'})
+    // Use icon_
+    // icon_s
+    let icon_cancel = icon({name: 'cross', path: 'assets'})
+    let icon_confirm = icon({name: 'check', path: 'assets'})
+    let icon_previous = icon({name: 'arrow-left', path: 'assets'})
+    let icon_next = icon({name: 'arrow-right', path: 'assets'})
     // buttons
-    const cancel = button({name: 'cancel', body: iconCancel, theme: {
+    const cancel = button({name: 'cancel', body: icon_cancel, theme: {
         style: ``,
         props: {
             fill: 'var(--color-red)',
-            bgColorHover: 'var(--color-flame)'
+            bg_color_hover: 'var(--color-flame)'
         }
     }}, protocol('cancel'))
-    const confirm = button({name: 'confirm', body: iconConfirm, theme: {
+    const confirm = button({name: 'confirm', body: icon_confirm, theme: {
         props: {
             fill: 'var(--color-green)',
-            bgColorHover: 'var(--color-lincoln-green)',
-            fillHover: 'var(--color-light-green)'
+            bg_color_hover: 'var(--color-lincoln-green)',
+            fill_hover: 'var(--color-light-green)'
         }
     }}, protocol('confirm'))
-    const previous = button({name: 'previous', body: bel`<div class="col2 left"><span>Previous</span>${iconPrevious}</div>`, theme: {
+    const previous = button({name: 'previous', body: bel`<div class="col2 left"><span>Previous</span>${icon_previous}</div>`, theme: {
         style: ``,
         props: {
-            bgColorHover: 'var(--color-green-yellow-crayola)',
-            colorHover: 'var(--color-purple)',
-            fillHover: 'var(--color-purple)'
+            bg_color_hover: 'var(--color-green-yellow-crayola)',
+            color_hover: 'var(--color-purple)',
+            fill_hover: 'var(--color-purple)'
         }
     }}, protocol('previous'))
-    const next = button({name: 'next', body: bel`<div class="col2 right"><span>Next</span>${iconNext}</div>`, theme: {
+    const next = button({name: 'next', body: bel`<div class="col2 right"><span>Next</span>${icon_next}</div>`, theme: {
         // props: {
         //     fill: 'var(--color-green)',
-        //     fillHover: 'var(--color-bright-yellow-crayola)'
+        //     fill_hover: 'var(--color-bright-yellow-crayola)'
         // }
     }}, protocol('next'))
 
-    const iconOption = Icon({name: 'option', path: 'assets'})
-    const option = button({name: 'option', role: 'listbox', body: iconOption, theme: {
+    const icon_option = icon({name: 'option', path: 'assets'})
+    const option = button({name: 'option', role: 'listbox', body: icon_option, theme: {
         props: {
             fill: 'var(--color-blue)',
             currentFill: 'var(--color-white)'
         }
     }}, protocol('option'))
+
+    const filter_list = list({name: 'filter-list', body: [
+        {
+            text: 'Available',
+            icon: icon({name: 'check', path: 'assets'})
+        },
+        {
+            text: 'Not Available',
+            icon: icon({name: 'check', path: 'assets'})
+        },
+        {
+            text: 'Core',
+            icon: icon({name: 'check', path: 'assets'})
+        },
+        {
+            text: 'Drive',
+            icon: icon({name: 'check', path: 'assets'})
+        },
+        {
+            text: 'Cabal',
+            icon: icon({name: 'check', path: 'assets'})
+        },
+    ]}, protocol('filter-list') )
 
     // content
     const content = bel`
@@ -125,7 +150,7 @@ function widget() {
         <section>
             <h2>Text</h2>
             <div class=${css.text}>
-                ${Default}${Disabled}${Toggle}
+                ${primary}${disabled}${toggle}
             </div>
         </section>
         <section>
@@ -137,15 +162,15 @@ function widget() {
         </section>
         <section>
             <h2>Tab</h2>
-            ${demoTab}
+            ${demo_tab}
         </section>
         <section>
-            <h2>Tab & Icon</h2>
-            ${demoIconTab}
+            <h2>Tab & icon</h2>
+            ${demo_icon_tab}
         </section>
         <section>
             <h2>Dropdown</h2>
-            ${option}
+            ${option}${filter_list}
         </section>
     </div>`
 
@@ -157,65 +182,65 @@ function widget() {
 
     const app = bel`
     <div class="${css.wrap}" data-state="debug">
-        ${container}${logList}
+        ${container}${log_list}
     </div>`
 
     return app
 
-    function handleClickEvent({page, from, flow, body}) {
+    function handle_click_event ({page, from, flow, body}) {
         const role = flow.split('-')[1]
-        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handleClickEvent', file, line: 165})
-        if (role === 'tab') return handleTabEvent(page, from, role)
-        if (role === 'switch') return handleToggleEvent(page, from, role, body)
-        if (role === 'listbox') return handleDropdownMenuEvent(page, from, role, body)
+        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handle_click_event', file, line: 165})
+        if (role === 'tab') return handle_tab_event(page, from, role)
+        if (role === 'switch') return handle_toggle_event(page, from, role, body)
+        if (role === 'listbox') return handle_dropdown_menu_event(page, from, role, body)
     }
 
-    function handleTabEvent(page, from, flow) {
-        const tabs = [...demoTab.children]
+    function handle_tab_event (page, from, flow) {
+        const tabs = [...demo_tab.children]
         tabs.map( tab => {
             let current = from === tab.dataset.name ? from : tab.dataset.name
             let type = from === tab.dataset.name ? 'checked' : 'unchecked'
             recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handleTabEvent', file, line: 183})
+            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handle_tab_event', file, line: 183})
         })
     }
 
-    function handleTabIconEvent({page, from, flow}) {
+    function handle_tab_icon_event ({page, from, flow}) {
         const role = flow.split('-')[1]
-        const tabs = [...demoIconTab.children]
+        const tabs = [...demo_icon_tab.children]
         tabs.map( tab => {
             let current = from === tab.dataset.name ? from : tab.dataset.name
             let type = from === tab.dataset.name ? 'checked' : 'unchecked'
             recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow: role, type, body: 'tab event', fn: 'handleTabIconEvent', file, line: 194})
+            recipients['logs']({page, from: current, flow: role, type, body: 'tab event', fn: 'handle_tab_icon_event', file, line: 194})
         })
     }
 
-    function handleToggleEvent(page, from, flow, body) {
+    function handle_toggle_event (page, from, flow, body) {
         const state = !body
         recipients[from]({page, from, type: 'switched', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `toggle ${body ? 'on' : 'off'}`, fn: 'handleToggleEvent', file, line: 195})
+        recipients['logs']({page, from, flow, type: 'triggered', body: `toggle ${body ? 'on' : 'off'}`, fn: 'handle_toggle_event', file, line: 195})
     }
 
-    function handleDropdownMenuEvent(page, from, flow, body) {
+    function handle_dropdown_menu_event (page, from, flow, body) {
         const state = !body 
         recipients[from]({from, flow, type: 'expanded', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handleDropdownMenuEvent', line: 201})
+        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handle_dropdown_menu_event', line: 201})
     }
 
     function get (msg) {
         const { type } = msg
         recipients['logs'](msg)
-        if (type === 'click') return handleClickEvent(msg)
+        if (type === 'click') return handle_click_event(msg)
     }
 
-    function tabProtocol (name) {
+    function tab_protocol (name) {
         return sender => {
             recipients[name] = sender
             return (msg) => {
                 const { type } = msg
                 recipients['logs'](msg)
-                if (type === 'click') return handleTabIconEvent(msg)
+                if (type === 'click') return handle_tab_icon_event(msg)
             }
         }
     }
@@ -298,7 +323,7 @@ const css = csjs`
     --weight800: 800;
     --define-primary: *---------------------------------------------*;
     --primary-color: var(--color-black);
-    --primary-bgColor: var(--color-greyF2);
+    --primary-bg_color: var(--color-greyF2);
     --primary-font: Arial, sens-serif;
     --primary-font-size: var(--size16);
     --primary-input-radius: 8px;
@@ -317,7 +342,7 @@ body {
     font-size: var(--primary-font-size);
     -webkit-text-size-adjust:100%;
     font-family: var(--primary-font);
-    background-color: hsl( var(--primary-bgColor) );
+    background-color: hsl( var(--primary-bg_color) );
     height: 100%;
     overflow: hidden;
 }
@@ -384,9 +409,72 @@ body {
 }
 `
 
-document.body.append( widget() )
+document.body.append(demo())
 }).call(this)}).call(this,"/demo/demo.js")
-},{"..":33,"bel":3,"csjs-inject":6,"datdot-ui-icon":23,"datdot-ui-logs":26,"path":31}],2:[function(require,module,exports){
+},{"..":35,"bel":5,"csjs-inject":8,"datdot-ui-icon":25,"datdot-ui-logs":28,"head":2,"list":3,"path":33}],2:[function(require,module,exports){
+module.exports = head
+
+function head (lang = 'utf8', title = 'Button - DatDot UI') {
+    document.title = title
+    const meta = document.createElement('meta')
+    meta.setAttribute('name', 'viewport')
+    meta.setAttribute('content', 'width=device-width, initial-scale=1.0')
+    document.head.appendChild(meta)
+}
+},{}],3:[function(require,module,exports){
+(function (__filename){(function (){
+const bel = require('bel')
+const csjs = require('csjs-inject')
+const file = require('path').basename(__filename)
+const style_sheet = require('../../src/node_modules/support-style-sheet')
+const button = require('../../src/index')
+
+module.exports = i_list
+
+function i_list ({page = 'Demo', flow = 'ui-list', name, body = [], is_expanded = false, is_hidden }, protocol) {
+    const recipients = [] 
+    const sender = protocol( get )
+    sender({page, from: name, flow, type: 'ready', file, fn: 'i_list', line: 12})
+    const list = document.createElement('i-list')
+    list.setAttribute('role', 'listbox')
+    list.ariaHidden = false
+    list.ariaLabel = name
+    list.tabIndex = 0
+
+    try {
+        body.map( (option, i) => {
+            const {text, icon} = option
+            const selected = i === 0 ? true : false
+            // todo: make button into list
+            var item = button({page, name: text, body: text, icon, isSelected: selected, theme: { props: { bg_color: 'transparent', bg_color_hover: 'transparent'}}}, button_protocol(text))
+            const li = bel`<li role="option" data-option=${text.toLowerCase()}">${item}</li>`
+            list.append(li)
+            if (i === 0) list.setAttribute('aria-activedescendant', text)
+        })
+        if (body.length === 0) sender({from: name, flow, type: 'error', body: 'body no items', fn: 'i_list', file, line: 25})
+    } catch(e) {
+        sender({from: name, flow, type: 'error', body: 'something went wrong', fn: 'i_list', file, line: 27})
+    }
+    
+    return list
+
+    function button_protocol (name) {
+        return (sender) => {
+            recipients[name] = sender
+            return (msg) => {
+                const {page, flow, from: name, type, body, fn} = msg
+                console.log( msg );
+                sender(msg)
+            }
+        }
+    }
+
+    function get (msg) {
+        console.log( msg );
+    }
+}
+}).call(this)}).call(this,"/demo/node_modules/list.js")
+},{"../../src/index":35,"../../src/node_modules/support-style-sheet":36,"bel":5,"csjs-inject":8,"path":33}],4:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
 var trailingSpaceRegex = /[\s]+$/
@@ -519,7 +607,7 @@ module.exports = function appendChild (el, childs) {
   }
 }
 
-},{}],3:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 var hyperx = require('hyperx')
 var appendChild = require('./appendChild')
 
@@ -620,7 +708,7 @@ module.exports = hyperx(belCreateElement, {comments: true})
 module.exports.default = module.exports
 module.exports.createElement = belCreateElement
 
-},{"./appendChild":2,"hyperx":29}],4:[function(require,module,exports){
+},{"./appendChild":4,"hyperx":31}],6:[function(require,module,exports){
 (function (global){(function (){
 'use strict';
 
@@ -639,12 +727,12 @@ function csjsInserter() {
 module.exports = csjsInserter;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"csjs":9,"insert-css":30}],5:[function(require,module,exports){
+},{"csjs":11,"insert-css":32}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = require('csjs/get-css');
 
-},{"csjs/get-css":8}],6:[function(require,module,exports){
+},{"csjs/get-css":10}],8:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -653,17 +741,17 @@ module.exports = csjs;
 module.exports.csjs = csjs;
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":4,"./get-css":5}],7:[function(require,module,exports){
+},{"./csjs":6,"./get-css":7}],9:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/csjs');
 
-},{"./lib/csjs":13}],8:[function(require,module,exports){
+},{"./lib/csjs":15}],10:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/get-css');
 
-},{"./lib/get-css":17}],9:[function(require,module,exports){
+},{"./lib/get-css":19}],11:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -673,7 +761,7 @@ module.exports.csjs = csjs;
 module.exports.noScope = csjs({ noscope: true });
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":7,"./get-css":8}],10:[function(require,module,exports){
+},{"./csjs":9,"./get-css":10}],12:[function(require,module,exports){
 'use strict';
 
 /**
@@ -695,7 +783,7 @@ module.exports = function encode(integer) {
   return str;
 };
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -739,7 +827,7 @@ function getClassChain(obj) {
   return acc;
 }
 
-},{"./composition":12}],12:[function(require,module,exports){
+},{"./composition":14}],14:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -819,7 +907,7 @@ function ignoreComposition(values) {
  */
 function Composition() {}
 
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 var extractExtends = require('./css-extract-extends');
@@ -897,7 +985,7 @@ function without(obj, unwanted) {
   }, {});
 }
 
-},{"./build-exports":11,"./composition":12,"./css-extract-extends":14,"./css-key":15,"./extract-exports":16,"./scopeify":22}],14:[function(require,module,exports){
+},{"./build-exports":13,"./composition":14,"./css-extract-extends":16,"./css-key":17,"./extract-exports":18,"./scopeify":24}],16:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -950,7 +1038,7 @@ function getClassName(str) {
   return trimmed[0] === '.' ? trimmed.substr(1) : trimmed;
 }
 
-},{"./composition":12}],15:[function(require,module,exports){
+},{"./composition":14}],17:[function(require,module,exports){
 'use strict';
 
 /**
@@ -960,7 +1048,7 @@ function getClassName(str) {
 
 module.exports = ' css ';
 
-},{}],16:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 var regex = require('./regex');
@@ -987,7 +1075,7 @@ function getExport(css, regex) {
   return prop;
 }
 
-},{"./regex":19}],17:[function(require,module,exports){
+},{"./regex":21}],19:[function(require,module,exports){
 'use strict';
 
 var cssKey = require('./css-key');
@@ -996,7 +1084,7 @@ module.exports = function getCss(csjs) {
   return csjs[cssKey];
 };
 
-},{"./css-key":15}],18:[function(require,module,exports){
+},{"./css-key":17}],20:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1014,7 +1102,7 @@ module.exports = function hashStr(str) {
   return hash >>> 0;
 };
 
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
 var findClasses = /(\.)(?!\d)([^\s\.,{\[>+~#:)]*)(?![^{]*})/.source;
@@ -1030,7 +1118,7 @@ module.exports = {
   ignoreComments: ignoreComments,
 };
 
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var ignoreComments = require('./regex').ignoreComments;
 
 module.exports = replaceAnimations;
@@ -1061,7 +1149,7 @@ function replaceAnimations(result) {
   return result;
 }
 
-},{"./regex":19}],21:[function(require,module,exports){
+},{"./regex":21}],23:[function(require,module,exports){
 'use strict';
 
 var encode = require('./base62-encode');
@@ -1075,7 +1163,7 @@ module.exports = function fileScoper(fileSrc) {
   }
 };
 
-},{"./base62-encode":10,"./hash-string":18}],22:[function(require,module,exports){
+},{"./base62-encode":12,"./hash-string":20}],24:[function(require,module,exports){
 'use strict';
 
 var fileScoper = require('./scoped-name');
@@ -1116,7 +1204,7 @@ function scopify(css, ignores) {
   return replaceAnimations(result);
 }
 
-},{"./regex":19,"./replace-animations":20,"./scoped-name":21}],23:[function(require,module,exports){
+},{"./regex":21,"./replace-animations":22,"./scoped-name":23}],25:[function(require,module,exports){
 const styleSheet = require('supportCSSStyleSheet')
 const svg = require('svg')
 
@@ -1172,7 +1260,7 @@ module.exports = ({name, path, isShadow = false, theme}) => {
     return symbol
 }
 
-},{"supportCSSStyleSheet":24,"svg":25}],24:[function(require,module,exports){
+},{"supportCSSStyleSheet":26,"svg":27}],26:[function(require,module,exports){
 module.exports = supportCSSStyleSheet
 function supportCSSStyleSheet (root, style) {
     return (() => {
@@ -1188,7 +1276,7 @@ function supportCSSStyleSheet (root, style) {
         }
     })()
 }
-},{}],25:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 module.exports = svg
 
 function svg(path) {
@@ -1211,7 +1299,7 @@ function svg(path) {
     })
     return el
 }   
-},{}],26:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 (function (__filename){(function (){
 const styleSheet = require('supportCSSStyleSheet')
 const bel = require('bel')
@@ -1408,9 +1496,9 @@ const style = `
 :host(i-log) [aria-label="demo"] {}
 `
 }).call(this)}).call(this,"/node_modules/datdot-ui-logs/src/index.js")
-},{"bel":3,"path":31,"supportCSSStyleSheet":27}],27:[function(require,module,exports){
-arguments[4][24][0].apply(exports,arguments)
-},{"dup":24}],28:[function(require,module,exports){
+},{"bel":5,"path":33,"supportCSSStyleSheet":29}],29:[function(require,module,exports){
+arguments[4][26][0].apply(exports,arguments)
+},{"dup":26}],30:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -1431,7 +1519,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],29:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -1728,7 +1816,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":28}],30:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":30}],32:[function(require,module,exports){
 var inserted = {};
 
 module.exports = function (css, options) {
@@ -1752,7 +1840,7 @@ module.exports = function (css, options) {
     }
 };
 
-},{}],31:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 (function (process){(function (){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -2058,7 +2146,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this)}).call(this,require('_process'))
-},{"_process":32}],32:[function(require,module,exports){
+},{"_process":34}],34:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2244,35 +2332,34 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],33:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 (function (__filename){(function (){
-const bel = require('bel')
 const file = require('path').basename(__filename)
-const styleSheet = require('supportCSSStyleSheet')
+const style_sheet = require('support-style-sheet')
 
-module.exports = ibutton
+module.exports = i_button
 
-function ibutton (option, protocol) {
-    const {page, flow = 'ui-button', name, body, icon, role = 'button', state, isExpanded = false, isCurrent = false, isSelected, isChecked, isDisabled, theme} = option
-    let current = isCurrent
-    let checked = isChecked
-    let disabled = isDisabled
-    let selected = isSelected
-    let expanded = isExpanded
+function i_button (option, protocol) {
+    const {page, flow = 'ui-button', name, body, icon, role = 'button', state, is_expanded = false, is_current = false, is_selected, is_checked, is_disabled, theme} = option
+    let current = is_current
+    let checked = is_checked
+    let disabled = is_disabled
+    let selected = is_selected
+    let expanded = is_expanded
 
     function widget () {
-        const sender = protocol( get )
-        sender({page, from: name, flow, type: 'ready', file, fn: 'ibutton', line: 16})
-        // const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handleClick()}">${body} ${icon}</button>`
+        const sender = protocol(get)
+        sender({page, from: name, flow, type: 'ready', file, fn: 'i_button', line: 16})
+        // const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handle_click()}">${body} ${icon}</button>`
         const el = document.createElement('i-button')
         el.dataset.name = name
         el.dataset.ui = role
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
         el.setAttribute('tabindex', 0)
-        el.onclick = handleClick
+        el.onclick = handle_click
         const shadow = el.attachShadow({mode: 'closed'})
-        styleSheet(shadow, style)
+        style_sheet(shadow, style)
         shadow.append(body)
         if (icon) shadow.append(icon)
 
@@ -2291,45 +2378,42 @@ function ibutton (option, protocol) {
         if (role === 'listbox') {
             el.setAttribute('aria-haspopup', role)
         }
-        if (expanded) {
-            el.setAttribute('aria-expanded', expanded)
-        }
-        if (isDisabled) {
+        if (is_disabled) {
             el.ariaDisabled = disabled
             el.setAttribute('disabled', disabled)
         } else {
             el.removeAttribute('aria-disabled')
             el.removeAttribute('disabled')
         }
-        if (isChecked) {
+        if (is_checked) {
             el.setAttribute('aria-checked', checked)
         }
-        if (isCurrent) {
+        if (is_current) {
             el.ariaCurrent = current
             el.ariaSelected = selected
         }
-        if (isSelected) {
+        if (is_selected) {
             el.ariaSelected = selected
         }
-        if (isExpanded) {
+        if (is_expanded) {
             el.ariaExpanded = expanded
         }
         return el
 
         // toggle
-        function switchedEvent (body) {
+        function switched_event (body) {
             checked = body
             if (!checked) return el.removeAttribute('aria-checked')
             el.setAttribute('aria-checked', checked)
         }
         // dropdown menu
-        function expandedEvent (body) {
+        function expanded_event (body) {
             expanded = body
             if (!expanded) return el.removeAttribute('aria-expanded')
             el.ariaExpanded = expanded
         }
         // tab checked
-        function checkedEvent () {
+        function checked_event () {
             checked = true
             current = checked
             el.ariaSelected = checked
@@ -2337,7 +2421,7 @@ function ibutton (option, protocol) {
             el.dataset.current = current
         }
         // tab unchecked
-        function uncheckedEvent() {
+        function unchecked_event() {
             checked = false
             current = checked
             el.ariaSelected = checked
@@ -2345,65 +2429,66 @@ function ibutton (option, protocol) {
             el.dataset.current = current
         }
         // button click
-        function handleClick() {
+        function handle_click() {
+            console.log( role );
             if (current) return
-            if (role === 'switch') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: checked, fn: 'handleClick', file, line: 102})
-            if (role === 'listbox') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: expanded, fn: 'handleClick', file, line: 103})
-            sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handleClick', file, line: 104})
+            if (role === 'switch') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: checked, fn: 'handle_click', file, line: 98})
+            if (role === 'listbox') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: expanded, fn: 'handle_click', file, line: 99})
+            sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handle_click', file, line: 100})
         }
         // protocol get msg
         function get (msg) {
             const { type, body } = msg
-            if (type === 'checked') return checkedEvent()
-            if (type === 'unchecked') return uncheckedEvent()
-            if (type === 'expanded') return expandedEvent(body)
-            if (type === 'switched') return switchedEvent(body)
+            if (type === 'checked') return checked_event()
+            if (type === 'unchecked') return unchecked_event()
+            if (type === 'expanded') return expanded_event(body)
+            if (type === 'switched') return switched_event(body)
         }
     }
    
      // insert CSS style
-     const customStyle = theme ? theme.style : ''
+     const custom_style = theme ? theme.style : ''
      // set CSS variables
      if (theme && theme.props) {
-        var {size, sizeHover, currentSize,
-            weight, weightHover, currentWeight,
-            color, colorHover, currentColor, currentBgColor, 
-            bgColor, bgColorHover, borderColorHover,
-            borderWidth, borderStyle, borderOpacity, borderColor, borderRadius, 
+        var {size, size_hover, current_size,
+            weight, weight_hover, current_weight,
+            color, color_hover, current_color, current_bg_color, 
+            bg_color, bg_color_hover, border_color_hover,
+            border_width, border_style, border_opacity, border_color, border_radius, 
             padding, width, height, opacity,
-            fill, fillHover, iconSize, currentFill,
-            shadowColor, offsetX, offsetY, blur, shadowOpacity,
-            shadowColorHover, offsetXHover, offsetYHover, blurHover, shadowOpacityHover
+            fill, fill_hover, icon_size, current_fill,
+            shadow_color, offset_x, offset_y, blur, shadow_opacity,
+            shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
      }
 
     const style = `
     :host(i-button) {
         --size: ${size ? size : 'var(--size14)'};
-        --sizeHover: ${sizeHover ? sizeHover : 'var(--size)'};
-        --currenSize: ${currentSize ? currentSize : 'var(--size14)'};
+        --size-hover: ${size_hover ? size_hover : 'var(--size)'};
+        --curren-size: ${current_size ? current_size : 'var(--size14)'};
         --bold: ${weight ? weight : 'normal'};
         --color: ${color ? color : 'var(--color-black)'};
-        --bgColor: ${bgColor ? bgColor : 'var(--color-white)'};
+        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
         --width: ${width ? width : 'unset'};
         --height: ${height ? height : 'unset'};
         --opacity: ${opacity ? opacity : '1'};
         --padding: ${padding ? padding : '12px'};
-        --borderWidth: ${borderWidth ? borderWidth : '0px'};
-        --borderStyle: ${borderStyle ? borderStyle : 'solid'};
-        --borderColor: ${borderColor ? borderColor : 'var(--color-black)'};
-        --borderOpacity: ${borderOpacity ? borderOpacity : '1'};
-        --border: var(--borderWidth) var(--borderStyle) hsla( var(--borderColor), var(--borderOpacity) );
-        --borderRadius: ${borderRadius ? borderRadius : 'var(--primary-button-radius)'};
+        --border-width: ${border_width ? border_width : '0px'};
+        --border-style: ${border_style ? border_style : 'solid'};
+        --border-color: ${border_color ? border_color : 'var(--color-black)'};
+        --border-opacity: ${border_opacity ? border_opacity : '1'};
+        --border: var(--border-width) var(--border-style) hsla( var(--border-color), var(--border-opacity) );
+        --border-radius: ${border_radius ? border_radius : 'var(--primary-button-radius)'};
         --fill: ${fill ? fill : 'var(--color-black)'};
-        --fillHover: ${fillHover ? fillHover : 'var(--color-white)'};
-        --iconSize: ${iconSize ? iconSize : '16px'};
-        --offsetX: ${offsetX ? offsetX : '0px'};
-        --offsetY: ${offsetY ? offsetY : '6px'};
+        --fill-hover: ${fill_hover ? fill_hover : 'var(--color-white)'};
+        ---icon-size: ${icon_size ? icon_size : '16px'};
+        --offset_x: ${offset_x ? offset_x : '0px'};
+        --offset-y: ${offset_y ? offset_y : '6px'};
         --blur: ${blur ? blur : '30px'};
-        --boxShadowColor: ${shadowColor ? shadowColor : 'var(--pimary-color)'};
-        --shadowOpacity: ${shadowOpacity ? shadowOpacity : '1'};
-        --boxShadow: var(--offsetX) var(--offsetY) var(--blur) hsla( var(--boxShadowColor), var(--shadowOpacity) );
+        --shadow-color: ${shadow_color ? shadow_color : 'var(--pimary-color)'};
+        --shadow-opacity: ${shadow_opacity ? shadow_opacity : '1'};
+        --box-shadow: var(--offset_x) var(--offset-y) var(--blur) hsla( var(--shadow-color), var(--shadow-opacity) );
         display: inline-grid;
         grid-auto-flow: column;
         grid-column-gap: 5px;
@@ -2414,33 +2499,33 @@ function ibutton (option, protocol) {
         font-size: var(--size);
         font-weight: var(--bold);
         color: hsl( var(--color) );
-        background-color: hsla( var(--bgColor), var(--opacity) );
+        background-color: hsla( var(--bg-color), var(--opacity) );
         border: var(--border);
-        border-radius: var(--borderRadius);
-        box-shadow: var(--boxShadow);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
         padding: var(--padding);
         transition: font-size .3s, color .3s, background-color .3s ease-in-out;
         cursor: pointer;
     }
     :host(i-button:hover), :host(i-button[role]:hover) {
-        --weight: ${weightHover ? weightHover : 'initial'};
-        --color: ${colorHover ? colorHover : 'var(--color-white)'};
-        --bgColor: ${bgColorHover ? bgColorHover : 'var(--color-black)'};
-        --borderColor: ${borderColorHover ? borderColorHover : 'var(-color-black)'};
-        --offset-x: ${offsetXHover ? offsetXHover : '0'};
-        --offset-y: ${offsetYHover ? offsetYHover : '0'};
-        --blur: ${blurHover ? blurHover : '50px'};
-        --boxShadowColor: ${shadowColorHover ? shadowColorHover : 'var(--pimary-color)'};
-        --shadowOpacity: ${shadowOpacityHover ? shadowOpacityHover : '.25'};
-        font-size: var(--sizeHover);
+        --weight: ${weight_hover ? weight_hover : 'initial'};
+        --color: ${color_hover ? color_hover : 'var(--color-white)'};
+        --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--color-black)'};
+        --border-color: ${border_color_hover ? border_color_hover : 'var(-color-black)'};
+        --offset-x: ${offset_x_hover ? offset_x_hover : '0'};
+        --offset-y: ${offset_y_hover ? offset_y_hover : '0'};
+        --blur: ${blur_hover ? blur_hover : '50px'};
+        --shadow-color: ${shadow_color_hover ? shadow_color_hover : 'var(--pimary-color)'};
+        --shadow-opacity: ${shadow_opacity_hover ? shadow_opacity_hover : '.25'};
+        font-size: var(--size-hover);
     }
     :host(i-button) g {
         fill: hsl(var(--fill));
         transition: fill 0.3s ease-in-out;
     }
     :host(i-button:hover) g {
-        --fillHover: ${fillHover ? fillHover : 'var(--color-white)'};
-        fill: hsl(var(--fillHover));
+        --fill-hover: ${fill_hover ? fill_hover : 'var(--color-white)'};
+        fill: hsl(var(--fill-hover));
     }
     :host(i-button[role="button"])  {
 
@@ -2454,8 +2539,8 @@ function ibutton (option, protocol) {
     }
     :host(i-button) .icon {
         display: block;
-        width: var(--iconSize);
-        height: var(--iconSize);
+        width: var(---icon-size);
+        height: var(---icon-size);
     }
     :host(i-button) .right .icon {
         grid-column-start: 2;
@@ -2471,67 +2556,81 @@ function ibutton (option, protocol) {
         --size: ${size ? size : 'initial'};
         --width: ${width ? width : '100%'};
         --color: ${color ? color : 'var(--primary-color)'};
-        --bgColor: ${bgColor ? bgcolor : 'var(--color-white)'};
-        --borderRadius: ${borderRadius ? borderRadius : '0'};
-        --borderWidth: ${borderWidth ? borderWidth : '0'};
-        --borderStyle: ${borderStyle ? borderStyle : 'solid'};
-        --borderColor: ${borderColor ? borderColor : 'var(--primary-color)'};
+        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
+        --border-radius: ${border_radius ? border_radius : '0'};
+        --border-width: ${border_width ? border_width : '0'};
+        --border-style: ${border_style ? border_style : 'solid'};
+        --border-color: ${border_color ? border_color : 'var(--primary-color)'};
         width: var(--width);
     }
     :host(i-button[role="switch"]) {
         --width: ${width ? width : 'unset'};
         --color: ${color ? color : 'var(--primary-color)'};
-        --bgColor: ${bgColor ? bgcolor : 'var(--color-white)'};
-        --borderRadius: ${borderRadius ? borderRadius : '8px'};
-        --borderWidth: ${borderWidth ? borderWidth : '0'};
-        --borderStyle: ${borderStyle ? borderStyle : 'solid'};
-        --borderColor: ${borderColor ? borderColor : 'var(--primary-color)'};
+        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
+        --border-radius: ${border_radius ? border_radius : '8px'};
+        --border-width: ${border_width ? border_width : '0'};
+        --border-style: ${border_style ? border_style : 'solid'};
+        --border-color: ${border_color ? border_color : 'var(--primary-color)'};
         width: var(--width);
     }
     :host(i-button[role="listbox"]) {
         --width: ${width ? width : 'unset'};
         --color: ${color ? color : 'var(--primary-color)'};
-        --bgColor: ${bgColor ? bgcolor : 'var(--color-white)'};
-        --borderRadius: ${borderRadius ? borderRadius : '8px'};
-        --borderWidth: ${borderWidth ? borderWidth : '0'};
-        --borderStyle: ${borderStyle ? borderStyle : 'solid'};
-        --borderColor: ${borderColor ? borderColor : 'var(--primary-color)'};
+        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
+        --border-radius: ${border_radius ? border_radius : '8px'};
+        --border-width: ${border_width ? border_width : '0'};
+        --border-style: ${border_style ? border_style : 'solid'};
+        --border-color: ${border_color ? border_color : 'var(--primary-color)'};
         width: var(--width);
     }
     :host(i-button[aria-current="true"]), :host(i-button[aria-current="true"]:hover) {
-        --bold: ${currentWeight ? currentWeight : 'initial'};
-        --color: ${currentColor ? currentColor : 'var(--color-white)'};
-        --bgColor: ${currentBgColor ? currentBgColor : 'var(--primary-color)'};
-        font-size: var(--currentSize);
+        --bold: ${current_weight ? current_weight : 'initial'};
+        --color: ${current_color ? current_color : 'var(--color-white)'};
+        --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-color)'};
+        font-size: var(--current_size);
     }
     :host(i-button[aria-current="true"]) g {
         --fill: ${fill ? fill : 'var(--color-white)'};
     }
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
     :host(i-button[aria-checked="true"]:hover), :host(i-button[aria-expanded="true"]:hover) {
-        --bold: ${currentWeight ? currentWeight : 'initial'};
-        --color: ${currentColor ? currentColor : 'var(--color-white)'};
-        --bgColor: ${currentBgColor ? currentBgColor : 'var(--primary-color)'};
+        --bold: ${current_weight ? current_weight : 'initial'};
+        --color: ${current_color ? current_color : 'var(--color-white)'};
+        --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-color)'};
     }
     :host(i-button[aria-checked="true"]) g {
-        --fill: ${currentFill ? currentFill : 'var(--color-white)' };
+        --fill: ${current_fill ? current_fill : 'var(--color-white)' };
     }
     :host(i-button[disabled]), :host(i-button[disabled]:hover) {
         --color: ${color ? color : 'var(--color-dark)'};
-        --bgColor: ${bgColor ? bgColor : 'var(--color-white)'};
-        --colorOpacity: .6;
-        --bgColorOpacity: .3;
-        color: hsla(var(--color), var(--colorOpacity));
-        background-color: hsla(var(--bgColor), var(--bgColorOpacity));
+        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
+        --color-opacity: .6;
+        --bg-color-opacity: .3;
+        color: hsla(var(--color), var(--color-opacity));
+        background-color: hsla(var(--bg-color), var(--bg-color-opacity));
         pointer-events: none;
         cursor: not-allowed;
     }
-    ${customStyle}
+    ${custom_style}
     `
 
     return widget()
 }
 }).call(this)}).call(this,"/src/index.js")
-},{"bel":3,"path":31,"supportCSSStyleSheet":34}],34:[function(require,module,exports){
-arguments[4][24][0].apply(exports,arguments)
-},{"dup":24}]},{},[1]);
+},{"path":33,"support-style-sheet":36}],36:[function(require,module,exports){
+module.exports = support_style_sheet
+function support_style_sheet (root, style) {
+    return (() => {
+        try {
+            const sheet = new CSSStyleSheet()
+            sheet.replaceSync(style)
+            root.adoptedStyleSheets = [sheet]
+            return true 
+        } catch (error) { 
+            const inject_style = `<style>${style}</style>`
+            root.innerHTML = `${inject_style}`
+            return false
+        }
+    })()
+}
+},{}]},{},[1]);
