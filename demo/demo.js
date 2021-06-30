@@ -185,6 +185,7 @@ function demo () {
 
     return app
 
+    // handle events
     function handle_click_event ({page, from, flow, body}) {
         const role = flow.split('-')[1]
         if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handle_click_event', file, line: 165})
@@ -226,12 +227,7 @@ function demo () {
         recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handle_dropdown_menu_event', line: 201})
     }
 
-    function get (msg) {
-        const { type } = msg
-        recipients['logs'](msg)
-        if (type === 'click') return handle_click_event(msg)
-    }
-
+    // protocols
     function tab_protocol (name) {
         return sender => {
             recipients[name] = sender
@@ -247,6 +243,13 @@ function demo () {
             recipients[name] = sender
             return get
         }
+    }
+
+    function get (msg) {
+        const { type } = msg
+        recipients['logs'](msg)
+        console.log( msg );
+        if (type === 'click') return handle_click_event(msg)
     }
 }
 

@@ -187,6 +187,7 @@ function demo () {
 
     return app
 
+    // handle events
     function handle_click_event ({page, from, flow, body}) {
         const role = flow.split('-')[1]
         if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handle_click_event', file, line: 165})
@@ -228,12 +229,7 @@ function demo () {
         recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handle_dropdown_menu_event', line: 201})
     }
 
-    function get (msg) {
-        const { type } = msg
-        recipients['logs'](msg)
-        if (type === 'click') return handle_click_event(msg)
-    }
-
+    // protocols
     function tab_protocol (name) {
         return sender => {
             recipients[name] = sender
@@ -249,6 +245,13 @@ function demo () {
             recipients[name] = sender
             return get
         }
+    }
+
+    function get (msg) {
+        const { type } = msg
+        recipients['logs'](msg)
+        console.log( msg );
+        if (type === 'click') return handle_click_event(msg)
     }
 }
 
@@ -428,13 +431,17 @@ const csjs = require('csjs-inject')
 const file = require('path').basename(__filename)
 const style_sheet = require('../../src/node_modules/support-style-sheet')
 const button = require('../../src/index')
+const message_maker = require('../../src/node_modules/message_maker')
 
 module.exports = i_list
 
 function i_list ({page = 'Demo', flow = 'ui-list', name, body = [], is_expanded = false, is_hidden }, protocol) {
+    const make = message_maker(`${name}/${flow}/i_list`)
+    const message = make({to: page, type: 'ready', data: body})
     const recipients = [] 
-    const sender = protocol( get )
-    sender({page, from: name, flow, type: 'ready', file, fn: 'i_list', line: 12})
+    const send = protocol( get )
+    send(message)
+    send({page, from: name, flow, type: 'ready', file, fn: 'i_list', line: 12})
     const list = document.createElement('i-list')
     list.setAttribute('role', 'listbox')
     list.ariaHidden = false
@@ -445,36 +452,33 @@ function i_list ({page = 'Demo', flow = 'ui-list', name, body = [], is_expanded 
         body.map( (option, i) => {
             const {text, icon} = option
             const selected = i === 0 ? true : false
-            // todo: make button into list
-            var item = button({page, name: text, body: text, icon, isSelected: selected, theme: { props: { bg_color: 'transparent', bg_color_hover: 'transparent'}}}, button_protocol(text))
+            // todo: make button event when click
+            let item = button({page, name: text, body: text, icon, is_selected: selected, theme: { props: { bg_color: 'transparent', bg_color_hover: 'transparent'}}}, button_protocol(text))
             const li = bel`<li role="option" data-option=${text.toLowerCase()}">${item}</li>`
             list.append(li)
             if (i === 0) list.setAttribute('aria-activedescendant', text)
         })
-        if (body.length === 0) sender({from: name, flow, type: 'error', body: 'body no items', fn: 'i_list', file, line: 25})
+        if (body.length === 0) send({from: name, flow, type: 'error', body: 'body no items', fn: 'i_list', file, line: 25})
     } catch(e) {
-        sender({from: name, flow, type: 'error', body: 'something went wrong', fn: 'i_list', file, line: 27})
+        send({from: name, flow, type: 'error', body: 'something went wrong', fn: 'i_list', file, line: 27})
     }
     
     return list
 
     function button_protocol (name) {
-        return (sender) => {
-            recipients[name] = sender
-            return (msg) => {
-                const {page, flow, from: name, type, body, fn} = msg
-                console.log( msg );
-                sender(msg)
-            }
+        return (send) => {
+            recipients[name] = send
+            return get
         }
     }
 
     function get (msg) {
-        console.log( msg );
+        // console.log( msg );
+        send(msg)
     }
 }
 }).call(this)}).call(this,"/demo/node_modules/list.js")
-},{"../../src/index":35,"../../src/node_modules/support-style-sheet":36,"bel":5,"csjs-inject":8,"path":33}],4:[function(require,module,exports){
+},{"../../src/index":35,"../../src/node_modules/message_maker":36,"../../src/node_modules/support-style-sheet":37,"bel":5,"csjs-inject":8,"path":33}],4:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
 var trailingSpaceRegex = /[\s]+$/
@@ -2617,7 +2621,16 @@ function i_button (option, protocol) {
     return widget()
 }
 }).call(this)}).call(this,"/src/index.js")
-},{"path":33,"support-style-sheet":36}],36:[function(require,module,exports){
+},{"path":33,"support-style-sheet":37}],36:[function(require,module,exports){
+module.exports = function message_maker (from) {
+    let msg_id = 0
+    return function make ({to, type, data = null, refs = []}) {
+        const stack = (new Error().stack.split('\n').slice(2).filter(x => x.trim()))
+        const message = { head: [from, to, ++msg_id], refs, type, data, meta: { stack }}
+        return message
+    }
+}
+},{}],37:[function(require,module,exports){
 module.exports = support_style_sheet
 function support_style_sheet (root, style) {
     return (() => {
