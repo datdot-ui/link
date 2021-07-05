@@ -27,7 +27,7 @@ function demo () {
 
     }}, protocol('primary'))
 
-    const disabled = button({name: 'disable', body: 'Disable', is_disabled: true, theme: {
+    const disabled = button({name: 'disable', body: 'Disable', disabled: true, theme: {
         // style: `
         // :host(i-button) button[disabled] {
         //     --color-opacity: 1;
@@ -39,7 +39,7 @@ function demo () {
         }
     }}, protocol('disable'))
 
-    const toggle = button({name: 'toggle', body: 'Toggle', role: 'switch', is_checked: false, theme : {
+    const toggle = button({name: 'toggle', body: 'Toggle', role: 'switch', checked: false, theme : {
         style: ``,
         props: {
             current_bg_color: 'var(--color-green)'
@@ -55,7 +55,7 @@ function demo () {
             current_color: 'var(--primary-color)'
         }
     }
-    const tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', is_current: true, theme: tab_theme }, protocol('tab1'))
+    const tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', current: true, theme: tab_theme }, protocol('tab1'))
     const tab2 = button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab', theme: tab_theme}, protocol('tab2'))
     const tab3 = button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab', theme: tab_theme}, protocol('tab3'))
     const demo_tab = bel`
@@ -67,7 +67,7 @@ function demo () {
     const icon_notice = icon({name: 'notice', path: 'assets'})
     const icon_warning = icon({name: 'warning', path: 'assets'})
     const icon_search = icon({name: 'search', path: 'assets'})
-    const tab4 = button({page: 'JOBS', name: 'tab4', icon: icon_notice, body: bel`<div class="col2">Tab4 ${icon_notice}</div>`, role: 'tab', is_current: true, theme: { props: {size: 'var(--szie20)', current_color: 'var(--color-blue)', fill: 'var(--color-blue)', fill_hover:  'var(--color-blue)', icon_Size: '32px' }}}, tab_protocol('tab4'))
+    const tab4 = button({page: 'JOBS', name: 'tab4', icon: icon_notice, body: bel`<div class="col2">Tab4 ${icon_notice}</div>`, role: 'tab', current: true, theme: { props: {size: 'var(--szie20)', current_color: 'var(--color-blue)', fill: 'var(--color-blue)', fill_hover:  'var(--color-blue)', icon_Size: '32px' }}}, tab_protocol('tab4'))
     const tab5 = button({page: 'JOBS', name: 'tab5', icon: icon_search, body: bel`<div class="col2">Tab5 ${icon_warning}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', current_color:'var(--color-orange)', fill: 'var(--color-orange)', fill_hover: 'var(--color-orange)', icon_Size: '32px' }}}, tab_protocol('tab5'))
     const tab6 = button({page: 'JOBS', name: 'tab6', icon: icon_search, body: bel`<div class="col2">Tab6 ${icon_search}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', icon_Size: '32px' }}}, tab_protocol('tab6'))
     const demo_icon_tab = bel`
@@ -119,28 +119,35 @@ function demo () {
         }
     }}, protocol('option'))
 
-    const filter_list = list({name: 'filter-list', body: [
-        {
-            text: 'Available',
-            icon: icon({name: 'check', path: 'assets'})
-        },
-        {
-            text: 'Not Available',
-            icon: icon({name: 'check', path: 'assets'})
-        },
-        {
-            text: 'Core',
-            icon: icon({name: 'check', path: 'assets'})
-        },
-        {
-            text: 'Drive',
-            icon: icon({name: 'check', path: 'assets'})
-        },
-        {
-            text: 'Cabal',
-            icon: icon({name: 'check', path: 'assets'})
-        },
-    ]}, protocol('filter-list') )
+    const filter_list = list({
+        name: 'filter-list', 
+        body: [
+            {
+                text: 'Available',
+                icon: icon({name: 'check', path: 'assets'}),
+                selected: true
+            },
+            {
+                text: 'Not Available',
+                icon: icon({name: 'check', path: 'assets'}),
+                selected: true
+            },
+            {
+                text: 'Core',
+                icon: icon({name: 'check', path: 'assets'}),
+                selected: true
+            },
+            {
+                text: 'Drive',
+                icon: icon({name: 'check', path: 'assets'}),
+                selected: true
+            },
+            {
+                text: 'Cabal',
+                icon: icon({name: 'check', path: 'assets'}),
+                selected: true
+            },
+        ]}, protocol('filter-list') )
 
     // content
     const content = bel`
@@ -166,9 +173,9 @@ function demo () {
             <h2>Tab & icon</h2>
             ${demo_icon_tab}
         </section>
-        <section>
+        <section class=${css.dropdown}>
             <h2>Dropdown</h2>
-            ${option}${filter_list}
+            ${option}
         </section>
     </div>`
 
@@ -188,8 +195,8 @@ function demo () {
     // handle events
     function handle_click_event ({page, from, flow, body}) {
         const role = flow.split('-')[1]
-        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handle_click_event', file, line: 165})
-        if (role === 'tab') return handle_tab_event(page, from, role)
+        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handle_click_event', file, line: 198})
+        if (role === 'tab') return handle_tab_event(page, from, role, body)
         if (role === 'switch') return handle_toggle_event(page, from, role, body)
         if (role === 'listbox') return handle_dropdown_menu_event(page, from, role, body)
     }
@@ -200,7 +207,7 @@ function demo () {
             let current = from === tab.dataset.name ? from : tab.dataset.name
             let type = from === tab.dataset.name ? 'checked' : 'unchecked'
             recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handle_tab_event', file, line: 183})
+            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handle_tab_event', file, line: 210})
         })
     }
 
@@ -211,20 +218,23 @@ function demo () {
             let current = from === tab.dataset.name ? from : tab.dataset.name
             let type = from === tab.dataset.name ? 'checked' : 'unchecked'
             recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow: role, type, body: 'tab event', fn: 'handle_tab_icon_event', file, line: 194})
+            recipients['logs']({page, from: current, flow: role, type, body: 'tab event', fn: 'handle_tab_icon_event', file, line: 221})
         })
     }
 
     function handle_toggle_event (page, from, flow, body) {
         const state = !body
         recipients[from]({page, from, type: 'switched', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `toggle ${body ? 'on' : 'off'}`, fn: 'handle_toggle_event', file, line: 195})
+        recipients['logs']({page, from, flow, type: 'triggered', body: `toggle ${body ? 'on' : 'off'}`, fn: 'handle_toggle_event', file, line: 228})
     }
 
     function handle_dropdown_menu_event (page, from, flow, body) {
-        const state = !body 
+        const state = !body
+        const dropdown = document.querySelector(`.${css.dropdown}`)
+        dropdown.append(filter_list)
+        recipients['filter-list']({from, type: 'expanded', body: body})
         recipients[from]({from, flow, type: 'expanded', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handle_dropdown_menu_event', line: 201})
+        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handle_dropdown_menu_event', line: 237})
     }
 
     // protocols
@@ -248,7 +258,6 @@ function demo () {
     function get (msg) {
         const { type } = msg
         recipients['logs'](msg)
-        console.log( msg );
         if (type === 'click') return handle_click_event(msg)
     }
 }
@@ -394,6 +403,9 @@ body {
 }
 .tabs span {
     width: 40px;
+}
+.dropdown {
+
 }
 @media (max-width: 768px) {
     [data-state="debug"] {

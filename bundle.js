@@ -29,7 +29,7 @@ function demo () {
 
     }}, protocol('primary'))
 
-    const disabled = button({name: 'disable', body: 'Disable', is_disabled: true, theme: {
+    const disabled = button({name: 'disable', body: 'Disable', disabled: true, theme: {
         // style: `
         // :host(i-button) button[disabled] {
         //     --color-opacity: 1;
@@ -41,7 +41,7 @@ function demo () {
         }
     }}, protocol('disable'))
 
-    const toggle = button({name: 'toggle', body: 'Toggle', role: 'switch', is_checked: false, theme : {
+    const toggle = button({name: 'toggle', body: 'Toggle', role: 'switch', checked: false, theme : {
         style: ``,
         props: {
             current_bg_color: 'var(--color-green)'
@@ -57,7 +57,7 @@ function demo () {
             current_color: 'var(--primary-color)'
         }
     }
-    const tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', is_current: true, theme: tab_theme }, protocol('tab1'))
+    const tab1 = button({page: 'PLAN', name: 'tab1', body: 'Tab1', role: 'tab', current: true, theme: tab_theme }, protocol('tab1'))
     const tab2 = button({page: 'PLAN', name: 'tab2', body: 'Tab2', role: 'tab', theme: tab_theme}, protocol('tab2'))
     const tab3 = button({page: 'PLAN', name: 'tab3', body: 'Tab3', role: 'tab', theme: tab_theme}, protocol('tab3'))
     const demo_tab = bel`
@@ -69,7 +69,7 @@ function demo () {
     const icon_notice = icon({name: 'notice', path: 'assets'})
     const icon_warning = icon({name: 'warning', path: 'assets'})
     const icon_search = icon({name: 'search', path: 'assets'})
-    const tab4 = button({page: 'JOBS', name: 'tab4', icon: icon_notice, body: bel`<div class="col2">Tab4 ${icon_notice}</div>`, role: 'tab', is_current: true, theme: { props: {size: 'var(--szie20)', current_color: 'var(--color-blue)', fill: 'var(--color-blue)', fill_hover:  'var(--color-blue)', icon_Size: '32px' }}}, tab_protocol('tab4'))
+    const tab4 = button({page: 'JOBS', name: 'tab4', icon: icon_notice, body: bel`<div class="col2">Tab4 ${icon_notice}</div>`, role: 'tab', current: true, theme: { props: {size: 'var(--szie20)', current_color: 'var(--color-blue)', fill: 'var(--color-blue)', fill_hover:  'var(--color-blue)', icon_Size: '32px' }}}, tab_protocol('tab4'))
     const tab5 = button({page: 'JOBS', name: 'tab5', icon: icon_search, body: bel`<div class="col2">Tab5 ${icon_warning}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', current_color:'var(--color-orange)', fill: 'var(--color-orange)', fill_hover: 'var(--color-orange)', icon_Size: '32px' }}}, tab_protocol('tab5'))
     const tab6 = button({page: 'JOBS', name: 'tab6', icon: icon_search, body: bel`<div class="col2">Tab6 ${icon_search}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', icon_Size: '32px' }}}, tab_protocol('tab6'))
     const demo_icon_tab = bel`
@@ -121,28 +121,35 @@ function demo () {
         }
     }}, protocol('option'))
 
-    const filter_list = list({name: 'filter-list', body: [
-        {
-            text: 'Available',
-            icon: icon({name: 'check', path: 'assets'})
-        },
-        {
-            text: 'Not Available',
-            icon: icon({name: 'check', path: 'assets'})
-        },
-        {
-            text: 'Core',
-            icon: icon({name: 'check', path: 'assets'})
-        },
-        {
-            text: 'Drive',
-            icon: icon({name: 'check', path: 'assets'})
-        },
-        {
-            text: 'Cabal',
-            icon: icon({name: 'check', path: 'assets'})
-        },
-    ]}, protocol('filter-list') )
+    const filter_list = list({
+        name: 'filter-list', 
+        body: [
+            {
+                text: 'Available',
+                icon: icon({name: 'check', path: 'assets'}),
+                selected: true
+            },
+            {
+                text: 'Not Available',
+                icon: icon({name: 'check', path: 'assets'}),
+                selected: true
+            },
+            {
+                text: 'Core',
+                icon: icon({name: 'check', path: 'assets'}),
+                selected: true
+            },
+            {
+                text: 'Drive',
+                icon: icon({name: 'check', path: 'assets'}),
+                selected: true
+            },
+            {
+                text: 'Cabal',
+                icon: icon({name: 'check', path: 'assets'}),
+                selected: true
+            },
+        ]}, protocol('filter-list') )
 
     // content
     const content = bel`
@@ -168,9 +175,9 @@ function demo () {
             <h2>Tab & icon</h2>
             ${demo_icon_tab}
         </section>
-        <section>
+        <section class=${css.dropdown}>
             <h2>Dropdown</h2>
-            ${option}${filter_list}
+            ${option}
         </section>
     </div>`
 
@@ -190,8 +197,8 @@ function demo () {
     // handle events
     function handle_click_event ({page, from, flow, body}) {
         const role = flow.split('-')[1]
-        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handle_click_event', file, line: 165})
-        if (role === 'tab') return handle_tab_event(page, from, role)
+        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handle_click_event', file, line: 198})
+        if (role === 'tab') return handle_tab_event(page, from, role, body)
         if (role === 'switch') return handle_toggle_event(page, from, role, body)
         if (role === 'listbox') return handle_dropdown_menu_event(page, from, role, body)
     }
@@ -202,7 +209,7 @@ function demo () {
             let current = from === tab.dataset.name ? from : tab.dataset.name
             let type = from === tab.dataset.name ? 'checked' : 'unchecked'
             recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handle_tab_event', file, line: 183})
+            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handle_tab_event', file, line: 210})
         })
     }
 
@@ -213,20 +220,23 @@ function demo () {
             let current = from === tab.dataset.name ? from : tab.dataset.name
             let type = from === tab.dataset.name ? 'checked' : 'unchecked'
             recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow: role, type, body: 'tab event', fn: 'handle_tab_icon_event', file, line: 194})
+            recipients['logs']({page, from: current, flow: role, type, body: 'tab event', fn: 'handle_tab_icon_event', file, line: 221})
         })
     }
 
     function handle_toggle_event (page, from, flow, body) {
         const state = !body
         recipients[from]({page, from, type: 'switched', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `toggle ${body ? 'on' : 'off'}`, fn: 'handle_toggle_event', file, line: 195})
+        recipients['logs']({page, from, flow, type: 'triggered', body: `toggle ${body ? 'on' : 'off'}`, fn: 'handle_toggle_event', file, line: 228})
     }
 
     function handle_dropdown_menu_event (page, from, flow, body) {
-        const state = !body 
+        const state = !body
+        const dropdown = document.querySelector(`.${css.dropdown}`)
+        dropdown.append(filter_list)
+        recipients['filter-list']({from, type: 'expanded', body: body})
         recipients[from]({from, flow, type: 'expanded', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handle_dropdown_menu_event', line: 201})
+        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handle_dropdown_menu_event', line: 237})
     }
 
     // protocols
@@ -250,7 +260,6 @@ function demo () {
     function get (msg) {
         const { type } = msg
         recipients['logs'](msg)
-        console.log( msg );
         if (type === 'click') return handle_click_event(msg)
     }
 }
@@ -397,6 +406,9 @@ body {
 .tabs span {
     width: 40px;
 }
+.dropdown {
+
+}
 @media (max-width: 768px) {
     [data-state="debug"] {
         grid-template-rows: 65% 35%;
@@ -427,58 +439,145 @@ function head (lang = 'utf8', title = 'Button - DatDot UI') {
 },{}],3:[function(require,module,exports){
 (function (__filename){(function (){
 const bel = require('bel')
-const csjs = require('csjs-inject')
 const file = require('path').basename(__filename)
 const style_sheet = require('../../src/node_modules/support-style-sheet')
 const button = require('../../src/index')
-const message_maker = require('../../src/node_modules/message_maker')
+// const message_maker = require('../../src/node_modules/message_maker')
 
 module.exports = i_list
 
-function i_list ({page = 'Demo', flow = 'ui-list', name, body = [], is_expanded = false, is_hidden }, protocol) {
-    const make = message_maker(`${name}/${flow}/i_list`)
-    const message = make({to: page, type: 'ready', data: body})
-    const recipients = [] 
-    const send = protocol( get )
-    send(message)
-    send({page, from: name, flow, type: 'ready', file, fn: 'i_list', line: 12})
-    const list = document.createElement('i-list')
-    list.setAttribute('role', 'listbox')
-    list.ariaHidden = false
-    list.ariaLabel = name
-    list.tabIndex = 0
+function i_list ({page = 'Demo', flow = 'ui-list', name, body = [], expanded = false, hidden = true, theme }, protocol) {
+    // const make = message_maker(`${name}/${flow}/i_list`)
+    // const message = make({to: page, type: 'ready', data: body})
+    const recipients = []
 
-    try {
-        body.map( (option, i) => {
-            const {text, icon} = option
-            const selected = i === 0 ? true : false
-            // todo: make button event when click
-            let item = button({page, name: text, body: text, icon, is_selected: selected, theme: { props: { bg_color: 'transparent', bg_color_hover: 'transparent'}}}, button_protocol(text))
-            const li = bel`<li role="option" data-option=${text.toLowerCase()}">${item}</li>`
-            list.append(li)
-            if (i === 0) list.setAttribute('aria-activedescendant', text)
-        })
-        if (body.length === 0) send({from: name, flow, type: 'error', body: 'body no items', fn: 'i_list', file, line: 25})
-    } catch(e) {
-        send({from: name, flow, type: 'error', body: 'something went wrong', fn: 'i_list', file, line: 27})
-    }
-    
-    return list
+    function widget () {
+        const send = protocol( get )
+        const fn_name = `${widget.name}/${i_list.name}`
+        // send(message)
+        send({page, from: name, flow, type: 'ready', file, fn: i_list.name, line: 19})
+        const list = document.createElement('i-list')
+        const shadow = list.attachShadow({mode: 'closed'})
+        list.setAttribute('role', 'listbox')
+        list.ariaHidden = hidden
+        list.ariaLabel = name
+        list.tabIndex = 0
+        list.ariaExpanded = expanded
+        style_sheet(shadow, style)
+        try {
+            body.map( (option, i) => {
+                const {text, icon, selected} = option
+                let item = button({page, name: text, body: text, selected, icon, role: 'option', 
+                                    theme: { 
+                                        props: {
+                                            color_hover: 'var(--color)', 
+                                            bg_color: 'transparent', 
+                                            bg_color_hover: 'transparent'}
+                                        }
+                                    }, button_protocol(text))
+                const li = bel`<li role="option" data-option=${text}" aria-selected=${selected}>${item}</li>`
+                const option_list = text.toLowerCase().split(' ').join('-')
+                shadow.append(li)
+                send({from: `option-${option_list}`, flow, type: 'ready', fn: fn_name, file, line: 34})
+            })
+            if (body.length === 0) send({from: name, flow, type: 'error', body: 'body no items', fn: fn_name, file, line: 42})
+        } catch(e) {
+            send({from: name, flow, type: 'error', body: 'something went wrong', fn: fn_name, file, line: 44})
+        }
+        
+        return list
 
-    function button_protocol (name) {
-        return (send) => {
-            recipients[name] = send
-            return get
+        function handle_expanded_event (body) {
+            list.ariaHidden = body
+        }
+        function handle_select_event (from, body) {
+            const selected = !body
+            const type = selected ? 'selected' : 'unselected'
+            const { childNodes } = shadow
+            childNodes.forEach( child => child.dataset.option === from ? child.setAttribute('aria-selected', selected) : false)
+            recipients[from]({from, type, body: selected})
+            send({page, from, flow, type, body: selected, fn: handle_select_event.name, file, line: 58})
+        }
+        function button_protocol (name) {
+            return (send) => {
+                recipients[name] = send
+                return get
+            }
+        }
+        function get (msg) {
+            const {from, type, body} = msg
+            // console.log( msg )
+            if (type === 'click') return handle_select_event(from, body)
+            if (type === 'expanded') return handle_expanded_event(body)
+            send(msg)
         }
     }
 
-    function get (msg) {
-        // console.log( msg );
-        send(msg)
+    // insert CSS style
+    const custom_style = theme ? theme.style : ''
+    // set CSS variables
+    if (theme && theme.props) {
+    var {size, size_hover, current_size,
+        weight, weight_hover, current_weight,
+        color, color_hover, current_color, current_bg_color, 
+        bg_color, bg_color_hover, border_color_hover,
+        border_width, border_style, border_opacity, border_color, border_radius, 
+        padding, width, height, opacity,
+        fill, fill_hover, icon_size, current_fill,
+        shadow_color, offset_x, offset_y, blur, shadow_opacity,
+        shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
+    } = theme.props
     }
+
+    const style = `
+    :host(i-list) {
+        --color: ${color ? color : 'var(--primary-color)'};
+        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
+        display: grid;
+    }
+    :host(i-list) li {
+        display: grid;
+        border: 1px solid hsl(var(--primary-color));
+        margin-top: -1px;
+        color: hsl(var(--color));
+        background-color: hsl(var(--bg-color));
+        transition: color 0.3s, background-color 0.3s ease-in-out;
+        cursor: pointer;
+    }
+    :host(i-list) li:hover {
+        --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--color-greyEB)'};
+    }
+    :host(i-list[aria-hidden="true"]) {
+        opacity: 0;
+        animation: close 0.3s;
+        pointer-events: none;
+    }
+    :host(i-list[aria-hidden="false"]) {
+        animation: open 0.3s;
+    }
+    @keyframes close {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+    @keyframes open {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    ${custom_style}
+    `
+
+    return widget()
 }
 }).call(this)}).call(this,"/demo/node_modules/list.js")
-},{"../../src/index":35,"../../src/node_modules/message_maker":36,"../../src/node_modules/support-style-sheet":37,"bel":5,"csjs-inject":8,"path":33}],4:[function(require,module,exports){
+},{"../../src/index":35,"../../src/node_modules/support-style-sheet":36,"bel":5,"path":33}],4:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
 var trailingSpaceRegex = /[\s]+$/
@@ -2344,101 +2443,111 @@ const style_sheet = require('support-style-sheet')
 module.exports = i_button
 
 function i_button (option, protocol) {
-    const {page, flow = 'ui-button', name, body, icon, role = 'button', state, is_expanded = false, is_current = false, is_selected, is_checked, is_disabled, theme} = option
-    let current = is_current
-    let checked = is_checked
-    let disabled = is_disabled
-    let selected = is_selected
-    let expanded = is_expanded
+    const {page, flow = 'ui-button', name, body, icon, role = 'button', state, expanded = false, current = false, selected, checked, disabled, theme} = option
+    let is_current = current
+    let is_checked = checked
+    let is_disabled = disabled
+    let is_selected = selected
+    let is_expanded = expanded
 
     function widget () {
-        const sender = protocol(get)
-        sender({page, from: name, flow, type: 'ready', file, fn: 'i_button', line: 16})
+        const send = protocol(get)
+        send({page, from: name, flow, type: 'ready', file, fn: i_button.name, line: 16})
         // const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handle_click()}">${body} ${icon}</button>`
         const el = document.createElement('i-button')
+        const text = document.createElement('span')
         el.dataset.name = name
         el.dataset.ui = role
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
         el.setAttribute('tabindex', 0)
         el.onclick = handle_click
-        const shadow = el.attachShadow({mode: 'closed'})
+        text.classList.add('text')
+        text.append(body)
+        const shadow = el.attachShadow({mode: 'open'})
         style_sheet(shadow, style)
-        shadow.append(body)
-        if (icon) shadow.append(icon)
+        if (icon || role === 'option') shadow.append(icon, text)
+        else shadow.append(body)
 
         // define conditions
         if (state) {
             el.dataset.state = state
-            el.ariaLive = 'assertive'
+            el.setAttribute('aria-live', 'assertive')
         }
         if (role === 'tab') {
-            el.ariaSelected = false
-            el.dataset.current = current
+            el.setAttribute('aria-selected', false)
+            el.dataset.current = is_current
         }
         if (role === 'switch') {
-            el.setAttribute('aria-checked', checked)
+            el.setAttribute('aria-checked', is_checked)
         }
         if (role === 'listbox') {
             el.setAttribute('aria-haspopup', role)
         }
-        if (is_disabled) {
-            el.ariaDisabled = disabled
-            el.setAttribute('disabled', disabled)
+        if (disabled) {
+            el.setAttribute('aria-disabled', is_disabled)
+            el.setAttribute('disabled', is_disabled)
         } else {
             el.removeAttribute('aria-disabled')
             el.removeAttribute('disabled')
         }
-        if (is_checked) {
-            el.setAttribute('aria-checked', checked)
+        if (checked) {
+            el.setAttribute('aria-checked', is_checked)
         }
-        if (is_current) {
-            el.ariaCurrent = current
-            el.ariaSelected = selected
+        if (current) {
+            is_selected = current
+            el.setAttribute('aria-current', is_current)
+            el.setAttribute('aria-selected', is_selected)
         }
-        if (is_selected) {
-            el.ariaSelected = selected
+        if (selected) {
+            el.setAttribute('aria-selected', is_selected)
         }
-        if (is_expanded) {
-            el.ariaExpanded = expanded
+        if (expanded) {
+            el.setAttribute('aria-expanded', is_expanded)
         }
         return el
 
         // toggle
         function switched_event (body) {
-            checked = body
-            if (!checked) return el.removeAttribute('aria-checked')
-            el.setAttribute('aria-checked', checked)
+            is_checked = body
+            if (!is_checked) return el.removeAttribute('aria-checked')
+            el.setAttribute('aria-checked', is_checked)
         }
         // dropdown menu
         function expanded_event (body) {
-            expanded = body
-            if (!expanded) return el.removeAttribute('aria-expanded')
-            el.ariaExpanded = expanded
+            is_expanded = body
+            el.setAttribute('aria-expanded', is_expanded)
         }
         // tab checked
         function checked_event () {
-            checked = true
-            current = checked
-            el.ariaSelected = checked
-            el.setAttribute('aria-current', checked)
-            el.dataset.current = current
+            is_checked = true
+            is_current = is_checked
+            el.setAttribute('aria-selected', is_checked)
+            el.setAttribute('aria-current', is_checked)
+            el.dataset.current = is_current
         }
         // tab unchecked
-        function unchecked_event() {
-            checked = false
-            current = checked
-            el.ariaSelected = checked
+        function unchecked_event () {
+            is_checked = false
+            is_current = is_checked
+            el.setAttribute('aria-selected', is_checked)
             el.removeAttribute('aria-current')
-            el.dataset.current = current
+            el.dataset.current = is_current
+        }
+        function selected_event (body) {
+            is_selected = body
+            el.setAttribute('aria-selected', is_selected)
         }
         // button click
-        function handle_click() {
-            console.log( role );
-            if (current) return
-            if (role === 'switch') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: checked, fn: 'handle_click', file, line: 98})
-            if (role === 'listbox') return sender({page, from: name, flow: `ui-${role}`, type: 'click', body: expanded, fn: 'handle_click', file, line: 99})
-            sender({page, from: name, flow: `ui-${role}`, type: 'click', fn: 'handle_click', file, line: 100})
+        function handle_click () {
+            if (is_current) return
+            const fn_name = handle_click.name
+            const code_line = 107
+            if (role.match(/tab/)) return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_checked, fn: fn_name, file, line: code_line+1})
+            if (role.match(/switch/)) return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_checked, fn: fn_name, file, line: code_line+1})
+            if (role === 'listbox') return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_expanded, fn: fn_name, file, line: code_line+2})
+            if (role === 'option') return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_selected, fn: fn_name, file, line: code_line+3})
+            send({page, from: name, flow: `ui-${role}`, type: 'click', fn: fn_name, file, line: code_line+4})
         }
         // protocol get msg
         function get (msg) {
@@ -2447,6 +2556,7 @@ function i_button (option, protocol) {
             if (type === 'unchecked') return unchecked_event()
             if (type === 'expanded') return expanded_event(body)
             if (type === 'switched') return switched_event(body)
+            if (type.match(/selected|unselected/)) return selected_event(body)
         }
     }
    
@@ -2472,7 +2582,7 @@ function i_button (option, protocol) {
         --size-hover: ${size_hover ? size_hover : 'var(--size)'};
         --curren-size: ${current_size ? current_size : 'var(--size14)'};
         --bold: ${weight ? weight : 'normal'};
-        --color: ${color ? color : 'var(--color-black)'};
+        --color: ${color ? color : 'var(--primary-color)'};
         --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
         --width: ${width ? width : 'unset'};
         --height: ${height ? height : 'unset'};
@@ -2480,11 +2590,11 @@ function i_button (option, protocol) {
         --padding: ${padding ? padding : '12px'};
         --border-width: ${border_width ? border_width : '0px'};
         --border-style: ${border_style ? border_style : 'solid'};
-        --border-color: ${border_color ? border_color : 'var(--color-black)'};
+        --border-color: ${border_color ? border_color : 'var(--primary-color)'};
         --border-opacity: ${border_opacity ? border_opacity : '1'};
         --border: var(--border-width) var(--border-style) hsla( var(--border-color), var(--border-opacity) );
         --border-radius: ${border_radius ? border_radius : 'var(--primary-button-radius)'};
-        --fill: ${fill ? fill : 'var(--color-black)'};
+        --fill: ${fill ? fill : 'var(--primary-color)'};
         --fill-hover: ${fill_hover ? fill_hover : 'var(--color-white)'};
         ---icon-size: ${icon_size ? icon_size : '16px'};
         --offset_x: ${offset_x ? offset_x : '0px'};
@@ -2514,8 +2624,8 @@ function i_button (option, protocol) {
     :host(i-button:hover), :host(i-button[role]:hover) {
         --weight: ${weight_hover ? weight_hover : 'initial'};
         --color: ${color_hover ? color_hover : 'var(--color-white)'};
-        --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--color-black)'};
-        --border-color: ${border_color_hover ? border_color_hover : 'var(-color-black)'};
+        --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--primary-color)'};
+        --border-color: ${border_color_hover ? border_color_hover : 'var(--primary-color)'};
         --offset-x: ${offset_x_hover ? offset_x_hover : '0'};
         --offset-y: ${offset_y_hover ? offset_y_hover : '0'};
         --blur: ${blur_hover ? blur_hover : '50px'};
@@ -2615,22 +2725,29 @@ function i_button (option, protocol) {
         pointer-events: none;
         cursor: not-allowed;
     }
+    :host(i-button[role="option"]) {
+        display: grid;
+        grid-template-rows: 24px;
+        grid-template-columns: 20px auto;
+        justify-content: left;
+    }
+    :host(i-button[role="option"]) .text {
+        display: block;
+        grid-column-start: 2;
+    }
+    :host(i-button[role="option"]:hover) g {
+        --fill-hover: ${fill_hover ? fill_hover : 'var(--primary-color)'};
+    }
+    :host(i-button[role="option"][aria-selected="false"]) .icon {
+        display: none;
+    }
     ${custom_style}
     `
 
     return widget()
 }
 }).call(this)}).call(this,"/src/index.js")
-},{"path":33,"support-style-sheet":37}],36:[function(require,module,exports){
-module.exports = function message_maker (from) {
-    let msg_id = 0
-    return function make ({to, type, data = null, refs = []}) {
-        const stack = (new Error().stack.split('\n').slice(2).filter(x => x.trim()))
-        const message = { head: [from, to, ++msg_id], refs, type, data, meta: { stack }}
-        return message
-    }
-}
-},{}],37:[function(require,module,exports){
+},{"path":33,"support-style-sheet":36}],36:[function(require,module,exports){
 module.exports = support_style_sheet
 function support_style_sheet (root, style) {
     return (() => {
