@@ -244,14 +244,15 @@ function demo () {
         const dropdown = document.querySelector(`.${css.dropdown}`)
         dropdown.append(filter_list)
         recipients['filter-list']( make({type: 'expanded', data}) )
-        recipients[from]( make({type: 'expanded', data: state}) )
-        recipients['logs']( make({type: 'expanded', data: {expanded: state }}) )
+        recipients[from]( make({to: 'filter-list / listbox / ui-list', type: 'expanded', data: state}) )
+        recipients['logs']( make({to: 'filter-list / listbox / ui-list', type: 'expanded', data: {expanded: state }}) )
     }
 
     function handle_filter_options (data) {
         filter_options.filter( option => {
             if (option.text === data.option) option.selected = data.selected
         })
+        console.table( filter_options );
     }
     // protocols
     function tab_protocol (name) {
