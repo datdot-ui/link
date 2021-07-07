@@ -1,10 +1,11 @@
 const file = require('path').basename(__filename)
 const style_sheet = require('support-style-sheet')
+const message_maker = require('message_maker')
 
 module.exports = i_button
 
 function i_button (option, protocol) {
-    const {page, flow = 'ui-button', name, body, icon, role = 'button', state, expanded = false, current = false, selected, checked, disabled, theme} = option
+    const {page, flow = 'ui-button', name, body, icon, role = 'button', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
     let is_current = current
     let is_checked = checked
     let is_disabled = disabled
@@ -13,8 +14,10 @@ function i_button (option, protocol) {
 
     function widget () {
         const send = protocol(get)
-        send({page, from: name, flow, type: 'ready', file, fn: i_button.name, line: 16})
-        // const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handle_click()}">${body} ${icon}</button>`
+        const make = message_maker(`${name} / ${role} / ${flow}`)
+        let data = role === 'tab' ?  {selected: is_current ? 'true' : is_selected, current: is_current} : role === 'switch' ? {checked: is_checked} : role === 'listbox' ? {selected: is_selected} :  disabled ? {disabled} : null
+        const message = make({to: 'demo.js', type: 'ready', data})
+        send(message)
         const el = document.createElement('i-button')
         const text = document.createElement('span')
         el.dataset.name = name
@@ -36,8 +39,8 @@ function i_button (option, protocol) {
             el.setAttribute('aria-live', 'assertive')
         }
         if (role === 'tab') {
-            el.setAttribute('aria-selected', false)
             el.dataset.current = is_current
+            el.setAttribute('aria-selected', false)
         }
         if (role === 'switch') {
             el.setAttribute('aria-checked', is_checked)
@@ -52,47 +55,39 @@ function i_button (option, protocol) {
             el.removeAttribute('aria-disabled')
             el.removeAttribute('disabled')
         }
-        if (checked) {
+        if (is_checked) {
             el.setAttribute('aria-checked', is_checked)
         }
         if (current) {
             is_selected = current
             el.setAttribute('aria-current', is_current)
+
+        }
+        if (is_selected) {
             el.setAttribute('aria-selected', is_selected)
         }
-        if (selected) {
-            el.setAttribute('aria-selected', is_selected)
-        }
-        if (expanded) {
+        if (is_expanded) {
             el.setAttribute('aria-expanded', is_expanded)
         }
         return el
 
         // toggle
-        function switched_event (body) {
-            is_checked = body
+        function switched_event (data) {
+            is_checked = data
             if (!is_checked) return el.removeAttribute('aria-checked')
             el.setAttribute('aria-checked', is_checked)
         }
         // dropdown menu
-        function expanded_event (body) {
-            is_expanded = body
+        function expanded_event (data) {
+            is_expanded = data
             el.setAttribute('aria-expanded', is_expanded)
         }
         // tab checked
-        function checked_event () {
-            is_checked = true
+        function checked_event (data) {
+            is_checked = data
             is_current = is_checked
             el.setAttribute('aria-selected', is_checked)
             el.setAttribute('aria-current', is_checked)
-            el.dataset.current = is_current
-        }
-        // tab unchecked
-        function unchecked_event () {
-            is_checked = false
-            is_current = is_checked
-            el.setAttribute('aria-selected', is_checked)
-            el.removeAttribute('aria-current')
             el.dataset.current = is_current
         }
         function selected_event (body) {
@@ -102,22 +97,30 @@ function i_button (option, protocol) {
         // button click
         function handle_click () {
             if (is_current) return
-            const fn_name = handle_click.name
-            const code_line = 107
-            if (role.match(/tab/)) return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_checked, fn: fn_name, file, line: code_line+1})
-            if (role.match(/switch/)) return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_checked, fn: fn_name, file, line: code_line+1})
-            if (role === 'listbox') return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_expanded, fn: fn_name, file, line: code_line+2})
-            if (role === 'option') return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_selected, fn: fn_name, file, line: code_line+3})
-            send({page, from: name, flow: `ui-${role}`, type: 'click', fn: fn_name, file, line: code_line+4})
+            // if (role.match(/tab/)) return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_checked, fn: fn_name, file, line: code_line+1})
+            // if (role.match(/switch/)) return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_checked, fn: fn_name, file, line: code_line+1})
+            // if (role === 'listbox') return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_expanded, fn: fn_name, file, line: code_line+2})
+            // if (role === 'option') return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_selected, fn: fn_name, file, line: code_line+3})
+            // new message
+            const type = 'click'
+            if (role === 'tab') return send( make({type, data: is_checked}) )
+            if (role === 'switch') return send( make({type, data: is_checked}) )
+            if (role === 'listbox') return send( make({type, data: is_expanded}) )
+            if (role === 'option') return send( make({type, data: is_selected}) )
+            // send({page, from: name, flow: `ui-${role}`, type: 'click', fn: fn_name, file, line: code_line+4})
+            send( make({type}) )
         }
         // protocol get msg
         function get (msg) {
-            const { type, body } = msg
-            if (type === 'checked') return checked_event()
-            if (type === 'unchecked') return unchecked_event()
-            if (type === 'expanded') return expanded_event(body)
-            if (type === 'switched') return switched_event(body)
-            if (type.match(/selected|unselected/)) return selected_event(body)
+            const { head, refs, type, data } = msg
+            // toggle
+            if (type === 'switched') return switched_event(data)
+            // dropdown
+            if (type === 'expanded') return expanded_event(data)
+            // tab, checkbox
+            if (type.match(/checked|unchecked/)) return checked_event(data)
+            // option
+            if (type.match(/selected|unselected/)) return selected_event(data)
         }
     }
    

@@ -7,12 +7,38 @@ const head = require('head')()
 const logs = require('datdot-ui-logs')
 const icon = require('datdot-ui-icon')
 const list = require('list')
+const message_maker = require('../src/node_modules/message_maker')
 
 function demo () {
     // save protocol callbacks
     let recipients = []
+    let filter_options = [{
+        text: 'Available',
+        icon: icon({name: 'check', path: 'assets'}),
+        selected: true
+    },
+    {
+        text: 'Not Available',
+        icon: icon({name: 'check', path: 'assets'}),
+        selected: true
+    },
+    {
+        text: 'Core',
+        icon: icon({name: 'check', path: 'assets'}),
+        selected: true
+    },
+    {
+        text: 'Drive',
+        icon: icon({name: 'check', path: 'assets'}),
+        selected: true
+    },
+    {
+        text: 'Cabal',
+        icon: icon({name: 'check', path: 'assets'}),
+        selected: true
+    }]
      // logs must be initialized first before components
-     const log_list = logs(protocol('logs'))
+    const log_list = logs(protocol('logs'))
     // buttons
     const primary = button({name: 'primary', body: 'Primary', theme: { 
         style: ` `, 
@@ -112,42 +138,17 @@ function demo () {
     }}, protocol('next'))
 
     const icon_option = icon({name: 'option', path: 'assets'})
-    const option = button({name: 'option', role: 'listbox', body: icon_option, theme: {
+    const option = button({name: 'filter-option', role: 'listbox', body: icon_option, theme: {
         props: {
             fill: 'var(--color-blue)',
             currentFill: 'var(--color-white)'
         }
-    }}, protocol('option'))
+    }}, protocol('filter-option'))
 
     const filter_list = list({
         name: 'filter-list', 
-        body: [
-            {
-                text: 'Available',
-                icon: icon({name: 'check', path: 'assets'}),
-                selected: true
-            },
-            {
-                text: 'Not Available',
-                icon: icon({name: 'check', path: 'assets'}),
-                selected: true
-            },
-            {
-                text: 'Core',
-                icon: icon({name: 'check', path: 'assets'}),
-                selected: true
-            },
-            {
-                text: 'Drive',
-                icon: icon({name: 'check', path: 'assets'}),
-                selected: true
-            },
-            {
-                text: 'Cabal',
-                icon: icon({name: 'check', path: 'assets'}),
-                selected: true
-            },
-        ]}, protocol('filter-list') )
+        body: filter_options
+    }, protocol('filter-list') )
 
     // content
     const content = bel`
@@ -193,72 +194,93 @@ function demo () {
     return app
 
     // handle events
-    function handle_click_event ({page, from, flow, body}) {
-        const role = flow.split('-')[1]
-        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handle_click_event', file, line: 198})
-        if (role === 'tab') return handle_tab_event(page, from, role, body)
-        if (role === 'switch') return handle_toggle_event(page, from, role, body)
-        if (role === 'listbox') return handle_dropdown_menu_event(page, from, role, body)
+    function handle_click_event ({head, refs, data}) {
+        const to = head[1]
+        const id = head[2]
+        const role = head[0].split(' / ')[1]
+        const from = head[0].split(' / ')[0]
+        const make = message_maker(`${from} / ${role} / Demo`)
+        if (role === 'button') return recipients['logs']( make({type: 'triggered'}) )
+        if (role === 'tab') return handle_tab_event(from, data)
+        if (role === 'switch') return handle_toggle_event(make, from, data)
+        if (role === 'listbox') return handle_dropdown_menu_event(make, from, data)
     }
 
-    function handle_tab_event (page, from, flow) {
+    function handle_tab_event (from, data) {
         const tabs = [...demo_tab.children]
         tabs.map( tab => {
-            let current = from === tab.dataset.name ? from : tab.dataset.name
-            let type = from === tab.dataset.name ? 'checked' : 'unchecked'
-            recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handle_tab_event', file, line: 210})
+            const state = from === tab.dataset.name ? !data : data
+            const current = from === tab.dataset.name ? from : tab.dataset.name
+            const type = from === tab.dataset.name ? 'checked' : 'unchecked'
+            const make = message_maker(`${current} / tab / Demo`)
+            recipients[current]( make({type, data: state}) )
+            if (from === tab.dataset.name) return recipients['logs']( make({type, data: {selected: state, current: state} }) )
+            return recipients['logs']( make({type, data: {selected: state, current: state}}) )
         })
     }
 
-    function handle_tab_icon_event ({page, from, flow}) {
-        const role = flow.split('-')[1]
+    function handle_tab_icon_event (from, data) {
         const tabs = [...demo_icon_tab.children]
         tabs.map( tab => {
-            let current = from === tab.dataset.name ? from : tab.dataset.name
-            let type = from === tab.dataset.name ? 'checked' : 'unchecked'
-            recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow: role, type, body: 'tab event', fn: 'handle_tab_icon_event', file, line: 221})
+            const state = from === tab.dataset.name ? true : data
+            const current = from === tab.dataset.name ? from : tab.dataset.name
+            const type = from === tab.dataset.name ? 'checked' : 'unchecked'
+            const make = message_maker(`${current} / tab / Demo`)
+            recipients[current]( make({type, data: state}) )
+            if (from === tab.dataset.name) return recipients['logs']( make({type, data: {selected: state, current: state} }) )
+            return recipients['logs']( make({type, data: {selected: state, current: state}}) )
         })
     }
 
-    function handle_toggle_event (page, from, flow, body) {
-        const state = !body
-        recipients[from]({page, from, type: 'switched', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `toggle ${body ? 'on' : 'off'}`, fn: 'handle_toggle_event', file, line: 228})
+    function handle_toggle_event (make, from, data) {
+        const state = !data
+        const message = make({type: 'switched', data: state})
+        recipients[from](message)
+        recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state}}) )
     }
 
-    function handle_dropdown_menu_event (page, from, flow, body) {
-        const state = !body
+    function handle_dropdown_menu_event (make, from, data) {
+        const state = !data
         const dropdown = document.querySelector(`.${css.dropdown}`)
         dropdown.append(filter_list)
-        recipients['filter-list']({from, type: 'expanded', body: body})
-        recipients[from]({from, flow, type: 'expanded', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handle_dropdown_menu_event', line: 237})
+        recipients['filter-list']( make({type: 'expanded', data}) )
+        recipients[from]( make({type: 'expanded', data: state}) )
+        recipients['logs']( make({type: 'expanded', data: {expanded: state }}) )
     }
 
+    function handle_filter_options (data) {
+        filter_options.filter( option => {
+            if (option.text === data.option) option.selected = data.selected
+        })
+    }
     // protocols
     function tab_protocol (name) {
-        return sender => {
-            recipients[name] = sender
+        return send => {
+            recipients[name] = send
             return (msg) => {
-                const { type } = msg
+                const {head, refs, type, data} = msg
+                const to = head[1]
+                const id = head[2]
+                const role = head[0].split(' / ')[1]
+                const from = head[0].split(' / ')[0]
+                if (type === 'click') return handle_tab_icon_event(from, data)
                 recipients['logs'](msg)
-                if (type === 'click') return handle_tab_icon_event(msg)
             }
         }
     }
     function protocol (name) {
-        return sender => {
-            recipients[name] = sender
+        return send => {
+            recipients[name] = send
             return get
         }
     }
 
     function get (msg) {
-        const { type } = msg
+        const { type, data } = msg
         recipients['logs'](msg)
         if (type === 'click') return handle_click_event(msg)
+        if (type === 'selected') return handle_filter_options(data)
+        if (type === 'unselected') return handle_filter_options(data)
     }
 }
 

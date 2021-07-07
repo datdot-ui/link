@@ -9,12 +9,38 @@ const head = require('head')()
 const logs = require('datdot-ui-logs')
 const icon = require('datdot-ui-icon')
 const list = require('list')
+const message_maker = require('../src/node_modules/message_maker')
 
 function demo () {
     // save protocol callbacks
     let recipients = []
+    let filter_options = [{
+        text: 'Available',
+        icon: icon({name: 'check', path: 'assets'}),
+        selected: true
+    },
+    {
+        text: 'Not Available',
+        icon: icon({name: 'check', path: 'assets'}),
+        selected: true
+    },
+    {
+        text: 'Core',
+        icon: icon({name: 'check', path: 'assets'}),
+        selected: true
+    },
+    {
+        text: 'Drive',
+        icon: icon({name: 'check', path: 'assets'}),
+        selected: true
+    },
+    {
+        text: 'Cabal',
+        icon: icon({name: 'check', path: 'assets'}),
+        selected: true
+    }]
      // logs must be initialized first before components
-     const log_list = logs(protocol('logs'))
+    const log_list = logs(protocol('logs'))
     // buttons
     const primary = button({name: 'primary', body: 'Primary', theme: { 
         style: ` `, 
@@ -114,42 +140,17 @@ function demo () {
     }}, protocol('next'))
 
     const icon_option = icon({name: 'option', path: 'assets'})
-    const option = button({name: 'option', role: 'listbox', body: icon_option, theme: {
+    const option = button({name: 'filter-option', role: 'listbox', body: icon_option, theme: {
         props: {
             fill: 'var(--color-blue)',
             currentFill: 'var(--color-white)'
         }
-    }}, protocol('option'))
+    }}, protocol('filter-option'))
 
     const filter_list = list({
         name: 'filter-list', 
-        body: [
-            {
-                text: 'Available',
-                icon: icon({name: 'check', path: 'assets'}),
-                selected: true
-            },
-            {
-                text: 'Not Available',
-                icon: icon({name: 'check', path: 'assets'}),
-                selected: true
-            },
-            {
-                text: 'Core',
-                icon: icon({name: 'check', path: 'assets'}),
-                selected: true
-            },
-            {
-                text: 'Drive',
-                icon: icon({name: 'check', path: 'assets'}),
-                selected: true
-            },
-            {
-                text: 'Cabal',
-                icon: icon({name: 'check', path: 'assets'}),
-                selected: true
-            },
-        ]}, protocol('filter-list') )
+        body: filter_options
+    }, protocol('filter-list') )
 
     // content
     const content = bel`
@@ -195,72 +196,93 @@ function demo () {
     return app
 
     // handle events
-    function handle_click_event ({page, from, flow, body}) {
-        const role = flow.split('-')[1]
-        if (role === 'button') return recipients['logs']({page, from, flow: role, type: 'triggered', body: 'button event', fn: 'handle_click_event', file, line: 198})
-        if (role === 'tab') return handle_tab_event(page, from, role, body)
-        if (role === 'switch') return handle_toggle_event(page, from, role, body)
-        if (role === 'listbox') return handle_dropdown_menu_event(page, from, role, body)
+    function handle_click_event ({head, refs, data}) {
+        const to = head[1]
+        const id = head[2]
+        const role = head[0].split(' / ')[1]
+        const from = head[0].split(' / ')[0]
+        const make = message_maker(`${from} / ${role} / Demo`)
+        if (role === 'button') return recipients['logs']( make({type: 'triggered'}) )
+        if (role === 'tab') return handle_tab_event(from, data)
+        if (role === 'switch') return handle_toggle_event(make, from, data)
+        if (role === 'listbox') return handle_dropdown_menu_event(make, from, data)
     }
 
-    function handle_tab_event (page, from, flow) {
+    function handle_tab_event (from, data) {
         const tabs = [...demo_tab.children]
         tabs.map( tab => {
-            let current = from === tab.dataset.name ? from : tab.dataset.name
-            let type = from === tab.dataset.name ? 'checked' : 'unchecked'
-            recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow, type, body: 'tab event', fn: 'handle_tab_event', file, line: 210})
+            const state = from === tab.dataset.name ? !data : data
+            const current = from === tab.dataset.name ? from : tab.dataset.name
+            const type = from === tab.dataset.name ? 'checked' : 'unchecked'
+            const make = message_maker(`${current} / tab / Demo`)
+            recipients[current]( make({type, data: state}) )
+            if (from === tab.dataset.name) return recipients['logs']( make({type, data: {selected: state, current: state} }) )
+            return recipients['logs']( make({type, data: {selected: state, current: state}}) )
         })
     }
 
-    function handle_tab_icon_event ({page, from, flow}) {
-        const role = flow.split('-')[1]
+    function handle_tab_icon_event (from, data) {
         const tabs = [...demo_icon_tab.children]
         tabs.map( tab => {
-            let current = from === tab.dataset.name ? from : tab.dataset.name
-            let type = from === tab.dataset.name ? 'checked' : 'unchecked'
-            recipients[current]({from: current, flow, type})
-            recipients['logs']({page, from: current, flow: role, type, body: 'tab event', fn: 'handle_tab_icon_event', file, line: 221})
+            const state = from === tab.dataset.name ? true : data
+            const current = from === tab.dataset.name ? from : tab.dataset.name
+            const type = from === tab.dataset.name ? 'checked' : 'unchecked'
+            const make = message_maker(`${current} / tab / Demo`)
+            recipients[current]( make({type, data: state}) )
+            if (from === tab.dataset.name) return recipients['logs']( make({type, data: {selected: state, current: state} }) )
+            return recipients['logs']( make({type, data: {selected: state, current: state}}) )
         })
     }
 
-    function handle_toggle_event (page, from, flow, body) {
-        const state = !body
-        recipients[from]({page, from, type: 'switched', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `toggle ${body ? 'on' : 'off'}`, fn: 'handle_toggle_event', file, line: 228})
+    function handle_toggle_event (make, from, data) {
+        const state = !data
+        const message = make({type: 'switched', data: state})
+        recipients[from](message)
+        recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state}}) )
     }
 
-    function handle_dropdown_menu_event (page, from, flow, body) {
-        const state = !body
+    function handle_dropdown_menu_event (make, from, data) {
+        const state = !data
         const dropdown = document.querySelector(`.${css.dropdown}`)
         dropdown.append(filter_list)
-        recipients['filter-list']({from, type: 'expanded', body: body})
-        recipients[from]({from, flow, type: 'expanded', body: state})
-        recipients['logs']({page, from, flow, type: 'triggered', body: `expanded ${state ? 'on' : 'off'}`, fn: 'handle_dropdown_menu_event', line: 237})
+        recipients['filter-list']( make({type: 'expanded', data}) )
+        recipients[from]( make({type: 'expanded', data: state}) )
+        recipients['logs']( make({type: 'expanded', data: {expanded: state }}) )
     }
 
+    function handle_filter_options (data) {
+        filter_options.filter( option => {
+            if (option.text === data.option) option.selected = data.selected
+        })
+    }
     // protocols
     function tab_protocol (name) {
-        return sender => {
-            recipients[name] = sender
+        return send => {
+            recipients[name] = send
             return (msg) => {
-                const { type } = msg
+                const {head, refs, type, data} = msg
+                const to = head[1]
+                const id = head[2]
+                const role = head[0].split(' / ')[1]
+                const from = head[0].split(' / ')[0]
+                if (type === 'click') return handle_tab_icon_event(from, data)
                 recipients['logs'](msg)
-                if (type === 'click') return handle_tab_icon_event(msg)
             }
         }
     }
     function protocol (name) {
-        return sender => {
-            recipients[name] = sender
+        return send => {
+            recipients[name] = send
             return get
         }
     }
 
     function get (msg) {
-        const { type } = msg
+        const { type, data } = msg
         recipients['logs'](msg)
         if (type === 'click') return handle_click_event(msg)
+        if (type === 'selected') return handle_filter_options(data)
+        if (type === 'unselected') return handle_filter_options(data)
     }
 }
 
@@ -426,7 +448,7 @@ body {
 
 document.body.append(demo())
 }).call(this)}).call(this,"/demo/demo.js")
-},{"..":35,"bel":5,"csjs-inject":8,"datdot-ui-icon":25,"datdot-ui-logs":28,"head":2,"list":3,"path":33}],2:[function(require,module,exports){
+},{"..":36,"../src/node_modules/message_maker":37,"bel":5,"csjs-inject":8,"datdot-ui-icon":25,"datdot-ui-logs":28,"head":2,"list":3,"path":34}],2:[function(require,module,exports){
 module.exports = head
 
 function head (lang = 'utf8', title = 'Button - DatDot UI') {
@@ -442,20 +464,18 @@ const bel = require('bel')
 const file = require('path').basename(__filename)
 const style_sheet = require('../../src/node_modules/support-style-sheet')
 const button = require('../../src/index')
-// const message_maker = require('../../src/node_modules/message_maker')
+const message_maker = require('../../src/node_modules/message_maker')
 
 module.exports = i_list
 
 function i_list ({page = 'Demo', flow = 'ui-list', name, body = [], expanded = false, hidden = true, theme }, protocol) {
-    // const make = message_maker(`${name}/${flow}/i_list`)
-    // const message = make({to: page, type: 'ready', data: body})
     const recipients = []
+    const make = message_maker(`${name} / ${flow} / i_list`)
+    const message = make({type: 'ready'})
 
     function widget () {
         const send = protocol( get )
-        const fn_name = `${widget.name}/${i_list.name}`
-        // send(message)
-        send({page, from: name, flow, type: 'ready', file, fn: i_list.name, line: 19})
+        send(message)
         const list = document.createElement('i-list')
         const shadow = list.attachShadow({mode: 'closed'})
         list.setAttribute('role', 'listbox')
@@ -478,25 +498,27 @@ function i_list ({page = 'Demo', flow = 'ui-list', name, body = [], expanded = f
                 const li = bel`<li role="option" data-option=${text}" aria-selected=${selected}>${item}</li>`
                 const option_list = text.toLowerCase().split(' ').join('-')
                 shadow.append(li)
-                send({from: `option-${option_list}`, flow, type: 'ready', fn: fn_name, file, line: 34})
+                const make = message_maker(`${option_list} / option / ${flow} / widget`)
+                send( make({type: 'ready'}) )
             })
-            if (body.length === 0) send({from: name, flow, type: 'error', body: 'body no items', fn: fn_name, file, line: 42})
+            if (body.length === 0) send({type: 'error', data: 'body no items'})
         } catch(e) {
-            send({from: name, flow, type: 'error', body: 'something went wrong', fn: fn_name, file, line: 44})
+            send({type: 'error', data: 'something went wrong'})
         }
         
         return list
 
-        function handle_expanded_event (body) {
-            list.ariaHidden = body
+        function handle_expanded_event (data) {
+            list.ariaHidden = data
         }
-        function handle_select_event (from, body) {
-            const selected = !body
+        function handle_select_event (from, data) {
+            const selected = !data
             const type = selected ? 'selected' : 'unselected'
             const { childNodes } = shadow
+            const make = message_maker(`${from} / option / ${flow}`)
             childNodes.forEach( child => child.dataset.option === from ? child.setAttribute('aria-selected', selected) : false)
-            recipients[from]({from, type, body: selected})
-            send({page, from, flow, type, body: selected, fn: handle_select_event.name, file, line: 58})
+            recipients[from]( make({type, data: selected}) )
+            send( make({type, data: { option: from, selected } }) )
         }
         function button_protocol (name) {
             return (send) => {
@@ -505,11 +527,13 @@ function i_list ({page = 'Demo', flow = 'ui-list', name, body = [], expanded = f
             }
         }
         function get (msg) {
-            const {from, type, body} = msg
-            // console.log( msg )
-            if (type === 'click') return handle_select_event(from, body)
-            if (type === 'expanded') return handle_expanded_event(body)
-            send(msg)
+            const {head, refs, type, data} = msg
+            const to = head[1]
+            const id = head[2]
+            const role = head[0].split(' / ')[1]
+            const from = head[0].split(' / ')[0]
+            if (type === 'click') return handle_select_event(from, data)
+            if (type === 'expanded') return handle_expanded_event(data)
         }
     }
 
@@ -534,18 +558,7 @@ function i_list ({page = 'Demo', flow = 'ui-list', name, body = [], expanded = f
         --color: ${color ? color : 'var(--primary-color)'};
         --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
         display: grid;
-    }
-    :host(i-list) li {
-        display: grid;
-        border: 1px solid hsl(var(--primary-color));
-        margin-top: -1px;
-        color: hsl(var(--color));
-        background-color: hsl(var(--bg-color));
-        transition: color 0.3s, background-color 0.3s ease-in-out;
-        cursor: pointer;
-    }
-    :host(i-list) li:hover {
-        --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--color-greyEB)'};
+        margin-top: 5px;
     }
     :host(i-list[aria-hidden="true"]) {
         opacity: 0;
@@ -554,6 +567,18 @@ function i_list ({page = 'Demo', flow = 'ui-list', name, body = [], expanded = f
     }
     :host(i-list[aria-hidden="false"]) {
         animation: open 0.3s;
+    }
+    li {
+        display: grid;
+        border: 1px solid hsl(var(--primary-color));
+        margin-top: -1px;
+        color: hsl(var(--color));
+        background-color: hsl(var(--bg-color));
+        transition: color 0.3s, background-color 0.3s ease-in-out;
+        cursor: pointer;
+    }
+    li:hover {
+        --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--color-greyEB)'};
     }
     @keyframes close {
         0% {
@@ -577,7 +602,7 @@ function i_list ({page = 'Demo', flow = 'ui-list', name, body = [], expanded = f
     return widget()
 }
 }).call(this)}).call(this,"/demo/node_modules/list.js")
-},{"../../src/index":35,"../../src/node_modules/support-style-sheet":36,"bel":5,"path":33}],4:[function(require,module,exports){
+},{"../../src/index":36,"../../src/node_modules/message_maker":37,"../../src/node_modules/support-style-sheet":38,"bel":5,"path":34}],4:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
 var trailingSpaceRegex = /[\s]+$/
@@ -811,7 +836,7 @@ module.exports = hyperx(belCreateElement, {comments: true})
 module.exports.default = module.exports
 module.exports.createElement = belCreateElement
 
-},{"./appendChild":4,"hyperx":31}],6:[function(require,module,exports){
+},{"./appendChild":4,"hyperx":32}],6:[function(require,module,exports){
 (function (global){(function (){
 'use strict';
 
@@ -830,7 +855,7 @@ function csjsInserter() {
 module.exports = csjsInserter;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"csjs":11,"insert-css":32}],7:[function(require,module,exports){
+},{"csjs":11,"insert-css":33}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = require('csjs/get-css');
@@ -1403,53 +1428,62 @@ function svg(path) {
     return el
 }   
 },{}],28:[function(require,module,exports){
-(function (__filename){(function (){
-const styleSheet = require('supportCSSStyleSheet')
 const bel = require('bel')
-const file = require('path').basename(__filename)
+const style_sheet = require('support-style-sheet')
+const message_maker = require('message_maker')
 
-module.exports = logs
-
-function logs ( protocol ) {
-    const sender = protocol ( get )
-    sender({from: 'logs', flow: 'logs-layout', type: 'ready', fn: 'logs', file, line: 8})
-    const ilog = document.createElement('i-log')
-    const shadow = ilog.attachShadow({mode: 'closed'})
+module.exports = i_log
+function i_log (protocol, to = 'Test for a long component name / demo / demo.js') {
+    const send = protocol(get)
+    const make = message_maker(`ui-logs / i_log / index.js`)
+    const message = make({to, type: 'ready', refs: ['old_logs', 'new_logs']})
+    send(message)
+    // send({from: 'logs', flow: 'logs-layout', type: 'ready', fn: 'logs', line: 8})
+    const i_log = document.createElement('i-log')
+    const shadow = i_log.attachShadow({mode: 'closed'})
     const title = bel`<h4>Logs</h4>`
     const content = bel`<section class="content">${title}</section>`
-    const logList = document.createElement('log-list')
-    styleSheet(shadow, style)
-    content.append(logList)
+    const log_list = document.createElement('log-list')
+    style_sheet(shadow, style)
+    content.append(log_list)
     shadow.append(content)
+    document.addEventListener('DOMContentLoaded', () => { log_list.scrollTop = log_list.scrollHeight })
 
-    document.addEventListener('DOMContentLoaded', () => {
-        logList.scrollTop = logList.scrollHeight
-    })
+    return i_log
 
-    return ilog
-
-    function get ({page = 'Demo', from, flow, type, body, fn, file, line}) {
+    function get (msg) {
+        // const {page = 'Demo', from, flow, type, body, fn, file, line} = msg
+        const {head, refs, type, data, meta} = msg
         try {
-            const f = flow ? bel`<span class="flow">${flow} :: </span>` : ''
-            var log = bel`
-            <aside class="list">
-                <span aria-label=${page} class="page">${page}</span>
-                <div class="log">
-                    <span aria-label="info" class="info">${f} ${from}</span>
-                    <span aria-type="${type}" class="type">${type}</span>
-                    <span aira-label="message" class="message">${typeof body === 'object' ? JSON.stringify(body) : body}</span>
-                    ${fn && bel`<span aria-type="${fn}" class="function">Fn: ${fn}</span>`}
+            const from = bel`<span aria-label=${head[0]} class="from">${head[0]}</span>`
+            const to = bel`<span aria-label="to" class="to">${head[1]}</span>`
+            const data_info = bel`<span aira-label="data" class="data">data: ${typeof data === 'object' ? JSON.stringify(data) : data}</span>`
+            const type_info = bel`<span aria-type="${type}" aria-label="${type}"  class="type">${type}</span>`
+            const refs_info = bel`<div class="refs">refs: </div>`
+            refs.map( (ref, i) => refs_info.append(bel`<span aria-label="${ref}">${ref}${i < refs.length - 1 ? ', ' : ''}</span>`))
+            const log = bel`
+            <div class="log">
+                <div class="head">
+                    ${from}
+                    ${type_info}
+                    ${to}
                 </div>
-                <div class="file">${file} : ${line}</div>
+                ${data_info}
+                ${refs_info}
+            </div>`
+            var list = bel`
+            <aside class="list">
+                ${log}
+                <div class="file">
+                    <span>${meta.stack[0]}</span>
+                    <span>${meta.stack[1]}</span>
+                </div>
             </aside>
             `
-            logList.append(log)
-            logList.scrollTop = logList.scrollHeight
-            
+            log_list.append(list)
+            log_list.scrollTop = log_list.scrollHeight
         } catch (error) {
-            document.addEventListener('DOMContentLoaded', () => {
-                logList.append(log)
-            })
+            document.addEventListener('DOMContentLoaded', () => log_list.append(list))
             return false
         }
     }
@@ -1457,7 +1491,7 @@ function logs ( protocol ) {
 
 const style = `
 :host(i-log) {}
-:host(i-log) .content {
+.content {
     --bgColor: var(--color-dark);
     --opacity: 1;
     width: 100%;
@@ -1466,7 +1500,7 @@ const style = `
     color: #fff;
     background-color: hsla( var(--bgColor), var(--opacity));
 }
-:host(i-log) h4 {
+h4 {
     --bgColor: var(--color-deep-black);
     --opacity: 1;
     margin: 0;
@@ -1474,41 +1508,43 @@ const style = `
     color: #fff;
     background-color: hsl( var(--bgColor), var(--opacity) );
 }
-:host(i-log) log-list {
-    display: block;
+log-list {
+    display: flex;
+    flex-direction: column;
     height: calc(100% - 44px);
     overflow-y: auto;
     margin: 8px;
 }
-:host(i-log) .list {
+.list {
     --bgColor: 0, 0%, 30%;
     --opacity: 0.25;
-    display: grid;
-    grid-template-rows: auto;
-    grid-template-columns: minmax(auto, 60px) auto;
-    grid-column-gap: 10px;
     padding: 2px 10px 4px 10px;
     margin-bottom: 4px;
     background-color: hsla( var(--bgColor), var(--opacity) );
     border-radius: 8px;
     transition: background-color 0.6s ease-in-out;
 }
-:host(i-log) log-list .list:last-child {
+log-list .list:last-child {
     --bgColor: var(--color-verdigris);
     --opacity: 0.5;
 }
-:host(i-log) .log {
-    grid-column-start: 2;
-    line-height: 2.2;
+.log {
+    line-height: 1.8;
     word-break: break-all;
     white-space: pre-wrap;
 }
-:host(i-log) .log span {
+.log span {
     --size: var(--size12);
     font-size: var(--size);
 }
-:host(i-log) .info {}
-:host(i-log) .type {
+.from {
+    --color: var(--color-maximum-blue-green);
+    color: hsl( var(--color) );
+    justify-content: center;
+    align-items: center;
+}
+.to {}
+.type {
     --color: var(--color-greyD9);
     --bgColor: var(--color-greyD9);
     --opacity: .25;
@@ -1516,92 +1552,115 @@ const style = `
     background-color: hsla( var(--bgColor), var(--opacity) );
     padding: 2px 10px;
     border-radius: 8px;
+    justify-self: center;
+    align-self: center;
 }
-:host(i-log) log-list .list:last-child .type {}
-:host(i-log) .page {
-    --color: var(--color-maximum-blue-green);
+log-list .list:last-child .type {}
+.file {
+    --color: var(--color-greyA2);
     display: grid;
-    color: hsl( var(--color) );
-    border: 1px solid hsl( var(--color) );
-    padding: 2px 4px;
-    border-radius: 4px;
-    grid-row-start: span 2;
-    justify-content: center;
-    align-items: center;
-}
-:host(i-log) .file {
-    --color: var(--color-grey70);
-    display: grid;
-    color: hsl( var(--color) );
     justify-content: right;
+    color: hsl( var(--color) );
+    line-height: 1.6;
 }
-:host(i-log) log-list .list:last-child .file {
+log-list .list:last-child .file {
     --color: var(--color-white);
 }
-:host(i-log) [aria-type="click"] {
+[aria-type="click"] {
     --color: var(--color-dark);
     --bgColor: var(--color-yellow);
     --opacity: 1;
 }
-:host(i-log) [aria-type="triggered"] {
+[aria-type="triggered"] {
     --color: var(--color-white);
     --bgColor: var(--color-blue-jeans);
     --opacity: .5;
 }
-:host(i-log) [aria-type="opened"] {
+[aria-type="opened"] {
     --bgColor: var(--color-slate-blue);
     --opacity: 1;
 }
-:host(i-log) [aria-type="closed"] {
+[aria-type="closed"] {
     --bgColor: var(--color-ultra-red);
     --opacity: 1;
 }
-:host(i-log) [aria-type="error"] {
+[aria-type="error"] {
     --color: var(--color-white);
     --bgColor: var(--color-red);
     --opacity: 1;
 }
-:host(i-log) [aria-type="warning"] {
+[aria-type="warning"] {
     --color: var(--color-white);
     --bgColor: var(--color-deep-saffron);
     --opacity: 1;
 }
-:host(i-log) [aria-type="checked"] {
+[aria-type="checked"] {
     --color: var(--color-dark);
     --bgColor: var(--color-blue-jeans);
     --opacity: 1;
 }
-:host(i-log) [aria-type="unchecked"] {
+[aria-type="unchecked"] {
     --bgColor: var(--color-blue-jeans);
     --opacity: .3;
 }
-:host(i-log) [aria-type="selected"] {
+[aria-type="selected"] {
     --color: var(--color-dark);
     --bgColor: var(--color-lime-green);
     --opacity: 1;
 }
-:host(i-log) [aria-type="unselected"] {
+[aria-type="unselected"] {
     --bgColor: var(--color-lime-green);
     --opacity: .25;
 }
 
-:host(i-log) log-list .list:last-child [aria-type="ready"] {
+log-list .list:last-child [aria-type="ready"] {
     --bgColor: var(--color-deep-black);
     --opacity: 0.3;
 }
-:host(i-log) .function {
+.function {
     --color: 0, 0%, 70%;
     color: var(--color);
 }
-:host(i-log) log-list .list:last-child .function {
+log-list .list:last-child .function {
     --color: var(--color-white);
 }
-:host(i-log) [aria-label="demo"] {}
+.head {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 12px;
+}
+.refs {
+    display: flex;
+    gap: 5px;
+    color: white;
+}
 `
-}).call(this)}).call(this,"/node_modules/datdot-ui-logs/src/index.js")
-},{"bel":5,"path":33,"supportCSSStyleSheet":29}],29:[function(require,module,exports){
-arguments[4][26][0].apply(exports,arguments)
-},{"dup":26}],30:[function(require,module,exports){
+},{"bel":5,"message_maker":29,"support-style-sheet":30}],29:[function(require,module,exports){
+module.exports = function message_maker (from) {
+    let msg_id = 0
+    return function make ({to, type, data = null, refs = []}) {
+        const stack = (new Error().stack.split('\n').slice(2).filter(x => x.trim()))
+        const message = { head: [from, to, ++msg_id], refs, type, data, meta: { stack }}
+        return message
+    }
+}
+},{}],30:[function(require,module,exports){
+module.exports = support_style_sheet
+function support_style_sheet (root, style) {
+    return (() => {
+        try {
+            const sheet = new CSSStyleSheet()
+            sheet.replaceSync(style)
+            root.adoptedStyleSheets = [sheet]
+            return true 
+        } catch (error) { 
+            const inject_style = `<style>${style}</style>`
+            root.innerHTML = `${inject_style}`
+            return false
+        }
+    })()
+}
+},{}],31:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -1622,7 +1681,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -1919,7 +1978,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":30}],32:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":31}],33:[function(require,module,exports){
 var inserted = {};
 
 module.exports = function (css, options) {
@@ -1943,7 +2002,7 @@ module.exports = function (css, options) {
     }
 };
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 (function (process){(function (){
 // .dirname, .basename, and .extname methods are extracted from Node.js v8.11.1,
 // backported and transplited with Babel, with backwards-compat fixes
@@ -2249,7 +2308,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this)}).call(this,require('_process'))
-},{"_process":34}],34:[function(require,module,exports){
+},{"_process":35}],35:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -2435,15 +2494,16 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 (function (__filename){(function (){
 const file = require('path').basename(__filename)
 const style_sheet = require('support-style-sheet')
+const message_maker = require('message_maker')
 
 module.exports = i_button
 
 function i_button (option, protocol) {
-    const {page, flow = 'ui-button', name, body, icon, role = 'button', state, expanded = false, current = false, selected, checked, disabled, theme} = option
+    const {page, flow = 'ui-button', name, body, icon, role = 'button', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
     let is_current = current
     let is_checked = checked
     let is_disabled = disabled
@@ -2452,8 +2512,10 @@ function i_button (option, protocol) {
 
     function widget () {
         const send = protocol(get)
-        send({page, from: name, flow, type: 'ready', file, fn: i_button.name, line: 16})
-        // const button = bel`<button role="${role}" aria-label="${name}" tabindex="0" onclick="${() => handle_click()}">${body} ${icon}</button>`
+        const make = message_maker(`${name} / ${role} / ${flow}`)
+        let data = role === 'tab' ?  {selected: is_current ? 'true' : is_selected, current: is_current} : role === 'switch' ? {checked: is_checked} : role === 'listbox' ? {selected: is_selected} :  disabled ? {disabled} : null
+        const message = make({to: 'demo.js', type: 'ready', data})
+        send(message)
         const el = document.createElement('i-button')
         const text = document.createElement('span')
         el.dataset.name = name
@@ -2475,8 +2537,8 @@ function i_button (option, protocol) {
             el.setAttribute('aria-live', 'assertive')
         }
         if (role === 'tab') {
-            el.setAttribute('aria-selected', false)
             el.dataset.current = is_current
+            el.setAttribute('aria-selected', false)
         }
         if (role === 'switch') {
             el.setAttribute('aria-checked', is_checked)
@@ -2491,47 +2553,39 @@ function i_button (option, protocol) {
             el.removeAttribute('aria-disabled')
             el.removeAttribute('disabled')
         }
-        if (checked) {
+        if (is_checked) {
             el.setAttribute('aria-checked', is_checked)
         }
         if (current) {
             is_selected = current
             el.setAttribute('aria-current', is_current)
+
+        }
+        if (is_selected) {
             el.setAttribute('aria-selected', is_selected)
         }
-        if (selected) {
-            el.setAttribute('aria-selected', is_selected)
-        }
-        if (expanded) {
+        if (is_expanded) {
             el.setAttribute('aria-expanded', is_expanded)
         }
         return el
 
         // toggle
-        function switched_event (body) {
-            is_checked = body
+        function switched_event (data) {
+            is_checked = data
             if (!is_checked) return el.removeAttribute('aria-checked')
             el.setAttribute('aria-checked', is_checked)
         }
         // dropdown menu
-        function expanded_event (body) {
-            is_expanded = body
+        function expanded_event (data) {
+            is_expanded = data
             el.setAttribute('aria-expanded', is_expanded)
         }
         // tab checked
-        function checked_event () {
-            is_checked = true
+        function checked_event (data) {
+            is_checked = data
             is_current = is_checked
             el.setAttribute('aria-selected', is_checked)
             el.setAttribute('aria-current', is_checked)
-            el.dataset.current = is_current
-        }
-        // tab unchecked
-        function unchecked_event () {
-            is_checked = false
-            is_current = is_checked
-            el.setAttribute('aria-selected', is_checked)
-            el.removeAttribute('aria-current')
             el.dataset.current = is_current
         }
         function selected_event (body) {
@@ -2541,22 +2595,30 @@ function i_button (option, protocol) {
         // button click
         function handle_click () {
             if (is_current) return
-            const fn_name = handle_click.name
-            const code_line = 107
-            if (role.match(/tab/)) return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_checked, fn: fn_name, file, line: code_line+1})
-            if (role.match(/switch/)) return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_checked, fn: fn_name, file, line: code_line+1})
-            if (role === 'listbox') return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_expanded, fn: fn_name, file, line: code_line+2})
-            if (role === 'option') return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_selected, fn: fn_name, file, line: code_line+3})
-            send({page, from: name, flow: `ui-${role}`, type: 'click', fn: fn_name, file, line: code_line+4})
+            // if (role.match(/tab/)) return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_checked, fn: fn_name, file, line: code_line+1})
+            // if (role.match(/switch/)) return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_checked, fn: fn_name, file, line: code_line+1})
+            // if (role === 'listbox') return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_expanded, fn: fn_name, file, line: code_line+2})
+            // if (role === 'option') return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_selected, fn: fn_name, file, line: code_line+3})
+            // new message
+            const type = 'click'
+            if (role === 'tab') return send( make({type, data: is_checked}) )
+            if (role === 'switch') return send( make({type, data: is_checked}) )
+            if (role === 'listbox') return send( make({type, data: is_expanded}) )
+            if (role === 'option') return send( make({type, data: is_selected}) )
+            // send({page, from: name, flow: `ui-${role}`, type: 'click', fn: fn_name, file, line: code_line+4})
+            send( make({type}) )
         }
         // protocol get msg
         function get (msg) {
-            const { type, body } = msg
-            if (type === 'checked') return checked_event()
-            if (type === 'unchecked') return unchecked_event()
-            if (type === 'expanded') return expanded_event(body)
-            if (type === 'switched') return switched_event(body)
-            if (type.match(/selected|unselected/)) return selected_event(body)
+            const { head, refs, type, data } = msg
+            // toggle
+            if (type === 'switched') return switched_event(data)
+            // dropdown
+            if (type === 'expanded') return expanded_event(data)
+            // tab, checkbox
+            if (type.match(/checked|unchecked/)) return checked_event(data)
+            // option
+            if (type.match(/selected|unselected/)) return selected_event(data)
         }
     }
    
@@ -2747,20 +2809,8 @@ function i_button (option, protocol) {
     return widget()
 }
 }).call(this)}).call(this,"/src/index.js")
-},{"path":33,"support-style-sheet":36}],36:[function(require,module,exports){
-module.exports = support_style_sheet
-function support_style_sheet (root, style) {
-    return (() => {
-        try {
-            const sheet = new CSSStyleSheet()
-            sheet.replaceSync(style)
-            root.adoptedStyleSheets = [sheet]
-            return true 
-        } catch (error) { 
-            const inject_style = `<style>${style}</style>`
-            root.innerHTML = `${inject_style}`
-            return false
-        }
-    })()
-}
-},{}]},{},[1]);
+},{"message_maker":37,"path":34,"support-style-sheet":38}],37:[function(require,module,exports){
+arguments[4][29][0].apply(exports,arguments)
+},{"dup":29}],38:[function(require,module,exports){
+arguments[4][30][0].apply(exports,arguments)
+},{"dup":30}]},{},[1]);
