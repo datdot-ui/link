@@ -1,13 +1,12 @@
+const head = require('head')()
 const bel = require('bel')
 const csjs = require('csjs-inject')
-const file = require('path').basename(__filename)
 const button = require('..')
-const head = require('head')()
 // datdot-ui dependences
 const logs = require('datdot-ui-logs')
 const icon = require('datdot-ui-icon')
 const list = require('list')
-const message_maker = require('../src/node_modules/message_maker')
+const message_maker = require('../src/node_modules/message-maker')
 
 function demo () {
     // save protocol callbacks
@@ -179,15 +178,8 @@ function demo () {
             ${option}
         </section>
     </div>`
-
-    const container = bel`
-    <div class="${css.container}">
-        ${content}
-    </div>
-    `
-
-    const app = bel`
-    <div class="${css.wrap}" data-state="debug">
+    const container = bel`<div class="${css.container}">${content}</div>`
+    const app = bel`<div class="${css.wrap}" data-state="debug">
         ${container}${log_list}
     </div>`
 
@@ -249,10 +241,11 @@ function demo () {
     }
 
     function handle_filter_options (data) {
+        const make = message_maker('filter-result')
         filter_options.filter( option => {
             if (option.text === data.option) option.selected = data.selected
         })
-        console.table( filter_options );
+        recipients['logs']( make({to: 'search-result', type: 'filter swarm', data: filter_options}) )
     }
     // protocols
     function tab_protocol (name) {
@@ -356,9 +349,9 @@ const css = csjs`
     --weight800: 800;
     --define-primary: *---------------------------------------------*;
     --primary-color: var(--color-black);
-    --primary-bg_color: var(--color-greyF2);
+    --primary-bg-color: var(--color-greyF2);
     --primary-font: Arial, sens-serif;
-    --primary-font-size: var(--size16);
+    --primary-size: var(--size16);
     --primary-input-radius: 8px;
     --primary-button-radius: 8px;
 }
@@ -372,10 +365,10 @@ html {
 body {
     margin: 0;
     padding: 0;
-    font-size: var(--primary-font-size);
+    font-size: var(--primary-size);
     -webkit-text-size-adjust:100%;
     font-family: var(--primary-font);
-    background-color: hsl( var(--primary-bg_color) );
+    background-color: hsl( var(--primary-bg-color) );
     height: 100%;
     overflow: hidden;
 }

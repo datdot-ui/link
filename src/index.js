@@ -1,11 +1,9 @@
-const file = require('path').basename(__filename)
 const style_sheet = require('support-style-sheet')
-const message_maker = require('message_maker')
-
+const message_maker = require('message-maker')
 module.exports = i_button
 
 function i_button (option, protocol) {
-    const {page, flow = 'ui-button', name, body, icon, role = 'button', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
+    const {page, flow = 'ui-button', name, body, icon = '', role = 'button', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
     let is_current = current
     let is_checked = checked
     let is_disabled = disabled
@@ -15,7 +13,7 @@ function i_button (option, protocol) {
     function widget () {
         const send = protocol(get)
         const make = message_maker(`${name} / ${role} / ${flow}`)
-        let data = role === 'tab' ?  {selected: is_current ? 'true' : is_selected, current: is_current} : role === 'switch' ? {checked: is_checked} : role === 'listbox' ? {selected: is_selected} :  disabled ? {disabled} : null
+        let data = role === 'tab' ?  {selected: is_current ? 'true' : is_selected, current: is_current} : role === 'switch' ? {checked: is_checked} : role === 'listbox' ? {selected: is_selected} : disabled ? {disabled} : null
         const message = make({to: 'demo.js', type: 'ready', data})
         send(message)
         const el = document.createElement('i-button')
@@ -61,11 +59,10 @@ function i_button (option, protocol) {
         if (current) {
             is_selected = current
             el.setAttribute('aria-current', is_current)
-
         }
-        if (is_selected) {
+        if (is_selected || !is_selected && role !== 'button') {
             el.setAttribute('aria-selected', is_selected)
-        }
+        } 
         if (is_expanded) {
             el.setAttribute('aria-expanded', is_expanded)
         }
@@ -97,17 +94,11 @@ function i_button (option, protocol) {
         // button click
         function handle_click () {
             if (is_current) return
-            // if (role.match(/tab/)) return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_checked, fn: fn_name, file, line: code_line+1})
-            // if (role.match(/switch/)) return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_checked, fn: fn_name, file, line: code_line+1})
-            // if (role === 'listbox') return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_expanded, fn: fn_name, file, line: code_line+2})
-            // if (role === 'option') return send({page, from: name, flow: `ui-${role}`, type: 'click', body: is_selected, fn: fn_name, file, line: code_line+3})
-            // new message
             const type = 'click'
             if (role === 'tab') return send( make({type, data: is_checked}) )
             if (role === 'switch') return send( make({type, data: is_checked}) )
             if (role === 'listbox') return send( make({type, data: is_expanded}) )
             if (role === 'option') return send( make({type, data: is_selected}) )
-            // send({page, from: name, flow: `ui-${role}`, type: 'click', fn: fn_name, file, line: code_line+4})
             send( make({type}) )
         }
         // protocol get msg
@@ -124,10 +115,10 @@ function i_button (option, protocol) {
         }
     }
    
-     // insert CSS style
-     const custom_style = theme ? theme.style : ''
-     // set CSS variables
-     if (theme && theme.props) {
+    // insert CSS style
+    const custom_style = theme ? theme.style : ''
+    // set CSS variables
+    if (theme && theme.props) {
         var {size, size_hover, current_size,
             weight, weight_hover, current_weight,
             color, color_hover, current_color, current_bg_color, 
@@ -138,7 +129,7 @@ function i_button (option, protocol) {
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
-     }
+    }
 
     const style = `
     :host(i-button) {
@@ -160,7 +151,7 @@ function i_button (option, protocol) {
         --border-radius: ${border_radius ? border_radius : 'var(--primary-button-radius)'};
         --fill: ${fill ? fill : 'var(--primary-color)'};
         --fill-hover: ${fill_hover ? fill_hover : 'var(--color-white)'};
-        ---icon-size: ${icon_size ? icon_size : '16px'};
+        --icon-size: ${icon_size ? icon_size : '16px'};
         --offset_x: ${offset_x ? offset_x : '0px'};
         --offset-y: ${offset_y ? offset_y : '6px'};
         --blur: ${blur ? blur : '30px'};
