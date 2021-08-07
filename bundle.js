@@ -1996,7 +1996,7 @@ const message_maker = require('message-maker')
 module.exports = i_button
 
 function i_button (option, protocol) {
-    const {page, flow = 'ui-button', name, body, icon = '', role = 'button', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
+    const {page, flow = 'ui-button', name, body, icon = '', role = 'button', mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
     let is_current = current
     let is_checked = checked
     let is_disabled = disabled
@@ -2083,6 +2083,10 @@ function i_button (option, protocol) {
         function selected_event (body) {
             is_selected = body
             el.setAttribute('aria-selected', is_selected)
+            if (mode === 'single-select') {
+                is_current = body
+                el.setAttribute('aria-current', is_current)
+            }
         }
         // button click
         function handle_click () {
@@ -2285,6 +2289,9 @@ function i_button (option, protocol) {
     }
     :host(i-button[role="option"]:hover) g {
         --fill-hover: ${fill_hover ? fill_hover : 'var(--primary-color)'};
+    }
+    :host(i-button[aria-current="true"]:hover) g {
+        --fill-hover: ${fill_hover ? fill_hover : 'var(--color-white)'};
     }
     :host(i-button[role="option"][aria-selected="false"]) .icon {
         display: none;
