@@ -18,18 +18,22 @@ function i_button (option, protocol) {
         send(message)
         const el = document.createElement('i-button')
         const text = document.createElement('span')
+        if (body != void 0) {
+            text.classList.add('text')
+            text.append(body)
+        }
         el.dataset.name = name
         el.dataset.ui = role
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
         el.setAttribute('tabindex', 0)
         el.onclick = handle_click
-        text.classList.add('text')
-        text.append(body)
         const shadow = el.attachShadow({mode: 'open'})
         style_sheet(shadow, style)
-        if (icon || role === 'option') shadow.append(icon, text)
-        else shadow.append(body)
+        if (icon || role.match(/option|listbox/) ) {
+            const content = text ? text : ''
+            shadow.append(icon, content)
+        }else shadow.append(body)
 
         // define conditions
         if (state) {
@@ -60,7 +64,7 @@ function i_button (option, protocol) {
             is_selected = current
             el.setAttribute('aria-current', is_current)
         }
-        if (is_selected || !is_selected && role !== 'button') {
+        if (is_selected || !is_selected && role.match(/option/)) {
             el.setAttribute('aria-selected', is_selected)
         } 
         if (is_expanded) {
@@ -124,12 +128,13 @@ function i_button (option, protocol) {
     // set CSS variables
     if (theme && theme.props) {
         var {size, size_hover, current_size,
-            weight, weight_hover, current_weight,
+            weight, weight_hover, current_weight, current_hover_weight,
             color, color_hover, current_color, current_bg_color, 
+            current_hover_color, current_hover_bg_color,
             bg_color, bg_color_hover, border_color_hover,
             border_width, border_style, border_opacity, border_color, border_radius, 
             padding, width, height, opacity,
-            fill, fill_hover, icon_size, current_fill,
+            fill, fill_hover, icon_size, current_fill, current_hover_fill,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
@@ -211,7 +216,9 @@ function i_button (option, protocol) {
         column-gap: 8px;
     }
     :host(i-button) .icon {
-        display: block;
+        display: grid;
+        justify-content: center;
+        align-item: center;
         width: var(---icon-size);
         height: var(---icon-size);
     }
@@ -254,6 +261,9 @@ function i_button (option, protocol) {
         --border-width: ${border_width ? border_width : '0'};
         --border-style: ${border_style ? border_style : 'solid'};
         --border-color: ${border_color ? border_color : 'var(--primary-color)'};
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
         width: var(--width);
     }
     :host(i-button[aria-current="true"]), :host(i-button[aria-current="true"]:hover) {
@@ -266,10 +276,18 @@ function i_button (option, protocol) {
         --fill: ${fill ? fill : 'var(--color-white)'};
     }
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
-    :host(i-button[aria-checked="true"]:hover), :host(i-button[aria-expanded="true"]:hover) {
+    :host(i-button[aria-checked="true"]:hover) {
         --bold: ${current_weight ? current_weight : 'initial'};
         --color: ${current_color ? current_color : 'var(--color-white)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-color)'};
+    }
+    :host(i-button[aria-expanded="true"]:hover) {
+        --bold: ${current_hover_weight ? current_hover_weight : 'initial'};
+        --color: ${current_hover_color ? current_hover_color : 'var(--color-white)'};
+        --bg-color: ${current_hover_bg_color ? current_hover_bg_color : 'var(--primary-color)'};
+    }
+    :host(i-button[aria-expanded="true"]:hover) g {
+        --fill: ${current_hover_fill ? current_hover_fill : 'var(--color-white)'};
     }
     :host(i-button[aria-checked="true"]) g {
         --fill: ${current_fill ? current_fill : 'var(--color-white)' };

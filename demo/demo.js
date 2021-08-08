@@ -137,10 +137,13 @@ function demo () {
     }}, protocol('next'))
 
     const icon_option = icon({name: 'option', path: 'assets'})
-    const option = button({name: 'filter-option', role: 'listbox', body: icon_option, theme: {
+    const option = button({name: 'filter-option', role: 'listbox', icon: icon_option, body: 'Filter', theme: {
         props: {
+            width: '100px',
+            color: 'var(--color-blue)',
+            current_color: 'var(--color-blue)',
             fill: 'var(--color-blue)',
-            currentFill: 'var(--color-white)'
+            current_fill: 'var(--color-white)'
         }
     }}, protocol('filter-option'))
 
