@@ -261,10 +261,16 @@ function i_button (option, protocol) {
         --border-width: ${border_width ? border_width : '0'};
         --border-style: ${border_style ? border_style : 'solid'};
         --border-color: ${border_color ? border_color : 'var(--primary-color)'};
-        display: flex;
-        flex-direction: row-reverse;
-        align-items: center;
+        display: grid;
+        grid-template-columns: 1fr auto;
         width: var(--width);
+    }
+    :host(i-button[role="listbox"]) .text {
+        grid-column-start: 1;
+        text-align: left;
+    }
+    :host(i-button[role="listbox"]) .icon {
+        grid-column-start: 2;
     }
     :host(i-button[aria-current="true"]), :host(i-button[aria-current="true"]:hover) {
         --bold: ${current_weight ? current_weight : 'initial'};
