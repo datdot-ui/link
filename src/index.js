@@ -99,6 +99,16 @@ function i_button (option, protocol) {
                 el.setAttribute('aria-current', is_current)
             }
         }
+        function changed_event (body) {
+            const [icon, text] = shadow.childNodes
+            console.log(shadow.childNodes);
+            if (text) {
+                text.textContent = body
+            } else {
+                shadow.childNodes[0].textContent = body
+                el.ariaLabel = body
+            }
+        }
         // button click
         function handle_click () {
             if (is_current) return
@@ -120,6 +130,7 @@ function i_button (option, protocol) {
             if (type.match(/checked|unchecked/)) return checked_event(data)
             // option
             if (type.match(/selected|unselected/)) return selected_event(data)
+            if (type === 'changed') return changed_event(data)
         }
     }
    

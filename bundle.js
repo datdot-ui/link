@@ -12,65 +12,86 @@ const message_maker = require('../src/node_modules/message-maker')
 function demo () {
     // save protocol callbacks
     let recipients = []
-    let filter_options = [{
-        text: 'Available',
-        icon: icon({name: 'check', path: 'assets'}),
-        selected: true
-    },
-    {
-        text: 'Not Available',
-        icon: icon({name: 'check', path: 'assets'}),
-        selected: true
-    },
-    {
-        text: 'Core',
-        icon: icon({name: 'check', path: 'assets'}),
-        selected: true
-    },
-    {
-        text: 'Drive',
-        icon: icon({name: 'check', path: 'assets'}),
-        selected: true
-    },
-    {
-        text: 'Cabal',
-        icon: icon({name: 'check', path: 'assets'}),
-        selected: true
-    }]
+    let filter_options = 
+    [
+        {
+            text: 'Available',
+            icon: icon({name: 'check', path: 'assets'}),
+            selected: true
+        },
+        {
+            text: 'Not Available',
+            icon: icon({name: 'check', path: 'assets'}),
+            selected: true
+        },
+        {
+            text: 'Core',
+            icon: icon({name: 'check', path: 'assets'}),
+            selected: true
+        },
+        {
+            text: 'Drive',
+            icon: icon({name: 'check', path: 'assets'}),
+            selected: true
+        },
+        {
+            text: 'Cabal',
+            icon: icon({name: 'check', path: 'assets'}),
+            selected: true
+        }
+    ]
      // logs must be initialized first before components
     const log_list = logs(protocol('logs'))
     // buttons
-    const primary = button({name: 'primary', body: 'Primary', theme: { 
-        style: ` `, 
-        props: {
-            // border_width: '2px',
-            // border_style: 'dashed',
-            // border_color: 'var(--color-yellow)',
-            // color_hover: 'var(--color-white)',
-            size_hover: 'var(--size16)',
-            bg_color_hover: 'var(--color-black)',
+    const primary = button(
+    {
+        name: 'primary', 
+        body: 'Primary',
+        theme:
+        { 
+            style: ` `, 
+            props: {
+                // border_width: '2px',
+                // border_style: 'dashed',
+                // border_color: 'var(--color-yellow)',
+                // color_hover: 'var(--color-white)',
+                size_hover: 'var(--size16)',
+                bg_color_hover: 'var(--color-black)',
+            }
         }
+    }, protocol('primary'))
 
-    }}, protocol('primary'))
-
-    const disabled = button({name: 'disable', body: 'Disable', disabled: true, theme: {
-        // style: `
-        // :host(i-button) button[disabled] {
-        //     --color-opacity: 1;
-        //     --bg-color-opacity: 0.2;
-        // }
-        // `,
-        props: {
-            // bg_color: 'var(--color-slimy-green)'
+    const disabled = button(
+    {
+        name: 'disable', 
+        body: 'Disable', 
+        disabled: true, 
+        theme: {
+            // style: `
+            // :host(i-button) button[disabled] {
+            //     --color-opacity: 1;
+            //     --bg-color-opacity: 0.2;
+            // }
+            // `,
+            props: {
+                // bg_color: 'var(--color-slimy-green)'
+            }
         }
-    }}, protocol('disable'))
+    }, protocol('disable'))
 
-    const toggle = button({name: 'toggle', body: 'Toggle', role: 'switch', checked: false, theme : {
-        style: ``,
-        props: {
-            current_bg_color: 'var(--color-green)'
+    const toggle = button(
+    {
+        name: 'toggle', 
+        body: 'Toggle', 
+        role: 'switch', 
+        checked: false, 
+        theme : {
+            style: ``,
+            props: {
+                current_bg_color: 'var(--color-green)'
+            }
         }
-    }}, protocol('toggle'))
+    }, protocol('toggle'))
 
     // Tab element
     const tab_theme = {
@@ -93,9 +114,54 @@ function demo () {
     const icon_notice = icon({name: 'notice', path: 'assets'})
     const icon_warning = icon({name: 'warning', path: 'assets'})
     const icon_search = icon({name: 'search', path: 'assets'})
-    const tab4 = button({page: 'JOBS', name: 'tab4', icon: icon_notice, body: bel`<div class="col2">Tab4 ${icon_notice}</div>`, role: 'tab', current: true, theme: { props: {size: 'var(--szie20)', current_color: 'var(--color-blue)', fill: 'var(--color-blue)', fill_hover:  'var(--color-blue)', icon_Size: '32px' }}}, tab_protocol('tab4'))
-    const tab5 = button({page: 'JOBS', name: 'tab5', icon: icon_search, body: bel`<div class="col2">Tab5 ${icon_warning}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', current_color:'var(--color-orange)', fill: 'var(--color-orange)', fill_hover: 'var(--color-orange)', icon_Size: '32px' }}}, tab_protocol('tab5'))
-    const tab6 = button({page: 'JOBS', name: 'tab6', icon: icon_search, body: bel`<div class="col2">Tab6 ${icon_search}</div>`, role: 'tab', theme: { props: {size: 'var(--szie20)', icon_Size: '32px' }}}, tab_protocol('tab6'))
+    const tab4 = button(
+    {
+        page: 'JOBS', 
+        name: 'tab4', 
+        icon: icon_notice, 
+        body: bel`<div class="col2">Tab4 ${icon_notice}</div>`, 
+        role: 'tab', 
+        current: true, 
+        theme: { 
+            props: {
+                    size: 'var(--szie20)', 
+                    current_color: 'var(--color-blue)', 
+                    fill: 'var(--color-blue)', 
+                    fill_hover:  'var(--color-blue)', 
+                    icon_Size: '32px' 
+                }
+            }
+    }, tab_protocol('tab4'))
+    const tab5 = button(
+    {
+        page: 'JOBS', 
+        name: 'tab5', 
+        icon: icon_search, 
+        body: bel`<div class="col2">Tab5 ${icon_warning}</div>`, 
+        role: 'tab', 
+        theme: { 
+            props: {
+                    size: 'var(--szie20)', 
+                    current_color:'var(--color-orange)', 
+                    fill: 'var(--color-orange)', 
+                    fill_hover: 'var(--color-orange)', 
+                    icon_Size: '32px'
+                }
+            }
+    }, tab_protocol('tab5'))
+    const tab6 = button({
+        page: 'JOBS', 
+        name: 'tab6', 
+        icon: icon_search, 
+        body: bel`<div class="col2">Tab6 ${icon_search}</div>`, 
+        role: 'tab', 
+        theme: { 
+            props: {
+                size: 'var(--szie20)', 
+                icon_Size: '32px' 
+            }
+        }
+    }, tab_protocol('tab6'))
     const demo_icon_tab = bel`
     <nav class=${css.tabs}>
         ${tab4}${tab5}${tab6}
@@ -115,37 +181,53 @@ function demo () {
             bg_color_hover: 'var(--color-flame)'
         }
     }}, protocol('cancel'))
-    const confirm = button({name: 'confirm', body: icon_confirm, theme: {
-        props: {
-            fill: 'var(--color-green)',
-            bg_color_hover: 'var(--color-lincoln-green)',
-            fill_hover: 'var(--color-light-green)'
+    const confirm = button({
+        name: 'confirm', 
+        body: icon_confirm, 
+        theme: {
+            props: {
+                fill: 'var(--color-green)',
+                bg_color_hover: 'var(--color-lincoln-green)',
+                fill_hover: 'var(--color-light-green)'
         }
     }}, protocol('confirm'))
-    const previous = button({name: 'previous', body: bel`<div class="col2 left"><span>Previous</span>${icon_previous}</div>`, theme: {
-        style: ``,
-        props: {
-            bg_color_hover: 'var(--color-green-yellow-crayola)',
-            color_hover: 'var(--color-purple)',
-            fill_hover: 'var(--color-purple)'
+    const previous = button({
+        name: 'previous', 
+        body: bel`<div class="col2 left"><span>Previous</span>${icon_previous}</div>`, 
+        theme: {
+            style: ``,
+            props: {
+                bg_color_hover: 'var(--color-green-yellow-crayola)',
+                color_hover: 'var(--color-purple)',
+                fill_hover: 'var(--color-purple)'
         }
     }}, protocol('previous'))
-    const next = button({name: 'next', body: bel`<div class="col2 right"><span>Next</span>${icon_next}</div>`, theme: {
-        // props: {
-        //     fill: 'var(--color-green)',
-        //     fill_hover: 'var(--color-bright-yellow-crayola)'
+    const next = button({
+        name: 'next', 
+        body: bel`<div class="col2 right"><span>Next</span>${icon_next}</div>`, 
+        theme: {
+            // props: {
+            //     fill: 'var(--color-green)',
+            //     fill_hover: 'var(--color-bright-yellow-crayola)'
         // }
     }}, protocol('next'))
 
     const icon_option = icon({name: 'option', path: 'assets'})
-    const option = button({name: 'filter-option', role: 'listbox', icon: icon_option, body: 'Filter', theme: {
-        props: {
-            color: 'var(--color-blue)',
-            current_color: 'var(--color-blue)',
-            fill: 'var(--color-blue)',
-            current_fill: 'var(--color-white)'
+    const option = button(
+    {
+        name: 'filter-option', 
+        role: 'listbox', 
+        icon: icon_option, 
+        body: 'Filter', 
+        theme: {
+            props: {
+                color: 'var(--color-blue)',
+                current_color: 'var(--color-blue)',
+                fill: 'var(--color-blue)',
+                current_fill: 'var(--color-white)'
+            }
         }
-    }}, protocol('filter-option'))
+    }, protocol('filter-option'))
 
     const filter_list = list({
         name: 'filter-list', 
@@ -182,9 +264,7 @@ function demo () {
         </section>
     </div>`
     const container = bel`<div class="${css.container}">${content}</div>`
-    const app = bel`<div class="${css.wrap}" data-state="debug">
-        ${container}${log_list}
-    </div>`
+    const app = bel`<div class="${css.wrap}" data-state="debug">${container}${log_list}</div>`
 
     return app
 
@@ -230,8 +310,11 @@ function demo () {
     function handle_toggle_event (make, from, data) {
         const state = !data
         const message = make({type: 'switched', data: state})
+        const body = state ? 'Toggle on' : 'Toggle off'
         recipients[from](message)
+        recipients[from](make({type: 'changed', data: body}))
         recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state}}) )
+        recipients['logs']( make({to: 'self', type: 'changed', data: body}) )
     }
 
     function handle_dropdown_menu_event (make, from, data) {
@@ -239,6 +322,8 @@ function demo () {
         const dropdown = document.querySelector(`.${css.dropdown}`)
         dropdown.append(filter_list)
         recipients['filter-list']( make({type: 'expanded', data}) )
+        recipients['filter-option']( make({type: 'changed', data: 'changed'}) )
+
         recipients[from]( make({to: 'filter-list / listbox / ui-list', type: 'expanded', data: state}) )
         recipients['logs']( make({to: 'filter-list / listbox / ui-list', type: 'expanded', data: {expanded: state }}) )
     }
@@ -248,7 +333,7 @@ function demo () {
         filter_options.filter( option => {
             if (option.text === data.option) option.selected = data.selected
         })
-        recipients['logs']( make({to: 'search-result', type: 'filter swarm', data: filter_options}) )
+        recipients['logs']( make({to: 'search-result', type: 'filter-swarm', data: filter_options}) )
     }
     // protocols
     function tab_protocol (name) {
@@ -276,8 +361,7 @@ function demo () {
         const { type, data } = msg
         recipients['logs'](msg)
         if (type === 'click') return handle_click_event(msg)
-        if (type === 'selected') return handle_filter_options(data)
-        if (type === 'unselected') return handle_filter_options(data)
+        if (type.match(/selected|unselected/) ) return handle_filter_options(data)
     }
 }
 
@@ -294,6 +378,7 @@ const css = csjs`
     --color-amaranth-pink: 331, 86%, 78%;
     --color-persian-rose: 323, 100%, 56%;
     --color-orange: 35, 100%, 58%;
+    --color-safety-orange: 27, 100%, 50%;
     --color-deep-saffron: 31, 100%, 56%;
     --color-ultra-red: 348, 96%, 71%;
     --color-flame: 15, 80%, 50%;
@@ -2094,6 +2179,16 @@ function i_button (option, protocol) {
                 el.setAttribute('aria-current', is_current)
             }
         }
+        function changed_event (body) {
+            const [icon, text] = shadow.childNodes
+            console.log(shadow.childNodes);
+            if (text) {
+                text.textContent = body
+            } else {
+                shadow.childNodes[0].textContent = body
+                el.ariaLabel = body
+            }
+        }
         // button click
         function handle_click () {
             if (is_current) return
@@ -2115,6 +2210,7 @@ function i_button (option, protocol) {
             if (type.match(/checked|unchecked/)) return checked_event(data)
             // option
             if (type.match(/selected|unselected/)) return selected_event(data)
+            if (type === 'changed') return changed_event(data)
         }
     }
    
