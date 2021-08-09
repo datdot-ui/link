@@ -2287,6 +2287,9 @@ function i_button (option, protocol) {
         --color: ${current_hover_color ? current_hover_color : 'var(--color-white)'};
         --bg-color: ${current_hover_bg_color ? current_hover_bg_color : 'var(--primary-color)'};
     }
+    :host(i-button[aria-expanded="true"]) g {
+        --fill: ${current_fill ? current_fill : 'var(--color-white)'};
+    }
     :host(i-button[aria-expanded="true"]:hover) g {
         --fill: ${current_hover_fill ? current_hover_fill : 'var(--color-white)'};
     }
