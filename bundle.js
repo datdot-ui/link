@@ -2235,7 +2235,7 @@ function i_button (option, protocol) {
     :host(i-button) {
         --size: ${size ? size : 'var(--size14)'};
         --size-hover: ${size_hover ? size_hover : 'var(--size)'};
-        --curren-size: ${current_size ? current_size : 'var(--size14)'};
+        --current-size: ${current_size ? current_size : 'var(--size14)'};
         --bold: ${weight ? weight : 'normal'};
         --color: ${color ? color : 'var(--primary-color)'};
         --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
@@ -2367,7 +2367,7 @@ function i_button (option, protocol) {
         --bold: ${current_weight ? current_weight : 'initial'};
         --color: ${current_color ? current_color : 'var(--color-white)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-color)'};
-        font-size: var(--current_size);
+        font-size: var(--current-size);
     }
     :host(i-button[aria-current="true"]) g {
         --fill: ${fill ? fill : 'var(--color-white)'};
