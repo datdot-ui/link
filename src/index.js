@@ -13,7 +13,7 @@ function i_button (option, protocol) {
     function widget () {
         const send = protocol(get)
         const make = message_maker(`${name} / ${role} / ${flow}`)
-        let data = role === 'tab' ?  {selected: is_current ? 'true' : is_selected, current: is_current} : role === 'switch' ? {checked: is_checked} : role === 'listbox' ? {selected: is_selected} : disabled ? {disabled} : null
+        let data = role === 'tab' ?  {selected: is_current ? 'true' : is_selected, current: is_current} : role === 'switch' ? {checked: is_checked} : role === 'listbox' ? {expanded: is_expanded} : disabled ? {disabled} : role === 'option' ? {selected: is_selected, current: is_current} : null
         const message = make({to: 'demo.js', type: 'ready', data})
         send(message)
         const el = document.createElement('i-button')
