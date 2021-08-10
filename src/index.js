@@ -31,8 +31,9 @@ function i_button (option, protocol) {
         const shadow = el.attachShadow({mode: 'open'})
         style_sheet(shadow, style)
         if (icon || role.match(/option|listbox/) ) {
-            const content = text ? text : ''
-            shadow.append(icon, content)
+            if (icon === '') shadow.append(body)
+            if (body === undefined) shadow.append(icon)
+            if (icon !== '' && body) shadow.append(icon, text)
         }else shadow.append(body)
 
         // define conditions
@@ -101,7 +102,6 @@ function i_button (option, protocol) {
         }
         function changed_event (body) {
             const [icon, text] = shadow.childNodes
-            console.log(shadow.childNodes);
             if (text) {
                 text.textContent = body
             } else {
@@ -273,7 +273,7 @@ function i_button (option, protocol) {
         --border-style: ${border_style ? border_style : 'solid'};
         --border-color: ${border_color ? border_color : 'var(--primary-color)'};
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: ${body && icon !== '' ? '1fr auto' : 'auto'};
         width: var(--width);
     }
     :host(i-button[role="listbox"]) .text {
@@ -281,7 +281,7 @@ function i_button (option, protocol) {
         text-align: left;
     }
     :host(i-button[role="listbox"]) .icon {
-        grid-column-start: 2;
+        ${body && icon !== '' ? 'grid-column-start: 2;' : ''}
     }
     :host(i-button[aria-current="true"]), :host(i-button[aria-current="true"]:hover) {
         --bold: ${current_weight ? current_weight : 'initial'};

@@ -216,8 +216,8 @@ function demo () {
     {
         name: 'filter-option', 
         role: 'listbox', 
-        icon: icon_option, 
-        body: 'Filter', 
+        icon: icon_option,
+        body: 'Filter',
         theme: {
             props: {
                 color: 'var(--color-blue)',
@@ -321,7 +321,7 @@ function demo () {
         const dropdown = document.querySelector(`.${css.dropdown}`)
         dropdown.append(filter_list)
         recipients['filter-list']( make({type: 'expanded', data}) )
-        recipients['filter-option']( make({type: 'changed', data: 'changed'}) )
+        // recipients['filter-option']( make({type: 'changed', data: 'changed'}) )
 
         recipients[from]( make({to: 'filter-list / listbox / ui-list', type: 'expanded', data: state}) )
         recipients['logs']( make({to: 'filter-list / listbox / ui-list', type: 'expanded', data: {expanded: state }}) )
