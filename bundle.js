@@ -2205,7 +2205,7 @@ function i_button (option, protocol) {
             // toggle
             if (type === 'switched') return switched_event(data)
             // dropdown
-            if (type === 'expanded') return expanded_event(data)
+            if (type.match(/expanded|unexpanded/)) return expanded_event(data)
             // tab, checkbox
             if (type.match(/checked|unchecked/)) return checked_event(data)
             // option
