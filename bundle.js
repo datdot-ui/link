@@ -2179,8 +2179,9 @@ function i_button (option, protocol) {
             }
         }
         function changed_event (body) {
-            const [icon, text] = shadow.childNodes
-            console.log(shadow.childNodes)
+            const { childNodes } = shadow
+            const lists = shadow.firstChild.tagName === 'LI' ? childNodes : [...childNodes].filter( (child, index) => index !== 0)
+            const [icon, text] = lists
             if (text) {
                 text.textContent = body
             } else {
