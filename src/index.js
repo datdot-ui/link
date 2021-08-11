@@ -102,6 +102,7 @@ function i_button (option, protocol) {
         }
         function changed_event (body) {
             const [icon, text] = shadow.childNodes
+            console.log(shadow.childNodes)
             if (text) {
                 text.textContent = body
             } else {
@@ -229,9 +230,9 @@ function i_button (option, protocol) {
     :host(i-button) .icon {
         display: grid;
         justify-content: center;
-        align-item: center;
-        width: var(---icon-size);
-        height: var(---icon-size);
+        align-items: center;
+        width: var(--icon-size);
+        height: var(---con-size);
     }
     :host(i-button) .right .icon {
         grid-column-start: 2;
@@ -240,6 +241,7 @@ function i_button (option, protocol) {
         grid-column-start: 1;
     }
     :host(i-button) svg {
+        max-width: 100%;
         width: 100%;
         height: auto;
     }

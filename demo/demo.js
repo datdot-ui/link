@@ -288,7 +288,7 @@ function demo () {
             const type = from === tab.dataset.name ? 'checked' : 'unchecked'
             const make = message_maker(`${current} / tab / Demo`)
             recipients[current]( make({type, data: state}) )
-            if (from === tab.dataset.name) return recipients['logs']( make({type, data: {selected: state, current: state} }) )
+            if (from === tab.dataset.name) return recipients['logs']( make({type, data: {selected: state, current: state}}) )
             return recipients['logs']( make({type, data: {selected: state, current: state}}) )
         })
     }
@@ -301,7 +301,7 @@ function demo () {
             const type = from === tab.dataset.name ? 'checked' : 'unchecked'
             const make = message_maker(`${current} / tab / Demo`)
             recipients[current]( make({type, data: state}) )
-            if (from === tab.dataset.name) return recipients['logs']( make({type, data: {selected: state, current: state} }) )
+            if (from === tab.dataset.name) return recipients['logs']( make({type, data: {selected: state, current: state}}) )
             return recipients['logs']( make({type, data: {selected: state, current: state}}) )
         })
     }
@@ -321,8 +321,6 @@ function demo () {
         const dropdown = document.querySelector(`.${css.dropdown}`)
         dropdown.append(filter_list)
         recipients['filter-list']( make({type: 'expanded', data}) )
-        // recipients['filter-option']( make({type: 'changed', data: 'changed'}) )
-
         recipients[from]( make({to: 'filter-list / listbox / ui-list', type: 'expanded', data: state}) )
         recipients['logs']( make({to: 'filter-list / listbox / ui-list', type: 'expanded', data: {expanded: state }}) )
     }
@@ -450,10 +448,10 @@ html {
     box-sizing: border-box;
 }
 body {
+    -webkit-text-size-adjust: 100%;
     margin: 0;
     padding: 0;
     font-size: var(--primary-size);
-    -webkit-text-size-adjust:100%;
     font-family: var(--primary-font);
     background-color: hsl( var(--primary-bg-color) );
     height: 100%;
