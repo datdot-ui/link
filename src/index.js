@@ -358,7 +358,7 @@ function i_button (option, protocol) {
         --border-width: ${border_width ? border_width : '1px'};
         --border-style: ${border_style ? border_style : 'solid'};
         --border-color: ${border_color ? border_color : 'var(--color)'};
-        --border-opacity: .6;
+        --border-opacity: .4;
         --border: var(--border-width) var(--border-style) hsla(var(--border-color), var(--border-opacity)); 
         color: hsla(var(--color), var(--color-opacity));
         background-color: hsla(var(--bg-color), var(--bg-color-opacity));
