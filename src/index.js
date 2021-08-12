@@ -352,9 +352,9 @@ function i_button (option, protocol) {
     }
     :host(i-button[role="listbox"][disabled]) {
         --color: ${color ? color : 'var(--color-dark)'};
-        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
+        --bg-color: ${bg_color ? bg_color : 'var(--color-greyCB)'};
         --color-opacity: .6;
-        --bg-color-opacity: .3;
+        --bg-color-opacity: .4;
         --border-width: ${border_width ? border_width : '1px'};
         --border-style: ${border_style ? border_style : 'solid'};
         --border-color: ${border_color ? border_color : 'var(--color)'};

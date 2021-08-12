@@ -218,7 +218,7 @@ function demo () {
         role: 'listbox', 
         icon: icon_option,
         body: 'Filter',
-        // disabled: true,
+        disabled: true,
         theme: {
             props: {
                 color: 'var(--color-blue)',
