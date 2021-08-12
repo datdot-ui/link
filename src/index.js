@@ -147,7 +147,7 @@ function i_button (option, protocol) {
             bg_color, bg_color_hover, border_color_hover,
             border_width, border_style, border_opacity, border_color, border_radius, 
             padding, width, height, opacity,
-            fill, fill_hover, icon_size, current_fill, current_hover_fill,
+            fill, fill_hover, fill_opacity, icon_size, current_fill, current_hover_fill,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
@@ -286,6 +286,25 @@ function i_button (option, protocol) {
     :host(i-button[role="listbox"]) .icon {
         ${body && icon !== '' ? 'grid-column-start: 2;' : ''}
     }
+    :host(i-button[role="option"]) {
+        display: grid;
+        grid-template-rows: 24px;
+        grid-template-columns: 20px auto;
+        justify-content: left;
+    }
+    :host(i-button[role="option"]) .text {
+        display: block;
+        grid-column-start: 2;
+    }
+    :host(i-button[role="option"]:hover) g {
+        --fill-hover: ${fill_hover ? fill_hover : 'var(--primary-color)'};
+    }
+    :host(i-button[aria-current="true"]:hover) g {
+        --fill-hover: ${fill_hover ? fill_hover : 'var(--color-white)'};
+    }
+    :host(i-button[role="option"][aria-selected="false"]) .icon {
+        display: none;
+    }
     :host(i-button[aria-current="true"]), :host(i-button[aria-current="true"]:hover) {
         --bold: ${current_weight ? current_weight : 'initial'};
         --color: ${current_color ? current_color : 'var(--color-white)'};
@@ -320,29 +339,35 @@ function i_button (option, protocol) {
         --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
         --color-opacity: .6;
         --bg-color-opacity: .3;
+        --border-width: ${border_width ? border_width : '0'};
+        --border-style: ${border_style ? border_style : 'solid'};
+        --border-color: ${border_color ? border_color : 'var(--color)'};
+        --border-opacity: .6;
+        --border: var(--border-width) var(--border-style) hsla(var(--border-color), var(--border-opacity)); 
         color: hsla(var(--color), var(--color-opacity));
         background-color: hsla(var(--bg-color), var(--bg-color-opacity));
+        border: var(--border);
         pointer-events: none;
         cursor: not-allowed;
     }
-    :host(i-button[role="option"]) {
-        display: grid;
-        grid-template-rows: 24px;
-        grid-template-columns: 20px auto;
-        justify-content: left;
+    :host(i-button[role="listbox"][disabled]) {
+        --color: ${color ? color : 'var(--color-dark)'};
+        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
+        --color-opacity: .6;
+        --bg-color-opacity: .3;
+        --border-width: ${border_width ? border_width : '1px'};
+        --border-style: ${border_style ? border_style : 'solid'};
+        --border-color: ${border_color ? border_color : 'var(--color)'};
+        --border-opacity: .6;
+        --border: var(--border-width) var(--border-style) hsla(var(--border-color), var(--border-opacity)); 
+        color: hsla(var(--color), var(--color-opacity));
+        background-color: hsla(var(--bg-color), var(--bg-color-opacity));
+        border: var(--border);
     }
-    :host(i-button[role="option"]) .text {
-        display: block;
-        grid-column-start: 2;
-    }
-    :host(i-button[role="option"]:hover) g {
-        --fill-hover: ${fill_hover ? fill_hover : 'var(--primary-color)'};
-    }
-    :host(i-button[aria-current="true"]:hover) g {
-        --fill-hover: ${fill_hover ? fill_hover : 'var(--color-white)'};
-    }
-    :host(i-button[role="option"][aria-selected="false"]) .icon {
-        display: none;
+    :host(i-button[role="listbox"][disabled]) g {
+        --fill: ${fill ? fill : 'var(--color-dark)'};
+        --fill-opacity: ${fill_opacity ? fill_opacity : '0.5'};
+        fill: hsla(var(--fill), var(--fill-opacity));
     }
     ${custom_style}
     `
