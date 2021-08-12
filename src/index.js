@@ -102,7 +102,7 @@ function i_button (option, protocol) {
         }
         function changed_event (body) {
             const { childNodes } = shadow
-            const lists = shadow.firstChild.tagName === 'LI' ? childNodes : [...childNodes].filter( (child, index) => index !== 0)
+            const lists = shadow.firstChild.tagName !== 'STYLE' ? childNodes : [...childNodes].filter( (child, index) => index !== 0)
             const [icon, text] = lists
             if (text) {
                 text.textContent = body
