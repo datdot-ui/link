@@ -4,7 +4,7 @@ const bel = require('bel')
 const csjs = require('csjs-inject')
 const button = require('..')
 // datdot-ui dependences
-const logs = require('datdot-ui-logs')
+const terminal = require('datdot-terminal')
 const icon = require('datdot-ui-icon')
 const list = require('list')
 const message_maker = require('../src/node_modules/message-maker')
@@ -41,7 +41,7 @@ function demo () {
         }
     ]
      // logs must be initialized first before components
-    const log_list = logs(protocol('logs'))
+    const logs = terminal({mode: 'comfortable', expanded: true}, protocol('logs'))
     // buttons
     const primary = button(
     {
@@ -219,7 +219,7 @@ function demo () {
         role: 'listbox', 
         icon: icon_option,
         body: 'Filter',
-        disabled: true,
+        disabled: false,
         theme: {
             props: {
                 color: 'var(--color-blue)',
@@ -265,7 +265,7 @@ function demo () {
         </section>
     </div>`
     const container = bel`<div class="${css.container}">${content}</div>`
-    const app = bel`<div class="${css.wrap}" data-state="debug">${container}${log_list}</div>`
+    const app = bel`<div class="${css.wrap}" data-state="debug">${container}${logs}</div>`
 
     return app
 
@@ -319,20 +319,28 @@ function demo () {
     }
 
     function handle_dropdown_menu_event (make, from, data) {
-        const state = !data
+        const state = data.expanded
         const dropdown = document.querySelector(`.${css.dropdown}`)
+        const type = state ? 'expanded' : 'unexpanded'
+        const arr = []
+        filter_options.filter( option => {
+            if (option.selected) return arr.push(option.text)
+        })
+        console.log(arr);
         dropdown.append(filter_list)
-        recipients['filter-list']( make({type: 'expanded', data}) )
-        recipients[from]( make({to: 'filter-list / listbox / ui-list', type: 'expanded', data: state}) )
-        recipients['logs']( make({to: 'filter-list / listbox / ui-list', type: 'expanded', data: {expanded: state }}) )
+        recipients['filter-list']( make({type: 'expanded', data: !state}) )
+        recipients[from]( make({to: 'filter-list / listbox / ui-list', type, data: state}) )
+        recipients['logs']( make({to: 'filter-list / listbox / ui-list', type, data: {selected: arr}}) )
     }
 
     function handle_filter_options (data) {
         const make = message_maker('filter-result')
+        const arr = []
         filter_options.filter( option => {
             if (option.text === data.option) option.selected = data.selected
+            if (option.selected) arr.push(option.text)
         })
-        recipients['logs']( make({to: 'search-result', type: 'filter-swarm', data: filter_options}) )
+        recipients['logs']( make({to: 'search-result', type: 'filter-swarm', data: {selected: arr} }) )
     }
     // protocols
     function tab_protocol (name) {
@@ -382,6 +390,7 @@ const css = csjs`
     --color-ultra-red: 348, 96%, 71%;
     --color-flame: 15, 80%, 50%;
     --color-verdigris: 180, 54%, 43%;
+    --color-viridian-green: 180, 100%, 63%;
     --color-maya-blue: 205, 96%, 72%;
     --color-slate-blue: 248, 56%, 59%;
     --color-blue-jeans: 204, 96%, 61%;
@@ -399,6 +408,7 @@ const css = csjs`
     --color-green-yellow-crayola: 51, 100%, 83%;
     --color-purple: 283, var(--r);
     --color-medium-purple: 269, 100%, 70%;
+    --color-electric-violet: 276, 98%, 48%;
     --color-grey33: var(--b), 20%;
     --color-grey66: var(--b), 40%;
     --color-grey70: var(--b), 44%;
@@ -526,7 +536,7 @@ body {
 `
 
 document.body.append(demo())
-},{"..":34,"../src/node_modules/message-maker":35,"bel":5,"csjs-inject":8,"datdot-ui-icon":25,"datdot-ui-logs":28,"head":2,"list":3}],2:[function(require,module,exports){
+},{"..":35,"../src/node_modules/message-maker":36,"bel":5,"csjs-inject":8,"datdot-terminal":25,"datdot-ui-icon":29,"head":2,"list":3}],2:[function(require,module,exports){
 module.exports = head
 
 function head (lang = 'utf8', title = 'Button - DatDot UI') {
@@ -676,7 +686,7 @@ function i_list ({page = 'Demo', flow = 'ui-list', name, body = [], expanded = f
 
     return widget()
 }
-},{"../../src/index":34,"../../src/node_modules/message-maker":35,"../../src/node_modules/support-style-sheet":36,"bel":5}],4:[function(require,module,exports){
+},{"../../src/index":35,"../../src/node_modules/message-maker":36,"../../src/node_modules/support-style-sheet":37,"bel":5}],4:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
 var trailingSpaceRegex = /[\s]+$/
@@ -910,7 +920,7 @@ module.exports = hyperx(belCreateElement, {comments: true})
 module.exports.default = module.exports
 module.exports.createElement = belCreateElement
 
-},{"./appendChild":4,"hyperx":32}],6:[function(require,module,exports){
+},{"./appendChild":4,"hyperx":33}],6:[function(require,module,exports){
 (function (global){(function (){
 'use strict';
 
@@ -929,7 +939,7 @@ function csjsInserter() {
 module.exports = csjsInserter;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"csjs":11,"insert-css":33}],7:[function(require,module,exports){
+},{"csjs":11,"insert-css":34}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = require('csjs/get-css');
@@ -1407,6 +1417,338 @@ function scopify(css, ignores) {
 }
 
 },{"./regex":21,"./replace-animations":22,"./scoped-name":23}],25:[function(require,module,exports){
+const bel = require('bel')
+const style_sheet = require('support-style-sheet')
+const message_maker = require('message-maker')
+const {int2hsla, str2hashint} = require('generator-color')
+
+module.exports = terminal
+function terminal ({to = 'terminal', mode = 'compact', expanded = false}, protocol) {
+    let is_expanded = expanded
+    let types = {}
+    const send = protocol(get)
+    const make = message_maker(`terminal / index.js`)
+    const message = make({to, type: 'ready', refs: ['old_logs', 'new_logs']})
+    send(message)
+    const el = document.createElement('i-terminal')
+    const shadow = el.attachShadow({mode: 'closed'})
+    const log_list = document.createElement('log-list')
+    log_list.setAttribute('aria-label', mode)
+    style_sheet(shadow, style)
+    shadow.append(log_list)
+    return el
+
+    function get (msg) {
+        const {head, refs, type, data, meta} = msg
+        // make an object for type, count, color
+        const init = t => ({type: t, count: 0, color: type.match(/ready|click|triggered|opened|closed|checked|unchecked|selected|unselected|expanded|unexpanded|error|warning|toggled|changed/) ? null : int2hsla(str2hashint(t)) })
+        // to check type is existing then do count++, else return new type
+        const add = t => ((types[t] || (types[t] = init(t))).count++, types[t])
+        add(type)
+        try {
+            const from = bel`<span aria-label=${head[0]} class="from">${head[0]}</span>`
+            const to = bel`<span aria-label="to" class="to">${head[1]}</span>`
+            const data_info = bel`<span aira-label="data" class="data">data: ${typeof data === 'object' ? JSON.stringify(data) : data}</span>`
+            const type_info = bel`<span aria-type="${type}" aria-label="${type}" class="type">${type}</span>`
+            const refs_info = bel`<div class="refs"><span>refs:</span></div>`
+            refs.map( (ref, i) => refs_info.append(
+                bel`<span>${ref}${i < refs.length - 1 ? ',  ' : ''}</span>`
+            ))
+            const info = bel`<div class="info">${data_info}${refs_info}</div>`
+            const header = bel`
+            <div class="head">
+                ${type_info}
+                ${from}
+                <span class="arrow">=＞</span>
+                ${to}
+            </div>`
+            const log = bel`<div class="log">${header}</div>`
+            if (mode === 'compact') log.append(data_info, refs_info)
+            if (mode === 'comfortable') log.append(info)
+            const file = bel`
+            <div class="file">
+                <span>${meta.stack[0]}</span>
+                <span>${meta.stack[1]}</span>
+            </div>`
+            var list = bel`<section class="list" aria-label="${type}" aria-expanded="${is_expanded}" onclick=${() => handle_accordion_event(list)}>${log}${file}</section>`
+            generate_type_color(type, type_info)
+            log_list.append(list)
+            el.scrollTop = el.scrollHeight
+        } catch (error) {
+            document.addEventListener('DOMContentLoaded', () => log_list.append(list))
+            return false
+        }
+    }
+    function generate_type_color (type, el) {
+        for (let t in types) { 
+            if (t === type && types[t].color) {
+                el.style.color = `hsl(var(--color-dark))`
+                el.style.backgroundColor = types[t].color
+            }   
+        }
+    }
+    function handle_accordion_event (target) {
+        const status = target.ariaExpanded === 'false' ? 'true' : 'false'
+        target.ariaExpanded = status
+    }
+}
+
+const style = `
+:host(i-terminal) {
+    --bg-color: var(--color-dark);
+    --opacity: 1;
+    font-size: var(--size12);
+    color: #fff;
+    background-color: hsla( var(--bg-color), var(--opacity));
+    height: 100%;
+    overflow: hidden auto;
+    padding-top: 4px;
+}
+h4 {
+    --bg-color: var(--color-deep-black);
+    --opacity: 1;
+    margin: 0;
+    padding: 10px 10px;
+    color: #fff;
+    background-color: hsl( var(--bg-color), var(--opacity) );
+}
+log-list {
+    height: 100%;
+}
+.list {
+    --bg-color: 0, 0%, 30%;
+    --opacity: 0.25;
+    --border-radius: 0;
+    padding: 2px 10px 2px 0px;
+    margin-bottom: 1px;
+    background-color: hsla( var(--bg-color), var(--opacity) );
+    border-radius: var(--border-radius);
+    transition: background-color 0.6s ease-in-out;
+}
+.list[aria-expanded="false"] .file {
+    height: 0;
+    opacity: 0;
+    transition: opacity 0.3s, height 0.3s ease-in-out;
+}
+.list[aria-expanded="true"] .file {
+    opacity: 1;
+    height: auto;
+    padding: 4px 8px;
+}
+log-list .list:last-child {
+    --bg-color: var(--color-viridian-green);
+    --opacity: .3;
+}
+[aria-label="compact"] [aria-expanded="false"] .log {
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+[aria-label="compact"] [aria-expanded="false"] .data {
+    display: line-block;
+}
+.log {
+    line-height: 1.8;
+    word-break: break-all;
+    white-space: pre-wrap;
+}
+.log span {
+    --size: var(--size12);
+    font-size: var(--size);
+}
+.head {
+    display: inline-block;
+}
+.type {
+    --color: var(--color-greyD9);
+    --bg-color: var(--color-greyD9);
+    --opacity: .25;
+    display: inline-grid;
+    color: hsl( var(--color) );
+    background-color: hsla( var(--bg-color), var(--opacity) );
+    padding: 0 2px;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+    min-width: 92px;
+}
+.from {
+    --color: var(--color-maximum-blue-green);
+    display: inline-block;
+    color: hsl( var(--color) );
+    justify-content: center;
+    align-items: center;
+    margin: 0 12px;
+}
+.to {
+    --color: var(--color-dodger-blue);
+    color: hsl(var(--color));
+    display: inline-block;
+    margin: 0 12px;
+}
+.arrow {
+    --color: var(--color-grey88);
+    color:  hsl(var(--color));
+}
+.file {
+    --color: var(--color-greyA2);
+    color: hsl( var(--color) );
+    line-height: 1.6;
+    display: flex;
+    gap: 10px;
+}
+.file > span {
+    display: inline-block;
+}
+.function {
+    --color: 0, 0%, 70%;
+    color: var(--color);
+}
+.data {
+    padding-left: 8px;
+}
+.refs {
+    --color: var(--color-white);
+    display: inline-block;
+    color: var(--color);
+    padding-left: 8px;
+}
+[aria-type="click"] {
+    --color: var(--color-dark);
+    --bg-color: var(--color-yellow);
+    --opacity: 1;
+}
+[aria-type="triggered"] {
+    --color: var(--color-white);
+    --bg-color: var(--color-blue-jeans);
+    --opacity: .5;
+}
+[aria-type="opened"] {
+    --bg-color: var(--color-slate-blue);
+    --opacity: 1;
+}
+[aria-type="closed"] {
+    --bg-color: var(--color-ultra-red);
+    --opacity: 1;
+}
+[aria-type="error"] {
+    --color: var(--color-white);
+    --bg-color: var(--color-red);
+    --opacity: 1;
+}
+[aria-type="warning"] {
+    --color: var(--color-white);
+    --bg-color: var(--color-deep-saffron);
+    --opacity: 1;
+}
+[aria-type="checked"] {
+    --color: var(--color-dark);
+    --bg-color: var(--color-blue-jeans);
+    --opacity: 1;
+}
+[aria-type="unchecked"] {
+    --bg-color: var(--color-blue-jeans);
+    --opacity: .3;
+}
+[aria-type="selected"] {
+    --color: var(--color-dark);
+    --bg-color: var(--color-lime-green);
+    --opacity: 1;
+}
+[aria-type="unselected"] {
+    --bg-color: var(--color-lime-green);
+    --opacity: .25;
+}
+[aria-type="changed"] {
+    --color: var(--color-dark);
+    --bg-color: var(--color-safety-orange);
+    --opacity: 1;
+}
+[aria-type="expanded"] {
+    --bg-color: var(--color-electric-violet);
+    --opacity: 1;
+}
+[aria-type="unexpanded"] {
+    --bg-color: var(--color-electric-violet);
+    --opacity: .6;
+}
+log-list .list:last-child .type {}
+log-list .list:last-child .arrow {
+    --color: var(--color-white);
+}
+log-list .list:last-child .to {
+    --color: var(--color-blue-jeans);
+}
+log-list .list:last-child .file {
+    --color: var(--color-white);
+}
+log-list .list:last-child [aria-type="ready"] {
+    --bg-color: var(--color-deep-black);
+    --opacity: 0.3;
+}
+log-list .list:last-child .function {
+    --color: var(--color-white);
+}
+[aria-label="comfortable"] .info {
+    padding: 8px;
+}
+[aria-label="comfortable"] [aria-expanded="false"] .info {
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+[aria-label="comfortable"] .data {
+    padding: 0 8px 0 0;
+}
+[aria-label="comfortable"] .refs {
+    padding-left: 0;
+}
+[aria-label="comfortable"] [aria-expanded="true"] .refs {
+    padding-top: 6px;
+}
+[aria-label="comfortable"] [aria-expanded="true"] .refs span:nth-child(1) {
+    padding-right: 5px;
+}
+`
+},{"bel":5,"generator-color":26,"message-maker":27,"support-style-sheet":28}],26:[function(require,module,exports){
+ module.exports = {int2hsla, str2hashint}
+ function int2hsla (i) { return `hsla(${i % 360}, 100%, 70%, 1)` }
+ function str2hashint (str) {
+     let hash = 0
+     const arr = str.split('')
+     arr.forEach( (v, i) => {
+         hash = str.charCodeAt(i) + ((hash << 5) - hash)
+     })
+     return hash
+ }
+},{}],27:[function(require,module,exports){
+module.exports = function message_maker (from) {
+    let msg_id = 0
+    return function make ({to, type, data = null, refs = []}) {
+        const stack = (new Error().stack.split('\n').slice(2).filter(x => x.trim()))
+        const message = { head: [from, to, ++msg_id], refs, type, data, meta: { stack }}
+        return message
+    }
+}
+},{}],28:[function(require,module,exports){
+module.exports = support_style_sheet
+function support_style_sheet (root, style) {
+    return (() => {
+        try {
+            const sheet = new CSSStyleSheet()
+            sheet.replaceSync(style)
+            root.adoptedStyleSheets = [sheet]
+            return true 
+        } catch (error) { 
+            const inject_style = `<style>${style}</style>`
+            root.innerHTML = `${inject_style}`
+            return false
+        }
+    })()
+}
+},{}],29:[function(require,module,exports){
 const styleSheet = require('supportCSSStyleSheet')
 const svg = require('svg')
 
@@ -1462,7 +1804,7 @@ module.exports = ({name, path, isShadow = false, theme}) => {
     return symbol
 }
 
-},{"supportCSSStyleSheet":26,"svg":27}],26:[function(require,module,exports){
+},{"supportCSSStyleSheet":30,"svg":31}],30:[function(require,module,exports){
 module.exports = supportCSSStyleSheet
 function supportCSSStyleSheet (root, style) {
     return (() => {
@@ -1478,7 +1820,7 @@ function supportCSSStyleSheet (root, style) {
         }
     })()
 }
-},{}],27:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 module.exports = svg
 
 function svg(path) {
@@ -1501,240 +1843,7 @@ function svg(path) {
     })
     return el
 }   
-},{}],28:[function(require,module,exports){
-const bel = require('bel')
-const style_sheet = require('support-style-sheet')
-const message_maker = require('message_maker')
-
-module.exports = i_log
-function i_log (protocol, to = 'Test for a long component name / demo / demo.js') {
-    const send = protocol(get)
-    const make = message_maker(`ui-logs / i_log / index.js`)
-    const message = make({to, type: 'ready', refs: ['old_logs', 'new_logs']})
-    send(message)
-    // send({from: 'logs', flow: 'logs-layout', type: 'ready', fn: 'logs', line: 8})
-    const i_log = document.createElement('i-log')
-    const shadow = i_log.attachShadow({mode: 'closed'})
-    const title = bel`<h4>Logs</h4>`
-    const content = bel`<section class="content">${title}</section>`
-    const log_list = document.createElement('log-list')
-    style_sheet(shadow, style)
-    content.append(log_list)
-    shadow.append(content)
-    document.addEventListener('DOMContentLoaded', () => { log_list.scrollTop = log_list.scrollHeight })
-
-    return i_log
-
-    function get (msg) {
-        // const {page = 'Demo', from, flow, type, body, fn, file, line} = msg
-        const {head, refs, type, data, meta} = msg
-        try {
-            const from = bel`<span aria-label=${head[0]} class="from">${head[0]}</span>`
-            const to = bel`<span aria-label="to" class="to">${head[1]}</span>`
-            const data_info = bel`<span aira-label="data" class="data">data: ${typeof data === 'object' ? JSON.stringify(data) : data}</span>`
-            const type_info = bel`<span aria-type="${type}" aria-label="${type}"  class="type">${type}</span>`
-            const refs_info = bel`<div class="refs">refs: </div>`
-            refs.map( (ref, i) => refs_info.append(bel`<span aria-label="${ref}">${ref}${i < refs.length - 1 ? ', ' : ''}</span>`))
-            const log = bel`
-            <div class="log">
-                <div class="head">
-                    ${from}
-                    ${type_info}
-                    ${to}
-                </div>
-                ${data_info}
-                ${refs_info}
-            </div>`
-            var list = bel`
-            <aside class="list">
-                ${log}
-                <div class="file">
-                    <span>${meta.stack[0]}</span>
-                    <span>${meta.stack[1]}</span>
-                </div>
-            </aside>
-            `
-            log_list.append(list)
-            log_list.scrollTop = log_list.scrollHeight
-        } catch (error) {
-            document.addEventListener('DOMContentLoaded', () => log_list.append(list))
-            return false
-        }
-    }
-}
-
-const style = `
-:host(i-log) {}
-.content {
-    --bgColor: var(--color-dark);
-    --opacity: 1;
-    width: 100%;
-    height: 100%;
-    font-size: var(--size12);
-    color: #fff;
-    background-color: hsla( var(--bgColor), var(--opacity));
-}
-h4 {
-    --bgColor: var(--color-deep-black);
-    --opacity: 1;
-    margin: 0;
-    padding: 10px 10px;
-    color: #fff;
-    background-color: hsl( var(--bgColor), var(--opacity) );
-}
-log-list {
-    display: flex;
-    flex-direction: column;
-    height: calc(100% - 44px);
-    overflow-y: auto;
-    margin: 8px;
-}
-.list {
-    --bgColor: 0, 0%, 30%;
-    --opacity: 0.25;
-    padding: 2px 10px 4px 10px;
-    margin-bottom: 4px;
-    background-color: hsla( var(--bgColor), var(--opacity) );
-    border-radius: 8px;
-    transition: background-color 0.6s ease-in-out;
-}
-log-list .list:last-child {
-    --bgColor: var(--color-verdigris);
-    --opacity: 0.5;
-}
-.log {
-    line-height: 1.8;
-    word-break: break-all;
-    white-space: pre-wrap;
-}
-.log span {
-    --size: var(--size12);
-    font-size: var(--size);
-}
-.from {
-    --color: var(--color-maximum-blue-green);
-    color: hsl( var(--color) );
-    justify-content: center;
-    align-items: center;
-}
-.to {}
-.type {
-    --color: var(--color-greyD9);
-    --bgColor: var(--color-greyD9);
-    --opacity: .25;
-    color: hsl( var(--color) );
-    background-color: hsla( var(--bgColor), var(--opacity) );
-    padding: 2px 10px;
-    border-radius: 8px;
-    justify-self: center;
-    align-self: center;
-}
-log-list .list:last-child .type {}
-.file {
-    --color: var(--color-greyA2);
-    display: grid;
-    justify-content: right;
-    color: hsl( var(--color) );
-    line-height: 1.6;
-}
-log-list .list:last-child .file {
-    --color: var(--color-white);
-}
-[aria-type="click"] {
-    --color: var(--color-dark);
-    --bgColor: var(--color-yellow);
-    --opacity: 1;
-}
-[aria-type="triggered"] {
-    --color: var(--color-white);
-    --bgColor: var(--color-blue-jeans);
-    --opacity: .5;
-}
-[aria-type="opened"] {
-    --bgColor: var(--color-slate-blue);
-    --opacity: 1;
-}
-[aria-type="closed"] {
-    --bgColor: var(--color-ultra-red);
-    --opacity: 1;
-}
-[aria-type="error"] {
-    --color: var(--color-white);
-    --bgColor: var(--color-red);
-    --opacity: 1;
-}
-[aria-type="warning"] {
-    --color: var(--color-white);
-    --bgColor: var(--color-deep-saffron);
-    --opacity: 1;
-}
-[aria-type="checked"] {
-    --color: var(--color-dark);
-    --bgColor: var(--color-blue-jeans);
-    --opacity: 1;
-}
-[aria-type="unchecked"] {
-    --bgColor: var(--color-blue-jeans);
-    --opacity: .3;
-}
-[aria-type="selected"] {
-    --color: var(--color-dark);
-    --bgColor: var(--color-lime-green);
-    --opacity: 1;
-}
-[aria-type="unselected"] {
-    --bgColor: var(--color-lime-green);
-    --opacity: .25;
-}
-
-log-list .list:last-child [aria-type="ready"] {
-    --bgColor: var(--color-deep-black);
-    --opacity: 0.3;
-}
-.function {
-    --color: 0, 0%, 70%;
-    color: var(--color);
-}
-log-list .list:last-child .function {
-    --color: var(--color-white);
-}
-.head {
-    display: grid;
-    grid-template-columns: 1fr 80px 1fr;
-    gap: 12px;
-}
-.refs {
-    display: flex;
-    gap: 5px;
-    color: white;
-}
-`
-},{"bel":5,"message_maker":29,"support-style-sheet":30}],29:[function(require,module,exports){
-module.exports = function message_maker (from) {
-    let msg_id = 0
-    return function make ({to, type, data = null, refs = []}) {
-        const stack = (new Error().stack.split('\n').slice(2).filter(x => x.trim()))
-        const message = { head: [from, to, ++msg_id], refs, type, data, meta: { stack }}
-        return message
-    }
-}
-},{}],30:[function(require,module,exports){
-module.exports = support_style_sheet
-function support_style_sheet (root, style) {
-    return (() => {
-        try {
-            const sheet = new CSSStyleSheet()
-            sheet.replaceSync(style)
-            root.adoptedStyleSheets = [sheet]
-            return true 
-        } catch (error) { 
-            const inject_style = `<style>${style}</style>`
-            root.innerHTML = `${inject_style}`
-            return false
-        }
-    })()
-}
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -1755,7 +1864,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -2052,7 +2161,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":31}],33:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":32}],34:[function(require,module,exports){
 var inserted = {};
 
 module.exports = function (css, options) {
@@ -2076,7 +2185,7 @@ module.exports = function (css, options) {
     }
 };
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
 module.exports = i_button
@@ -2160,7 +2269,7 @@ function i_button (option, protocol) {
         }
         // dropdown menu
         function expanded_event (data) {
-            is_expanded = data
+            is_expanded = !data
             el.setAttribute('aria-expanded', is_expanded)
         }
         // tab checked
@@ -2196,7 +2305,10 @@ function i_button (option, protocol) {
             const type = 'click'
             if (role === 'tab') return send( make({type, data: is_checked}) )
             if (role === 'switch') return send( make({type, data: is_checked}) )
-            if (role === 'listbox') return send( make({type, data: is_expanded}) )
+            if (role === 'listbox') {
+                is_expanded = !is_expanded
+                return send( make({type, data: {expanded: is_expanded}}) )
+            }
             if (role === 'option') return send( make({type, data: is_selected}) )
             send( make({type}) )
         }
@@ -2206,7 +2318,7 @@ function i_button (option, protocol) {
             // toggle
             if (type === 'switched') return switched_event(data)
             // dropdown
-            if (type.match(/expanded|unexpanded/)) return expanded_event(data)
+            if (type.match(/expanded|unexpanded/)) return expanded_event(!data)
             // tab, checkbox
             if (type.match(/checked|unchecked/)) return checked_event(data)
             // option
@@ -2453,8 +2565,8 @@ function i_button (option, protocol) {
 
     return widget()
 }
-},{"message-maker":35,"support-style-sheet":36}],35:[function(require,module,exports){
-arguments[4][29][0].apply(exports,arguments)
-},{"dup":29}],36:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"dup":30}]},{},[1]);
+},{"message-maker":36,"support-style-sheet":37}],36:[function(require,module,exports){
+arguments[4][27][0].apply(exports,arguments)
+},{"dup":27}],37:[function(require,module,exports){
+arguments[4][28][0].apply(exports,arguments)
+},{"dup":28}]},{},[1]);

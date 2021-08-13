@@ -3,7 +3,7 @@ const bel = require('bel')
 const csjs = require('csjs-inject')
 const button = require('..')
 // datdot-ui dependences
-const logs = require('datdot-ui-logs')
+const terminal = require('datdot-terminal')
 const icon = require('datdot-ui-icon')
 const list = require('list')
 const message_maker = require('../src/node_modules/message-maker')
@@ -40,7 +40,7 @@ function demo () {
         }
     ]
      // logs must be initialized first before components
-    const log_list = logs(protocol('logs'))
+    const logs = terminal({mode: 'comfortable', expanded: true}, protocol('logs'))
     // buttons
     const primary = button(
     {
@@ -218,7 +218,7 @@ function demo () {
         role: 'listbox', 
         icon: icon_option,
         body: 'Filter',
-        disabled: true,
+        disabled: false,
         theme: {
             props: {
                 color: 'var(--color-blue)',
@@ -264,7 +264,7 @@ function demo () {
         </section>
     </div>`
     const container = bel`<div class="${css.container}">${content}</div>`
-    const app = bel`<div class="${css.wrap}" data-state="debug">${container}${log_list}</div>`
+    const app = bel`<div class="${css.wrap}" data-state="debug">${container}${logs}</div>`
 
     return app
 
@@ -318,20 +318,28 @@ function demo () {
     }
 
     function handle_dropdown_menu_event (make, from, data) {
-        const state = !data
+        const state = data.expanded
         const dropdown = document.querySelector(`.${css.dropdown}`)
+        const type = state ? 'expanded' : 'unexpanded'
+        const arr = []
+        filter_options.filter( option => {
+            if (option.selected) return arr.push(option.text)
+        })
+        console.log(arr);
         dropdown.append(filter_list)
-        recipients['filter-list']( make({type: 'expanded', data}) )
-        recipients[from]( make({to: 'filter-list / listbox / ui-list', type: 'expanded', data: state}) )
-        recipients['logs']( make({to: 'filter-list / listbox / ui-list', type: 'expanded', data: {expanded: state }}) )
+        recipients['filter-list']( make({type: 'expanded', data: !state}) )
+        recipients[from]( make({to: 'filter-list / listbox / ui-list', type, data: state}) )
+        recipients['logs']( make({to: 'filter-list / listbox / ui-list', type, data: {selected: arr}}) )
     }
 
     function handle_filter_options (data) {
         const make = message_maker('filter-result')
+        const arr = []
         filter_options.filter( option => {
             if (option.text === data.option) option.selected = data.selected
+            if (option.selected) arr.push(option.text)
         })
-        recipients['logs']( make({to: 'search-result', type: 'filter-swarm', data: filter_options}) )
+        recipients['logs']( make({to: 'search-result', type: 'filter-swarm', data: {selected: arr} }) )
     }
     // protocols
     function tab_protocol (name) {
@@ -381,6 +389,7 @@ const css = csjs`
     --color-ultra-red: 348, 96%, 71%;
     --color-flame: 15, 80%, 50%;
     --color-verdigris: 180, 54%, 43%;
+    --color-viridian-green: 180, 100%, 63%;
     --color-maya-blue: 205, 96%, 72%;
     --color-slate-blue: 248, 56%, 59%;
     --color-blue-jeans: 204, 96%, 61%;
@@ -398,6 +407,7 @@ const css = csjs`
     --color-green-yellow-crayola: 51, 100%, 83%;
     --color-purple: 283, var(--r);
     --color-medium-purple: 269, 100%, 70%;
+    --color-electric-violet: 276, 98%, 48%;
     --color-grey33: var(--b), 20%;
     --color-grey66: var(--b), 40%;
     --color-grey70: var(--b), 44%;

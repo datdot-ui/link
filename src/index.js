@@ -81,7 +81,7 @@ function i_button (option, protocol) {
         }
         // dropdown menu
         function expanded_event (data) {
-            is_expanded = data
+            is_expanded = !data
             el.setAttribute('aria-expanded', is_expanded)
         }
         // tab checked
@@ -117,7 +117,10 @@ function i_button (option, protocol) {
             const type = 'click'
             if (role === 'tab') return send( make({type, data: is_checked}) )
             if (role === 'switch') return send( make({type, data: is_checked}) )
-            if (role === 'listbox') return send( make({type, data: is_expanded}) )
+            if (role === 'listbox') {
+                is_expanded = !is_expanded
+                return send( make({type, data: {expanded: is_expanded}}) )
+            }
             if (role === 'option') return send( make({type, data: is_selected}) )
             send( make({type}) )
         }
@@ -127,7 +130,7 @@ function i_button (option, protocol) {
             // toggle
             if (type === 'switched') return switched_event(data)
             // dropdown
-            if (type.match(/expanded|unexpanded/)) return expanded_event(data)
+            if (type.match(/expanded|unexpanded/)) return expanded_event(!data)
             // tab, checkbox
             if (type.match(/checked|unchecked/)) return checked_event(data)
             // option
