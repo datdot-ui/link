@@ -191,6 +191,7 @@ function demo () {
         name: 'link-datdot',
         role: 'link',
         body: 'datdot.org',
+        icon: icon({name: 'plan-list', path:'assets'}),
         link: {
             url: 'http://datdot.org',
             target: '#frame'
@@ -198,7 +199,9 @@ function demo () {
         theme: {
             props: {
                 color: 'var(--color-black)',
-                color_hover: 'var(--color-black)'
+                fill: 'var(--color-black)',
+                color_hover: 'var(--color-grey88)',
+                fill_hover: 'var(--color-grey88)'
             }
         }
     }, protocol('link-datdot'))
@@ -2030,7 +2033,6 @@ module.exports = {i_button, i_link}
 
 function i_link (option, protocol) {
     const {page, flow = 'ui-link', name, body, link = {}, icon = undefined, role='link', disabled = false, theme} = option
-
     let {url = '#', target = '_self'} = link
     
     function widget () {
@@ -2040,6 +2042,8 @@ function i_link (option, protocol) {
         const el = document.createElement('i-link')
         const shadow = el.attachShadow({mode: 'open'})
         const text = document.createElement('span')
+        text.classList.add('text')
+        text.append(body)
         el.dataset.ui = role
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
@@ -2047,8 +2051,8 @@ function i_link (option, protocol) {
         el.setAttribute('href', url)
         if (!target.match(/self/)) el.setAttribute('target', target)
         style_sheet(shadow, style)
-        if (icon === undefined) shadow.append(body)
-        else shadow.append(icon, text)
+        if (icon !== undefined) shadow.append(icon, text)
+        else shadow.append(body)
         send(message)
         el.onclick = handle_open_link
         return el
@@ -2091,6 +2095,9 @@ function i_link (option, protocol) {
         --deco: ${deco ? deco : 'none'};
         --padding: ${padding ? padding : '0'};
         --margin: ${margin ? margin : '0'};
+        display: inline-grid;
+        grid-auto-flow: column;
+        column-gap: 4px;
         font-size: var(--size);
         font-weight: var(--weight);
         color: hsl(var(--color));
@@ -2108,6 +2115,14 @@ function i_link (option, protocol) {
         --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--color-white)'};
         --opacity: ${opacity ? opacity : '0'};
         text-decoration: var(--deco);
+    }
+    :host(i-link) svg g {
+        --fill: ${fill ? fill : 'var(--color-heavy-blue)'};
+        fill: hsl(var(--fill));
+        transition: fill 0.5s ease-in-out;
+    }
+    :host(i-link:hover) svg g {
+        --fill: ${fill_hover ? fill_hover : 'var(--color-dodger-blue)'};
     }
     ${custom_style}
     `

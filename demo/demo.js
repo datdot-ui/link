@@ -190,6 +190,7 @@ function demo () {
         name: 'link-datdot',
         role: 'link',
         body: 'datdot.org',
+        icon: icon({name: 'plan-list', path:'assets'}),
         link: {
             url: 'http://datdot.org',
             target: '#frame'
@@ -197,7 +198,9 @@ function demo () {
         theme: {
             props: {
                 color: 'var(--color-black)',
-                color_hover: 'var(--color-black)'
+                fill: 'var(--color-black)',
+                color_hover: 'var(--color-grey88)',
+                fill_hover: 'var(--color-grey88)'
             }
         }
     }, protocol('link-datdot'))
