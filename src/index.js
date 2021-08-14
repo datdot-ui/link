@@ -253,7 +253,7 @@ function i_button (option, protocol) {
         --border-color: ${border_color ? border_color : 'var(--primary-color)'};
         --border-opacity: ${border_opacity ? border_opacity : '1'};
         --border: var(--border-width) var(--border-style) hsla( var(--border-color), var(--border-opacity) );
-        --border-radius: ${border_radius ? border_radius : '0'};
+        --border-radius: ${border_radius ? border_radius : 'var(--primary-button-radius)'};
         --fill: ${fill ? fill : 'var(--primary-color)'};
         --icon-size: ${icon_size ? icon_size : '16px'};
         --offset_x: ${offset_x ? offset_x : '0px'};
@@ -274,6 +274,7 @@ function i_button (option, protocol) {
         color: hsl( var(--color) );
         background-color: hsla( var(--bg-color), var(--opacity) );
         border: var(--border);
+        border-radius: var(--border-radius);
         box-shadow: var(--box-shadow);
         padding: var(--padding);
         transition: font-size .3s, color .3s, background-color .3s ease-in-out;
@@ -367,6 +368,7 @@ function i_button (option, protocol) {
         ${body && icon !== '' ? 'grid-column-start: 2;' : ''}
     }
     :host(i-button[role="option"]) {
+        --border-radius: ${border_radius ? border_radius : '0'};
         display: grid;
         grid-template-rows: 24px;
         grid-template-columns: 20px auto;
