@@ -1,12 +1,14 @@
 const head = require('head')()
 const bel = require('bel')
 const csjs = require('csjs-inject')
-const button = require('..')
+const { i_button, i_link } = require('..')
 // datdot-ui dependences
 const terminal = require('datdot-terminal')
 const icon = require('datdot-ui-icon')
-const list = require('list')
+const list = require('datdot-ui-list')
 const message_maker = require('../src/node_modules/message-maker')
+const button = i_button
+const link = i_link
 
 function demo () {
     // save protocol callbacks
@@ -16,27 +18,23 @@ function demo () {
         {
             text: 'Available',
             icon: icon({name: 'check', path: 'assets'}),
-            selected: true
+            current: true,
         },
         {
             text: 'Not Available',
             icon: icon({name: 'check', path: 'assets'}),
-            selected: true
         },
         {
             text: 'Core',
             icon: icon({name: 'check', path: 'assets'}),
-            selected: true
         },
         {
             text: 'Drive',
             icon: icon({name: 'check', path: 'assets'}),
-            selected: true
         },
         {
             text: 'Cabal',
             icon: icon({name: 'check', path: 'assets'}),
-            selected: true
         }
     ]
      // logs must be initialized first before components
@@ -109,7 +107,7 @@ function demo () {
         ${tab1}${tab2}${tab3}
     </nav>`
 
-    // Tab & icon_
+    // Tab & icon
     const icon_notice = icon({name: 'notice', path: 'assets'})
     const icon_warning = icon({name: 'warning', path: 'assets'})
     const icon_search = icon({name: 'search', path: 'assets'})
@@ -166,8 +164,7 @@ function demo () {
         ${tab4}${tab5}${tab6}
     </nav>`
 
-    // Use icon_
-    // icon_s
+    // icons
     let icon_cancel = icon({name: 'cross', path: 'assets'})
     let icon_confirm = icon({name: 'check', path: 'assets'})
     let icon_previous = icon({name: 'arrow-left', path: 'assets'})
@@ -210,7 +207,8 @@ function demo () {
             //     fill_hover: 'var(--color-bright-yellow-crayola)'
         // }
     }}, protocol('next'))
-
+    
+    // selector
     const icon_option = icon({name: 'option', path: 'assets'})
     const option = button(
     {
@@ -222,21 +220,64 @@ function demo () {
         theme: {
             props: {
                 color: 'var(--color-blue)',
-                current_color: 'var(--color-blue)',
                 fill: 'var(--color-blue)',
-                current_fill: 'var(--color-white)'
+                current_color: 'var(--color-blue)',
+                current_fill: 'var(--color-blue)',
             }
         }
     }, protocol('filter-option'))
-
     const filter_list = list({
-        name: 'filter-list', 
-        body: filter_options
+        name: 'filter-list',
+        body: filter_options,
+        mode: 'single-select'
     }, protocol('filter-list') )
 
+    // links
+    const link1 = link({
+        name: 'link-datdot',
+        role: 'link',
+        body: 'datdot.org',
+        link: {
+            url: 'http://datdot.org',
+            target: '#frame'
+        },
+        theme: {}
+    }, protocol('link-datdot'))
+    const link2 = link({
+        name: 'link-playproject',
+        role: 'link',
+        body: 'playproject.io',
+        link: {
+            url: 'https://playproject.io/',
+            target: '#frame'
+        },
+    }, protocol('link-playproject'))
+    const link3 = link({
+        name: 'link3',
+        role: 'link',
+        body: 'Google',
+    }, protocol('link3'))
+    const Link4 = link({
+        name: 'go-top',
+        role: 'link',
+        body: '↑Top',
+        link: {
+            url: '#top'
+        },
+    }, protocol('go-top'))
+    const Link5 = link({
+        name: 'datdot-ui-issues',
+        role: 'link',
+        body: 'DatDot UI issues',
+        link: {
+            url: 'https://github.com/playproject-io/datdot-ui/issues',
+            target: '_new'
+        },
+    }, protocol('datdot-ui-issues'))
     // content
     const content = bel`
     <div class=${css.content}>
+        <a name="top"></a>
         <section>
             <h2>Text</h2>
             <div class=${css.text}>
@@ -261,6 +302,11 @@ function demo () {
         <section class=${css.dropdown}>
             <h2>Dropdown</h2>
             ${option}
+        </section>
+        <section>
+            <h2>Link</h2>
+            <nav class=${css.links}>${link1}${link2}${link3}${Link5}${Link4}</nav>
+            <iframe id="frame" src="https://datdot.org"></iframe>
         </section>
     </div>`
     const container = bel`<div class="${css.container}">${content}</div>`
@@ -325,7 +371,6 @@ function demo () {
         filter_options.filter( option => {
             if (option.selected) return arr.push(option.text)
         })
-        console.log(arr);
         dropdown.append(filter_list)
         recipients['filter-list']( make({type: 'expanded', data: !state}) )
         recipients[from]( make({to: 'filter-list / listbox / ui-list', type, data: state}) )
@@ -334,12 +379,7 @@ function demo () {
 
     function handle_filter_options (data) {
         const make = message_maker('filter-result')
-        const arr = []
-        filter_options.filter( option => {
-            if (option.text === data.option) option.selected = data.selected
-            if (option.selected) arr.push(option.text)
-        })
-        recipients['logs']( make({to: 'search-result', type: 'filter-swarm', data: {selected: arr} }) )
+        recipients['logs']( make({to: 'search-result', type: 'filter-swarm', data: {selected: data.selected} }) )
     }
     // protocols
     function tab_protocol (name) {
@@ -379,7 +419,6 @@ const css = csjs`
     --color-black: var(--b), 0%;
     --color-dark: 223, 13%, 20%;
     --color-deep-black: 222, 18%, 11%;
-    --color-blue: 214, var(--r);
     --color-red: 358, 99%, 53%;
     --color-amaranth-pink: 331, 86%, 78%;
     --color-persian-rose: 323, 100%, 56%;
@@ -390,6 +429,8 @@ const css = csjs`
     --color-flame: 15, 80%, 50%;
     --color-verdigris: 180, 54%, 43%;
     --color-viridian-green: 180, 100%, 63%;
+    --color-blue: 214, var(--r);
+    --color-heavy-blue: 233, var(--r);
     --color-maya-blue: 205, 96%, 72%;
     --color-slate-blue: 248, 56%, 59%;
     --color-blue-jeans: 204, 96%, 61%;
@@ -517,7 +558,22 @@ body {
     width: 40px;
 }
 .dropdown {
-
+    position: relative;
+}
+i-list {
+    position: absolute;
+    left: 0;
+    top: 90px;
+    width: 100%;
+}
+#frame {
+    width: 100%;
+    height: 250px;
+}
+.links {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
 }
 @media (max-width: 768px) {
     [data-state="debug"] {

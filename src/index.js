@@ -1,6 +1,88 @@
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
-module.exports = i_button
+module.exports = {i_button, i_link}
+
+function i_link (option, protocol) {
+    const {page, flow = 'ui-link', name, body, link = {}, icon = undefined, role='link', disabled = false, theme} = option
+
+    let {url = '#', target = '_self'} = link
+    
+    function widget () {
+        const send = protocol(get)
+        const make = message_maker(`${name} / ${role} / ${flow}`)
+        const message = make({to: 'demo.js', type: 'ready'})
+        const el = document.createElement('i-link')
+        const shadow = el.attachShadow({mode: 'open'})
+        const text = document.createElement('span')
+        el.dataset.ui = role
+        el.setAttribute('role', role)
+        el.setAttribute('aria-label', name)
+        el.setAttribute('tabindex', '-1')
+        el.setAttribute('href', url)
+        if (!target.match(/self/)) el.setAttribute('target', target)
+        style_sheet(shadow, style)
+        if (icon === undefined) shadow.append(body)
+        else shadow.append(icon, text)
+        send(message)
+        el.onclick = handle_open_link
+        return el
+    }
+
+    function handle_open_link () {
+        if (target.match(/_/)) window.open(url, target)
+        if (target.match(/#/) && target.length > 1) {
+            document.querySelector(target).src = url
+        }
+    }
+
+    // protocol get msg
+    function get (msg) {
+        const { head, refs, type, data } = msg
+    }
+
+    // insert CSS style
+    const custom_style = theme ? theme.style : ''
+    // set CSS variables
+    if (theme && theme.props) {
+        var {size, size_hover, weight, color, color_hover, 
+            deco, deco_hover,
+            bg_color, bg_color_hover,
+            border_width, border_style, border_opacity, border_color, border_color_hover,  border_radius, 
+            padding, width, height, opacity,
+            fill, fill_hover, fill_opacity, icon_size,
+            shadow_color, offset_x, offset_y, blur, shadow_opacity,
+            shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
+        } = theme.props
+    }
+
+    const style = `
+    :host(i-link) {
+        --size: ${size ? size : 'var(--primary-size)'};
+        --weight: ${weight ? weight : 'var(--weight300)'};
+        --color: ${color ? color : 'var(--color-heavy-blue)'};
+        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
+        --opacity: ${opacity ? opacity : '0'};
+        --deco: ${deco ? deco : 'none'};
+        font-size: var(--size);
+        font-weight: var(--weight);
+        color: hsl(var(--color));
+        background-color: hsla(var(--bg-color), var(--opacity));
+        text-decoration: var(--deco);
+        transition: color 0.5s, font-size 0.5s ease-in-out;
+        cursor: pointer;
+    }
+    :host(i-link:hover) {
+        --color: ${color_hover ? color_hover : 'var(--color-blue)'};
+        --size: ${size_hover ? size_hover : 'var(--size)'};
+        --deco: ${deco_hover ? deco_hover : 'underline'};
+        color: hsl(var(--color));
+        font-size: var(--size);
+        text-decoration: var(--deco);
+    }
+    ${custom_style}
+    `
+    return widget()
+}
 
 function i_button (option, protocol) {
     const {page, flow = 'ui-button', name, body, icon = '', role = 'button', mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
@@ -13,7 +95,7 @@ function i_button (option, protocol) {
     function widget () {
         const send = protocol(get)
         const make = message_maker(`${name} / ${role} / ${flow}`)
-        let data = role === 'tab' ?  {selected: is_current ? 'true' : is_selected, current: is_current} : role === 'switch' ? {checked: is_checked} : role === 'listbox' ? {expanded: is_expanded} : disabled ? {disabled} : role === 'option' ? {selected: is_selected, current: is_current} : null
+        const data = role === 'tab' ?  {selected: is_current ? 'true' : is_selected, current: is_current} : role === 'switch' ? {checked: is_checked} : role === 'listbox' ? {expanded: is_expanded} : disabled ? {disabled} : role === 'option' ? {selected: is_selected, current: is_current} : null
         const message = make({to: 'demo.js', type: 'ready', data})
         send(message)
         const el = document.createElement('i-button')
@@ -34,7 +116,7 @@ function i_button (option, protocol) {
             if (icon === '') shadow.append(body)
             if (body === undefined) shadow.append(icon)
             if (icon !== '' && body) shadow.append(icon, text)
-        }else shadow.append(body)
+        } else shadow.append(body)
 
         // define conditions
         if (state) {
@@ -159,8 +241,6 @@ function i_button (option, protocol) {
     const style = `
     :host(i-button) {
         --size: ${size ? size : 'var(--size14)'};
-        --size-hover: ${size_hover ? size_hover : 'var(--size)'};
-        --current-size: ${current_size ? current_size : 'var(--size14)'};
         --bold: ${weight ? weight : 'normal'};
         --color: ${color ? color : 'var(--primary-color)'};
         --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
@@ -173,29 +253,27 @@ function i_button (option, protocol) {
         --border-color: ${border_color ? border_color : 'var(--primary-color)'};
         --border-opacity: ${border_opacity ? border_opacity : '1'};
         --border: var(--border-width) var(--border-style) hsla( var(--border-color), var(--border-opacity) );
-        --border-radius: ${border_radius ? border_radius : 'var(--primary-button-radius)'};
+        --border-radius: ${border_radius ? border_radius : '0'};
         --fill: ${fill ? fill : 'var(--primary-color)'};
-        --fill-hover: ${fill_hover ? fill_hover : 'var(--color-white)'};
         --icon-size: ${icon_size ? icon_size : '16px'};
         --offset_x: ${offset_x ? offset_x : '0px'};
         --offset-y: ${offset_y ? offset_y : '6px'};
         --blur: ${blur ? blur : '30px'};
-        --shadow-color: ${shadow_color ? shadow_color : 'var(--pimary-color)'};
-        --shadow-opacity: ${shadow_opacity ? shadow_opacity : '1'};
+        --shadow-color: ${shadow_color ? shadow_color : 'var(--primary-color)'};
+        --shadow-opacity: ${shadow_opacity ? shadow_opacity : '0'};
         --box-shadow: var(--offset_x) var(--offset-y) var(--blur) hsla( var(--shadow-color), var(--shadow-opacity) );
         display: inline-grid;
         grid-auto-flow: column;
         grid-column-gap: 5px;
         justify-content: center;
         align-items: center;
-        ${width && 'width: var(--width)'};
-        ${height && 'height: var(--height)'};
+        ${width && 'width: var(--width);'}
+        ${height && 'height: var(--height);'}
         font-size: var(--size);
         font-weight: var(--bold);
         color: hsl( var(--color) );
         background-color: hsla( var(--bg-color), var(--opacity) );
         border: var(--border);
-        border-radius: var(--border-radius);
         box-shadow: var(--box-shadow);
         padding: var(--padding);
         transition: font-size .3s, color .3s, background-color .3s ease-in-out;
@@ -204,22 +282,21 @@ function i_button (option, protocol) {
     :host(i-button:hover), :host(i-button[role]:hover) {
         --weight: ${weight_hover ? weight_hover : 'initial'};
         --color: ${color_hover ? color_hover : 'var(--color-white)'};
+        --size: ${size_hover ? size_hover : 'var(--size14)'};
         --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--primary-color)'};
         --border-color: ${border_color_hover ? border_color_hover : 'var(--primary-color)'};
         --offset-x: ${offset_x_hover ? offset_x_hover : '0'};
         --offset-y: ${offset_y_hover ? offset_y_hover : '0'};
         --blur: ${blur_hover ? blur_hover : '50px'};
-        --shadow-color: ${shadow_color_hover ? shadow_color_hover : 'var(--pimary-color)'};
-        --shadow-opacity: ${shadow_opacity_hover ? shadow_opacity_hover : '.25'};
-        font-size: var(--size-hover);
+        --shadow-color: ${shadow_color_hover ? shadow_color_hover : 'var(--primary-color)'};
+        --shadow-opacity: ${shadow_opacity_hover ? shadow_opacity_hover : '0'};
     }
     :host(i-button) g {
         fill: hsl(var(--fill));
         transition: fill 0.3s ease-in-out;
     }
     :host(i-button:hover) g {
-        --fill-hover: ${fill_hover ? fill_hover : 'var(--color-white)'};
-        fill: hsl(var(--fill-hover));
+        --fill: ${fill_hover ? fill_hover : 'var(--color-white)'};
     }
     :host(i-button[role="button"])  {
 
@@ -249,7 +326,7 @@ function i_button (option, protocol) {
         width: 100%;
         height: auto;
     }
-    :host(i-button[role="tab"])  {
+    :host(i-button[role="tab"]) {
         --size: ${size ? size : 'initial'};
         --width: ${width ? width : '100%'};
         --color: ${color ? color : 'var(--primary-color)'};
@@ -299,11 +376,8 @@ function i_button (option, protocol) {
         display: block;
         grid-column-start: 2;
     }
-    :host(i-button[role="option"]:hover) g {
-        --fill-hover: ${fill_hover ? fill_hover : 'var(--primary-color)'};
-    }
     :host(i-button[aria-current="true"]:hover) g {
-        --fill-hover: ${fill_hover ? fill_hover : 'var(--color-white)'};
+        --fill: ${fill_hover ? fill_hover : 'var(--color-white)'};
     }
     :host(i-button[role="option"][aria-selected="false"]) .icon {
         display: none;
@@ -312,7 +386,7 @@ function i_button (option, protocol) {
         --bold: ${current_weight ? current_weight : 'initial'};
         --color: ${current_color ? current_color : 'var(--color-white)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-color)'};
-        font-size: var(--current-size);
+        --size: ${current_size ? current_size : 'var(--size14)'};
     }
     :host(i-button[aria-current="true"]) g {
         --fill: ${fill ? fill : 'var(--color-white)'};
