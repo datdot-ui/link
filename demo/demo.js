@@ -488,7 +488,7 @@ const css = csjs`
     --primary-color: var(--color-black);
     --primary-bg-color: var(--color-greyF2);
     --primary-font: Arial, sens-serif;
-    --primary-size: var(--size16);
+    --primary-size: var(--size14);
     --primary-input-radius: 8px;
     --primary-button-radius: 8px;
 }
@@ -503,7 +503,7 @@ body {
     -webkit-text-size-adjust: 100%;
     margin: 0;
     padding: 0;
-    font-size: var(--primary-size);
+    font-size: 1.6rem;
     font-family: var(--primary-font);
     background-color: hsl( var(--primary-bg-color) );
     height: 100%;

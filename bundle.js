@@ -489,7 +489,7 @@ const css = csjs`
     --primary-color: var(--color-black);
     --primary-bg-color: var(--color-greyF2);
     --primary-font: Arial, sens-serif;
-    --primary-size: var(--size16);
+    --primary-size: var(--size14);
     --primary-input-radius: 8px;
     --primary-button-radius: 8px;
 }
@@ -504,7 +504,7 @@ body {
     -webkit-text-size-adjust: 100%;
     margin: 0;
     padding: 0;
-    font-size: var(--primary-size);
+    font-size: 1.6rem;
     font-family: var(--primary-font);
     background-color: hsl( var(--primary-bg-color) );
     height: 100%;
@@ -3000,7 +3000,7 @@ function i_button (option, protocol) {
 
     const style = `
     :host(i-button) {
-        --size: ${size ? size : 'var(--size14)'};
+        --size: ${size ? size : 'var(--primary-size)'};
         --bold: ${weight ? weight : 'normal'};
         --color: ${color ? color : 'var(--primary-color)'};
         --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
@@ -3027,8 +3027,8 @@ function i_button (option, protocol) {
         grid-column-gap: 5px;
         justify-content: center;
         align-items: center;
-        ${width && 'width: var(--width);'}
-        ${height && 'height: var(--height);'}
+        ${width && 'width: var(--width)'};
+        ${height && 'height: var(--height)'};
         font-size: var(--size);
         font-weight: var(--bold);
         color: hsl( var(--color) );
@@ -3088,28 +3088,28 @@ function i_button (option, protocol) {
         height: auto;
     }
     :host(i-button[role="tab"]) {
-        --size: ${size ? size : 'initial'};
         --width: ${width ? width : '100%'};
+        --size: ${size ? size : 'var(--primary-size)'};
         --color: ${color ? color : 'var(--primary-color)'};
         --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
         --border-radius: ${border_radius ? border_radius : '0'};
         --border-width: ${border_width ? border_width : '0'};
         --border-style: ${border_style ? border_style : 'solid'};
         --border-color: ${border_color ? border_color : 'var(--primary-color)'};
-        width: var(--width);
     }
     :host(i-button[role="switch"]) {
         --width: ${width ? width : 'unset'};
+        --size: ${size ? size : 'var(--primary-size)'};
         --color: ${color ? color : 'var(--primary-color)'};
         --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
         --border-radius: ${border_radius ? border_radius : '8px'};
         --border-width: ${border_width ? border_width : '0'};
         --border-style: ${border_style ? border_style : 'solid'};
         --border-color: ${border_color ? border_color : 'var(--primary-color)'};
-        width: var(--width);
     }
     :host(i-button[role="listbox"]) {
         --width: ${width ? width : 'unset'};
+        --size: ${size ? size : 'var(--primary-size)'};
         --color: ${color ? color : 'var(--primary-color)'};
         --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
         --border-radius: ${border_radius ? border_radius : '8px'};
@@ -3124,11 +3124,11 @@ function i_button (option, protocol) {
         grid-column-start: 1;
         text-align: left;
     }
-    :host(i-button[role="listbox"]) .icon {
-        ${body && icon !== '' ? 'grid-column-start: 2;' : ''}
-    }
+    ${body && icon !== '' ? ':host(i-button[role="listbox"]) .icon {grid-column-start: 2;}' : ''}
     :host(i-button[role="option"]) {
         --border-radius: ${border_radius ? border_radius : '0'};
+        --size: ${size ? size : 'var(--primary-size)'};
+        --color: ${color ? color : 'var(--primary-color)'};
         display: grid;
         grid-template-rows: 24px;
         grid-template-columns: 20px auto;
@@ -3137,6 +3137,8 @@ function i_button (option, protocol) {
     :host(i-button[role="option"]) .text {
         display: block;
         grid-column-start: 2;
+        font-size: var(--size);
+        color: hsl(var(--color));
     }
     :host(i-button[aria-current="true"]:hover) g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-white)'};
