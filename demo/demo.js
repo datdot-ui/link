@@ -5,7 +5,6 @@ const { i_button, i_link } = require('..')
 // datdot-ui dependences
 const terminal = require('datdot-terminal')
 const icon = require('datdot-ui-icon')
-const list = require('datdot-ui-list')
 const message_maker = require('../src/node_modules/message-maker')
 const button = i_button
 const link = i_link
@@ -13,31 +12,7 @@ const link = i_link
 function demo () {
     // save protocol callbacks
     let recipients = []
-    let filter_options = 
-    [
-        {
-            text: 'Available',
-            icon: icon({name: 'check', path: 'assets'}),
-            current: true,
-        },
-        {
-            text: 'Not Available',
-            icon: icon({name: 'check', path: 'assets'}),
-        },
-        {
-            text: 'Core',
-            icon: icon({name: 'check', path: 'assets'}),
-        },
-        {
-            text: 'Drive',
-            icon: icon({name: 'check', path: 'assets'}),
-        },
-        {
-            text: 'Cabal',
-            icon: icon({name: 'check', path: 'assets'}),
-        }
-    ]
-     // logs must be initialized first before components
+    // logs must be initialized first before components
     const logs = terminal({mode: 'comfortable', expanded: true}, protocol('logs'))
     // buttons
     const primary = button(
@@ -121,11 +96,11 @@ function demo () {
         current: true, 
         theme: { 
             props: {
-                    size: 'var(--szie20)', 
-                    current_color: 'var(--color-blue)', 
-                    fill: 'var(--color-blue)', 
-                    fill_hover:  'var(--color-blue)', 
-                    icon_Size: '32px' 
+                    size: 'var(--size14)', 
+                    current_color: 'var(--color-maya-blue)', 
+                    fill: 'var(--color-maya-blue)', 
+                    fill_hover:  'var(--color-maya-blue)', 
+                    icon_size: '24px' 
                 }
             }
     }, tab_protocol('tab4'))
@@ -138,11 +113,10 @@ function demo () {
         role: 'tab', 
         theme: { 
             props: {
-                    size: 'var(--szie20)', 
                     current_color:'var(--color-orange)', 
                     fill: 'var(--color-orange)', 
                     fill_hover: 'var(--color-orange)', 
-                    icon_Size: '32px'
+                    icon_size: '30px'
                 }
             }
     }, tab_protocol('tab5'))
@@ -154,8 +128,11 @@ function demo () {
         role: 'tab', 
         theme: { 
             props: {
-                size: 'var(--szie20)', 
-                icon_Size: '32px' 
+                color: 'var(--color-green)',
+                current_color: 'var(--color-green)',
+                fill: 'var(--color-green)',
+                fill_hover: 'var(--color-green)',
+                icon_size: '24px' 
             }
         }
     }, tab_protocol('tab6'))
@@ -208,30 +185,6 @@ function demo () {
         // }
     }}, protocol('next'))
     
-    // selector
-    const icon_option = icon({name: 'option', path: 'assets'})
-    const option = button(
-    {
-        name: 'filter-option', 
-        role: 'listbox', 
-        icon: icon_option,
-        body: 'Filter',
-        disabled: false,
-        theme: {
-            props: {
-                color: 'var(--color-blue)',
-                fill: 'var(--color-blue)',
-                current_color: 'var(--color-blue)',
-                current_fill: 'var(--color-blue)',
-            }
-        }
-    }, protocol('filter-option'))
-    const filter_list = list({
-        name: 'filter-list',
-        body: filter_options,
-        mode: 'single-select'
-    }, protocol('filter-list') )
-
     // links
     const link1 = link({
         name: 'link-datdot',
@@ -241,7 +194,12 @@ function demo () {
             url: 'http://datdot.org',
             target: '#frame'
         },
-        theme: {}
+        theme: {
+            props: {
+                color: 'var(--color-black)',
+                color_hover: 'var(--color-black)'
+            }
+        }
     }, protocol('link-datdot'))
     const link2 = link({
         name: 'link-playproject',
@@ -298,10 +256,6 @@ function demo () {
         <section>
             <h2>Tab & icon</h2>
             ${demo_icon_tab}
-        </section>
-        <section class=${css.dropdown}>
-            <h2>Dropdown</h2>
-            ${option}
         </section>
         <section>
             <h2>Link</h2>
@@ -557,18 +511,9 @@ body {
 .tabs span {
     width: 40px;
 }
-.dropdown {
-    position: relative;
-}
-i-list {
-    position: absolute;
-    left: 0;
-    top: 90px;
-    width: 100%;
-}
 #frame {
     width: 100%;
-    height: 250px;
+    height: 480px;
 }
 .links {
     display: flex;

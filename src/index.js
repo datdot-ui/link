@@ -48,7 +48,7 @@ function i_link (option, protocol) {
             deco, deco_hover,
             bg_color, bg_color_hover,
             border_width, border_style, border_opacity, border_color, border_color_hover,  border_radius, 
-            padding, width, height, opacity,
+            padding, margin, width, height, opacity,
             fill, fill_hover, fill_opacity, icon_size,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
@@ -63,20 +63,24 @@ function i_link (option, protocol) {
         --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
         --opacity: ${opacity ? opacity : '0'};
         --deco: ${deco ? deco : 'none'};
+        --padding: ${padding ? padding : '0'};
+        --margin: ${margin ? margin : '0'};
         font-size: var(--size);
         font-weight: var(--weight);
         color: hsl(var(--color));
         background-color: hsla(var(--bg-color), var(--opacity));
         text-decoration: var(--deco);
+        padding: var(--padding);
+        margin: var(--margin);
         transition: color 0.5s, font-size 0.5s ease-in-out;
         cursor: pointer;
     }
     :host(i-link:hover) {
-        --color: ${color_hover ? color_hover : 'var(--color-blue)'};
-        --size: ${size_hover ? size_hover : 'var(--size)'};
+        --color: ${color_hover ? color_hover : 'var(--color-dodger-blue)'};
+        --size: ${size_hover ? size_hover : 'var(--primary-size)'};
         --deco: ${deco_hover ? deco_hover : 'underline'};
-        color: hsl(var(--color));
-        font-size: var(--size);
+        --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--color-white)'};
+        --opacity: ${opacity ? opacity : '0'};
         text-decoration: var(--deco);
     }
     ${custom_style}
@@ -231,7 +235,7 @@ function i_button (option, protocol) {
             current_hover_color, current_hover_bg_color,
             bg_color, bg_color_hover, border_color_hover,
             border_width, border_style, border_opacity, border_color, border_radius, 
-            padding, width, height, opacity,
+            padding, margin, width, height, opacity,
             fill, fill_hover, fill_opacity, icon_size, current_fill, current_hover_fill,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
@@ -248,6 +252,7 @@ function i_button (option, protocol) {
         --height: ${height ? height : 'unset'};
         --opacity: ${opacity ? opacity : '1'};
         --padding: ${padding ? padding : '12px'};
+        --margin: ${margin ? margin : '0'};
         --border-width: ${border_width ? border_width : '0px'};
         --border-style: ${border_style ? border_style : 'solid'};
         --border-color: ${border_color ? border_color : 'var(--primary-color)'};
@@ -267,8 +272,8 @@ function i_button (option, protocol) {
         grid-column-gap: 5px;
         justify-content: center;
         align-items: center;
-        ${width && 'width: var(--width)'};
-        ${height && 'height: var(--height)'};
+        ${width && 'width: var(--width);'};
+        ${height && 'height: var(--height);'};
         font-size: var(--size);
         font-weight: var(--bold);
         color: hsl( var(--color) );
@@ -310,11 +315,9 @@ function i_button (option, protocol) {
         column-gap: 8px;
     }
     :host(i-button) .icon {
-        display: grid;
-        justify-content: center;
-        align-items: center;
+        display: block;
         width: var(--icon-size);
-        height: var(---con-size);
+        height: var(--icon-size);
     }
     :host(i-button) .right .icon {
         grid-column-start: 2;
@@ -323,7 +326,6 @@ function i_button (option, protocol) {
         grid-column-start: 1;
     }
     :host(i-button) svg {
-        max-width: 100%;
         width: 100%;
         height: auto;
     }
