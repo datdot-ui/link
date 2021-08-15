@@ -2185,6 +2185,8 @@ function i_link (option, protocol) {
         --deco: ${deco ? deco : 'none'};
         --padding: ${padding ? padding : '0'};
         --margin: ${margin ? margin : '0'};
+        --icon-size: ${icon_size ? icon_size : '16px'};
+        --img-size: ${img_size ? img_size : '20px'};
         display: inline-flex;
         flex-direction: row;
         align-items: center;
@@ -2221,12 +2223,11 @@ function i_link (option, protocol) {
     }
     :host(i-link) .text {}
     :host(i-link) .icon {
-        width: ${icon_size ? icon_size : '16px'};
-        height: ${icon_size ? icon_size : '16px'};
+        width: var(--icon-size);
+        height: var(--icon-size);
     }
     :host(i-link) .cover {
-        width: ${img_size ? img_size : '16px'};
-        height: ${img_size ? img_size : '16px'};
+        width: var(--img-size);
     }
     :host(i-link[role="menuitem"]) {
         --color: ${color ? color : 'var(--primary-color)'};
@@ -2413,7 +2414,7 @@ function i_button (option, protocol) {
             bg_color, bg_color_hover, border_color_hover,
             border_width, border_style, border_opacity, border_color, border_radius, 
             padding, margin, width, height, opacity,
-            fill, fill_hover, fill_opacity, icon_size, current_fill, current_hover_fill,
+            fill, fill_hover, fill_opacity, img_size, icon_size, current_fill, current_hover_fill,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
@@ -2438,6 +2439,7 @@ function i_button (option, protocol) {
         --border-radius: ${border_radius ? border_radius : 'var(--primary-button-radius)'};
         --fill: ${fill ? fill : 'var(--primary-color)'};
         --icon-size: ${icon_size ? icon_size : '16px'};
+        --img-size: ${img_size ? img_size : '20px'};
         --offset_x: ${offset_x ? offset_x : '0px'};
         --offset-y: ${offset_y ? offset_y : '6px'};
         --blur: ${blur ? blur : '30px'};
@@ -2491,10 +2493,13 @@ function i_button (option, protocol) {
         align-items: center;
         column-gap: 8px;
     }
-    :host(i-button) .icon, :host(i-button) .cover {
+    :host(i-button) .icon  {
         display: block;
         width: var(--icon-size);
         height: var(--icon-size);
+    }
+    :host(i-button) .cover { 
+        width: var(--img-size);
     }
     :host(i-button) .right .icon {
         grid-column-start: 2;
