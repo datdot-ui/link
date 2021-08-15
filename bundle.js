@@ -2177,6 +2177,12 @@ function i_link (option, protocol) {
         text-decoration: none;
         background-color: transparent;
     }
+    :host(i-link[role="menuitem"]) svg g {
+        --fill: ${fill ? fill : 'var(--color-primary-color)'};
+    }
+    :host(i-link[role="menuitem"]:hover) svg g {
+        --fill: ${fill_hover ? fill_hover : 'var(--color-grey66)'};
+    }
     ${custom_style}
     `
     return widget()
