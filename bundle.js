@@ -2423,6 +2423,9 @@ function i_button (option, protocol) {
         font-size: var(--size);
         color: hsl(var(--color));
     }
+    :host(i-button[role="option"][aria-selected="true"]:hover) g {
+        --fill: ${fill ? fill : 'var(--color-dark)'};
+    }
     :host(i-button[aria-current="true"]:hover) g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-white)'};
     }
