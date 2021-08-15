@@ -397,7 +397,7 @@ function i_button (option, protocol) {
     :host(i-button[role="option"][aria-selected="true"]:hover) g {
         --fill: ${fill ? fill : 'var(--color-dark)'};
     }
-    :host(i-button[aria-current="true"]:hover) g {
+    :host(i-button[aria-current="true"]:hover) g, :host(i-button[role="option"][aria-current="true"]:hover) g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-white)'};
     }
     :host(i-button[role="option"][aria-selected="false"]) .icon {
