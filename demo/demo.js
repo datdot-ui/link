@@ -28,7 +28,7 @@ function demo () {
                 // border_color: 'var(--color-yellow)',
                 // color_hover: 'var(--color-white)',
                 size_hover: 'var(--size16)',
-                bg_color_hover: 'var(--color-black)',
+                // bg_color_hover: 'var(--color-black)',
             }
         }
     }, protocol('primary'))
@@ -233,10 +233,16 @@ function demo () {
         name: 'link-playproject',
         role: 'link',
         body: 'playproject.io',
+        img: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
         link: {
             url: 'https://playproject.io/',
             target: '#frame'
         },
+        theme: {
+            props: {
+                img_size: '44px'
+            }
+        }
     }, protocol('link-playproject'))
     const link3 = link({
         name: 'link3',
@@ -257,6 +263,7 @@ function demo () {
         name: 'go-top',
         role: 'link',
         body: '↑Top',
+        disabled: true,
         link: {
             url: '#top'
         },
@@ -266,19 +273,48 @@ function demo () {
         name: 'item1',
         role: 'menuitem',
         body: 'DatDot UI issues',
+        img: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
             target: '_new'
         },
+        theme: {
+            props: {
+                // img_size: '20px'
+            }
+        }
     }, protocol('item1'))
     const item2 = link({
         name: 'item2',
         role: 'menuitem',
         body: 'playproject.io',
+        img: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
         link: {
             url: 'https://github.com/playproject-io',
         },
+        theme: {
+            props: {
+                img_size: '40px',
+            }
+        }
     }, protocol('item2'))
+    const item3 = link({
+        name: 'item3',
+        role: 'menuitem',
+        body: 'twitter',
+        icon: icon({name: 'icon-svg.168b89d5', path: 'https://abs.twimg.com/responsive-web/client-web'}),
+        link: {
+            url: 'https://twitter.com/home',
+            target: '_blank'
+        },
+        theme: {
+            props: {
+                color: 'var(--color-blue)',
+                fill: 'var(--color-blue)',
+                icon_size: '20px'
+            }
+        }
+    }, protocol('item3'))
     // content
     const content = bel`
     <div class=${css.content}>
@@ -311,7 +347,7 @@ function demo () {
         </section>
         <section>
             <h2>Menu item</h2>
-            <nav class=${css.links}>${item1}${item2}</nav>
+            <nav class=${css.links}>${item1}${item2}${item3}</nav>
         </section>
     </div>`
     const container = bel`<div class="${css.container}">${content}</div>`

@@ -29,7 +29,7 @@ function demo () {
                 // border_color: 'var(--color-yellow)',
                 // color_hover: 'var(--color-white)',
                 size_hover: 'var(--size16)',
-                bg_color_hover: 'var(--color-black)',
+                // bg_color_hover: 'var(--color-black)',
             }
         }
     }, protocol('primary'))
@@ -234,10 +234,16 @@ function demo () {
         name: 'link-playproject',
         role: 'link',
         body: 'playproject.io',
+        img: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
         link: {
             url: 'https://playproject.io/',
             target: '#frame'
         },
+        theme: {
+            props: {
+                img_size: '44px'
+            }
+        }
     }, protocol('link-playproject'))
     const link3 = link({
         name: 'link3',
@@ -258,6 +264,7 @@ function demo () {
         name: 'go-top',
         role: 'link',
         body: '↑Top',
+        disabled: true,
         link: {
             url: '#top'
         },
@@ -267,19 +274,48 @@ function demo () {
         name: 'item1',
         role: 'menuitem',
         body: 'DatDot UI issues',
+        img: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
             target: '_new'
         },
+        theme: {
+            props: {
+                // img_size: '20px'
+            }
+        }
     }, protocol('item1'))
     const item2 = link({
         name: 'item2',
         role: 'menuitem',
         body: 'playproject.io',
+        img: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
         link: {
             url: 'https://github.com/playproject-io',
         },
+        theme: {
+            props: {
+                img_size: '40px',
+            }
+        }
     }, protocol('item2'))
+    const item3 = link({
+        name: 'item3',
+        role: 'menuitem',
+        body: 'twitter',
+        icon: icon({name: 'icon-svg.168b89d5', path: 'https://abs.twimg.com/responsive-web/client-web'}),
+        link: {
+            url: 'https://twitter.com/home',
+            target: '_blank'
+        },
+        theme: {
+            props: {
+                color: 'var(--color-blue)',
+                fill: 'var(--color-blue)',
+                icon_size: '20px'
+            }
+        }
+    }, protocol('item3'))
     // content
     const content = bel`
     <div class=${css.content}>
@@ -312,7 +348,7 @@ function demo () {
         </section>
         <section>
             <h2>Menu item</h2>
-            <nav class=${css.links}>${item1}${item2}</nav>
+            <nav class=${css.links}>${item1}${item2}${item3}</nav>
         </section>
     </div>`
     const container = bel`<div class="${css.container}">${content}</div>`
@@ -2077,8 +2113,9 @@ const message_maker = require('message-maker')
 module.exports = {i_button, i_link}
 
 function i_link (option, protocol) {
-    const {page, flow = 'ui-link', name, body, link = {}, icon = undefined, role='link', disabled = false, theme} = option
+    const {page, flow = 'ui-link', name, body, link = {}, icon = undefined, img = undefined, role='link', disabled = false, theme} = option
     let {url = '#', target = '_self'} = link
+    let is_disabled = disabled
     
     function widget () {
         const send = protocol(get)
@@ -2093,10 +2130,19 @@ function i_link (option, protocol) {
         el.setAttribute('aria-label', name)
         el.setAttribute('tabindex', '-1')
         el.setAttribute('href', url)
+        if (is_disabled) el.setAttribute('disabled', is_disabled)
         if (!target.match(/self/)) el.setAttribute('target', target)
         style_sheet(shadow, style)
         if (icon !== undefined) shadow.append(icon, text)
-        else shadow.append(body)
+        else if (img !== undefined) {
+            const cover = document.createElement('span')
+            const image = document.createElement('img')
+            image.src = img
+            image.alt = 'name'
+            cover.append(image)
+            shadow.append(cover, text)
+            cover.classList.add('cover')
+        } else shadow.append(body)
         send(message)
         el.onclick = handle_open_link
         return el
@@ -2118,12 +2164,12 @@ function i_link (option, protocol) {
     const custom_style = theme ? theme.style : ''
     // set CSS variables
     if (theme && theme.props) {
-        var {size, size_hover, weight, color, color_hover, 
+        var {size, size_hover, weight, color, color_hover, disabled_color,
             deco, deco_hover,
             bg_color, bg_color_hover,
             border_width, border_style, border_opacity, border_color, border_color_hover,  border_radius, 
             padding, margin, width, height, opacity,
-            fill, fill_hover, fill_opacity, icon_size,
+            fill, fill_hover, fill_opacity, icon_size, img_size,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
@@ -2141,6 +2187,7 @@ function i_link (option, protocol) {
         --margin: ${margin ? margin : '0'};
         display: inline-flex;
         flex-direction: row;
+        align-items: center;
         gap: 4px;
         font-size: var(--size);
         font-weight: var(--weight);
@@ -2160,6 +2207,10 @@ function i_link (option, protocol) {
         --opacity: ${opacity ? opacity : '0'};
         text-decoration: var(--deco);
     }
+    :host(i-link) svg, :host(i-link) .cover img {
+        width: 100%;
+        height: auto;
+    }
     :host(i-link) svg g {
         --fill: ${fill ? fill : 'var(--color-heavy-blue)'};
         fill: hsl(var(--fill));
@@ -2167,6 +2218,15 @@ function i_link (option, protocol) {
     }
     :host(i-link:hover) svg g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-dodger-blue)'};
+    }
+    :host(i-link) .text {}
+    :host(i-link) .icon {
+        width: ${icon_size ? icon_size : '16px'};
+        height: ${icon_size ? icon_size : '16px'};
+    }
+    :host(i-link) .cover {
+        width: ${img_size ? img_size : '16px'};
+        height: ${img_size ? img_size : '16px'};
     }
     :host(i-link[role="menuitem"]) {
         --color: ${color ? color : 'var(--primary-color)'};
@@ -2183,13 +2243,18 @@ function i_link (option, protocol) {
     :host(i-link[role="menuitem"]:hover) svg g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-grey66)'};
     }
+    :host(i-link[disabled="true"]) {
+        --color: ${disabled_color ? disabled_color : 'var(--color-greyA2)'};
+        pointer-events: none; 
+        cursor: not-allowed;
+    }
     ${custom_style}
     `
     return widget()
 }
 
 function i_button (option, protocol) {
-    const {page, flow = 'ui-button', name, body, icon = '', role = 'button', mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
+    const {page, flow = 'ui-button', name, body, icon = '', img = undefined, role = 'button', mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
     let is_current = current
     let is_checked = checked
     let is_disabled = disabled
@@ -2219,7 +2284,17 @@ function i_button (option, protocol) {
             if (icon === '') shadow.append(body)
             if (body === undefined) shadow.append(icon)
             if (icon !== '' && body) shadow.append(icon, text)
-        } else shadow.append(body)
+        } 
+        else if (img !== undefined) {
+            const cover = document.createElement('span')
+            const image = document.createElement('img')
+            image.src = img
+            image.alt = 'name'
+            cover.append(image)
+            shadow.append(cover, text)
+            cover.classList.add('cover')
+        }
+        else shadow.append(body)
 
         // define conditions
         if (state) {
@@ -2416,7 +2491,7 @@ function i_button (option, protocol) {
         align-items: center;
         column-gap: 8px;
     }
-    :host(i-button) .icon {
+    :host(i-button) .icon, :host(i-button) .cover {
         display: block;
         width: var(--icon-size);
         height: var(--icon-size);
@@ -2427,7 +2502,7 @@ function i_button (option, protocol) {
     :host(i-button) .left .icon {
         grid-column-start: 1;
     }
-    :host(i-button) svg {
+    :host(i-button) svg,  :host(i-button) img {
         width: 100%;
         height: auto;
     }
