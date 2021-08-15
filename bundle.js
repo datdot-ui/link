@@ -185,6 +185,31 @@ function demo () {
             //     fill_hover: 'var(--color-bright-yellow-crayola)'
         // }
     }}, protocol('next'))
+
+    const listbox = button(
+    {
+        name: 'filter', 
+        role: 'listbox',
+        body: 'Filter', 
+        icon: icon({name: 'filter', path: 'assets'}),
+        expanded: false,
+        theme : {
+            
+        }
+    }, protocol('filter'))
+
+    const option = button(
+    {
+        name: 'option', 
+        body: 'Option', 
+        role: 'option',
+        icon: icon({name: 'check', path: 'assets'}),
+        theme : {
+            props: {
+                current_bg_color: 'var(--color-blue)'
+            }
+        }
+    }, protocol('option'))
     
     // links
     const link1 = link({
@@ -219,15 +244,8 @@ function demo () {
         role: 'link',
         body: 'Google',
     }, protocol('link3'))
-    const Link4 = link({
-        name: 'go-top',
-        role: 'link',
-        body: '↑Top',
-        link: {
-            url: '#top'
-        },
-    }, protocol('go-top'))
-    const Link5 = link({
+    
+    const link4 = link({
         name: 'datdot-ui-issues',
         role: 'link',
         body: 'DatDot UI issues',
@@ -236,6 +254,32 @@ function demo () {
             target: '_new'
         },
     }, protocol('datdot-ui-issues'))
+    const link5 = link({
+        name: 'go-top',
+        role: 'link',
+        body: '↑Top',
+        link: {
+            url: '#top'
+        },
+    }, protocol('go-top'))
+    // menu items
+    const item1 = link({
+        name: 'item1',
+        role: 'menuitem',
+        body: 'DatDot UI issues',
+        link: {
+            url: 'https://github.com/playproject-io/datdot-ui/issues',
+            target: '_new'
+        },
+    }, protocol('item1'))
+    const item2 = link({
+        name: 'item2',
+        role: 'menuitem',
+        body: 'playproject.io',
+        link: {
+            url: 'https://github.com/playproject-io',
+        },
+    }, protocol('item2'))
     // content
     const content = bel`
     <div class=${css.content}>
@@ -243,7 +287,7 @@ function demo () {
         <section>
             <h2>Text</h2>
             <div class=${css.text}>
-                ${primary}${disabled}${toggle}
+                ${primary}${disabled}${toggle}${listbox}${option}
             </div>
         </section>
         <section>
@@ -263,8 +307,12 @@ function demo () {
         </section>
         <section>
             <h2>Link</h2>
-            <nav class=${css.links}>${link1}${link2}${link3}${Link5}${Link4}</nav>
+            <nav class=${css.links}>${link1}${link2}${link3}${link4}${link5}</nav>
             <iframe id="frame" src="https://datdot.org"></iframe>
+        </section>
+        <section>
+            <h2>Menu item</h2>
+            <nav class=${css.links}>${item1}${item2}</nav>
         </section>
     </div>`
     const container = bel`<div class="${css.container}">${content}</div>`
@@ -283,6 +331,7 @@ function demo () {
         if (role === 'tab') return handle_tab_event(from, data)
         if (role === 'switch') return handle_toggle_event(make, from, data)
         if (role === 'listbox') return handle_dropdown_menu_event(make, from, data)
+        if (role === 'option') return handle_select_event(from, data)
     }
 
     function handle_tab_event (from, data) {
@@ -323,21 +372,17 @@ function demo () {
 
     function handle_dropdown_menu_event (make, from, data) {
         const state = data.expanded
-        const dropdown = document.querySelector(`.${css.dropdown}`)
         const type = state ? 'expanded' : 'unexpanded'
-        const arr = []
-        filter_options.filter( option => {
-            if (option.selected) return arr.push(option.text)
-        })
-        dropdown.append(filter_list)
-        recipients['filter-list']( make({type: 'expanded', data: !state}) )
-        recipients[from]( make({to: 'filter-list / listbox / ui-list', type, data: state}) )
-        recipients['logs']( make({to: 'filter-list / listbox / ui-list', type, data: {selected: arr}}) )
+        recipients[from]( make({type, data: state}) )
+        recipients['logs']( make({type}) )
     }
 
-    function handle_filter_options (data) {
-        const make = message_maker('filter-result')
-        recipients['logs']( make({to: 'search-result', type: 'filter-swarm', data: {selected: data.selected} }) )
+    function handle_select_event (from, data) {
+        const make = message_maker(from)
+        const state = data.selected
+        const type = state ? 'selected' : 'unselected'
+        recipients[from]({type, data: state})
+        recipients['logs']( make({type, data: {selected: state ? from : ''} }) )
     }
     // protocols
     function tab_protocol (name) {
@@ -2044,7 +2089,6 @@ function i_link (option, protocol) {
         const text = document.createElement('span')
         text.classList.add('text')
         text.append(body)
-        el.dataset.ui = role
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
         el.setAttribute('tabindex', '-1')
@@ -2095,9 +2139,9 @@ function i_link (option, protocol) {
         --deco: ${deco ? deco : 'none'};
         --padding: ${padding ? padding : '0'};
         --margin: ${margin ? margin : '0'};
-        display: inline-grid;
-        grid-auto-flow: column;
-        column-gap: 4px;
+        display: inline-flex;
+        flex-direction: row;
+        gap: 4px;
         font-size: var(--size);
         font-weight: var(--weight);
         color: hsl(var(--color));
@@ -2123,6 +2167,15 @@ function i_link (option, protocol) {
     }
     :host(i-link:hover) svg g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-dodger-blue)'};
+    }
+    :host(i-link[role="menuitem"]) {
+        --color: ${color ? color : 'var(--primary-color)'};
+        background-color: transparent;
+    }
+    :host(i-link[role="menuitem"]:hover) {
+        --color: ${color_hover ? color_hover : 'var(--color-grey66)'};
+        text-decoration: none;
+        background-color: transparent;
     }
     ${custom_style}
     `
@@ -2150,7 +2203,6 @@ function i_button (option, protocol) {
             text.append(body)
         }
         el.dataset.name = name
-        el.dataset.ui = role
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
         el.setAttribute('tabindex', 0)
@@ -2234,7 +2286,7 @@ function i_button (option, protocol) {
             if (text) {
                 text.textContent = body
             } else {
-                shadow.childNodes[0].textContent = body
+                shadow.lastChild.textContent = body
                 el.ariaLabel = body
             }
         }
@@ -2248,7 +2300,10 @@ function i_button (option, protocol) {
                 is_expanded = !is_expanded
                 return send( make({type, data: {expanded: is_expanded}}) )
             }
-            if (role === 'option') return send( make({type, data: is_selected}) )
+            if (role === 'option') {
+                is_selected = !is_selected
+                return send( make({type, data: {selected: is_selected}}) )
+            }
             send( make({type}) )
         }
         // protocol get msg
@@ -2424,7 +2479,7 @@ function i_button (option, protocol) {
         color: hsl(var(--color));
     }
     :host(i-button[role="option"][aria-selected="true"]:hover) g {
-        --fill: ${fill ? fill : 'var(--color-dark)'};
+        --fill: ${fill ? fill : 'var(--color-white)'};
     }
     :host(i-button[aria-current="true"]:hover) g, :host(i-button[role="option"][aria-current="true"]:hover) g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-white)'};

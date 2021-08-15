@@ -15,7 +15,6 @@ function i_link (option, protocol) {
         const text = document.createElement('span')
         text.classList.add('text')
         text.append(body)
-        el.dataset.ui = role
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
         el.setAttribute('tabindex', '-1')
@@ -66,9 +65,9 @@ function i_link (option, protocol) {
         --deco: ${deco ? deco : 'none'};
         --padding: ${padding ? padding : '0'};
         --margin: ${margin ? margin : '0'};
-        display: inline-grid;
-        grid-auto-flow: column;
-        column-gap: 4px;
+        display: inline-flex;
+        flex-direction: row;
+        gap: 4px;
         font-size: var(--size);
         font-weight: var(--weight);
         color: hsl(var(--color));
@@ -94,6 +93,15 @@ function i_link (option, protocol) {
     }
     :host(i-link:hover) svg g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-dodger-blue)'};
+    }
+    :host(i-link[role="menuitem"]) {
+        --color: ${color ? color : 'var(--primary-color)'};
+        background-color: transparent;
+    }
+    :host(i-link[role="menuitem"]:hover) {
+        --color: ${color_hover ? color_hover : 'var(--color-grey66)'};
+        text-decoration: none;
+        background-color: transparent;
     }
     ${custom_style}
     `
@@ -121,7 +129,6 @@ function i_button (option, protocol) {
             text.append(body)
         }
         el.dataset.name = name
-        el.dataset.ui = role
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
         el.setAttribute('tabindex', 0)
@@ -205,7 +212,7 @@ function i_button (option, protocol) {
             if (text) {
                 text.textContent = body
             } else {
-                shadow.childNodes[0].textContent = body
+                shadow.lastChild.textContent = body
                 el.ariaLabel = body
             }
         }
@@ -219,7 +226,10 @@ function i_button (option, protocol) {
                 is_expanded = !is_expanded
                 return send( make({type, data: {expanded: is_expanded}}) )
             }
-            if (role === 'option') return send( make({type, data: is_selected}) )
+            if (role === 'option') {
+                is_selected = !is_selected
+                return send( make({type, data: {selected: is_selected}}) )
+            }
             send( make({type}) )
         }
         // protocol get msg
@@ -395,7 +405,7 @@ function i_button (option, protocol) {
         color: hsl(var(--color));
     }
     :host(i-button[role="option"][aria-selected="true"]:hover) g {
-        --fill: ${fill ? fill : 'var(--color-dark)'};
+        --fill: ${fill ? fill : 'var(--color-white)'};
     }
     :host(i-button[aria-current="true"]:hover) g, :host(i-button[role="option"][aria-current="true"]:hover) g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-white)'};
