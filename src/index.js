@@ -1,9 +1,11 @@
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
+const i_icon = require('datdot-ui-icon')
 module.exports = {i_button, i_link}
 
 function i_link (option, protocol) {
-    const {page, flow = 'ui-link', name, body, link = {}, icon = undefined, img = undefined, role='link', disabled = false, theme} = option
+    const {page, flow = 'ui-link', name, body, link = {}, icon, img, role='link', disabled = false, theme} = option
+    if (icon) var make_icon = i_icon({name: icon.name, path: icon.path ? icon.path : 'assets'})
     let {url = '#', target = '_self'} = link
     let is_disabled = disabled
     
@@ -14,7 +16,11 @@ function i_link (option, protocol) {
         const el = document.createElement('i-link')
         const shadow = el.attachShadow({mode: 'open'})
         const text = document.createElement('span')
+        const avatar = document.createElement('span')
+        const image = document.createElement('img')
+        avatar.classList.add('avatar')
         text.classList.add('text')
+        avatar.append(image)
         text.append(body)
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
@@ -23,16 +29,17 @@ function i_link (option, protocol) {
         if (is_disabled) el.setAttribute('disabled', is_disabled)
         if (!target.match(/self/)) el.setAttribute('target', target)
         style_sheet(shadow, style)
-        if (icon !== undefined) shadow.append(icon, text)
-        else if (img !== undefined) {
-            const cover = document.createElement('span')
-            const image = document.createElement('img')
+        // check icon, img and body if has value
+        const add_img = typeof img === 'string' && img.match(/http/) ? avatar : img ? img : undefined
+        const add_icon = icon ? make_icon : undefined
+        const add_text = body ? typeof body === 'string' && (add_icon || add_img ) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
+        if (typeof img === 'string' && img.match(/http/)) {
             image.src = img
-            image.alt = 'name'
-            cover.append(image)
-            shadow.append(cover, text)
-            cover.classList.add('cover')
-        } else shadow.append(body)
+            image.alt = name
+        }
+        if (add_icon) shadow.append(add_icon)
+        if (add_img) shadow.append(add_img)
+        if (add_text) shadow.append(add_text)
         send(message)
         el.onclick = handle_open_link
         return el
@@ -69,8 +76,8 @@ function i_link (option, protocol) {
     :host(i-link) {
         --size: ${size ? size : 'var(--primary-size)'};
         --weight: ${weight ? weight : 'var(--weight300)'};
-        --color: ${color ? color : 'var(--color-heavy-blue)'};
-        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
+        --color: ${color ? color : 'var(--primary-link-color)'};
+        --bg-color: ${bg_color ? bg_color : 'var(--primary-bg-color)'};
         --opacity: ${opacity ? opacity : '0'};
         --deco: ${deco ? deco : 'none'};
         --padding: ${padding ? padding : '0'};
@@ -92,14 +99,14 @@ function i_link (option, protocol) {
         cursor: pointer;
     }
     :host(i-link:hover) {
-        --color: ${color_hover ? color_hover : 'var(--color-dodger-blue)'};
+        --color: ${color_hover ? color_hover : 'var(--primary-link-hover-color)'};
         --size: ${size_hover ? size_hover : 'var(--primary-size)'};
         --deco: ${deco_hover ? deco_hover : 'underline'};
         --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--color-white)'};
         --opacity: ${opacity ? opacity : '0'};
         text-decoration: var(--deco);
     }
-    :host(i-link) svg, :host(i-link) .cover img {
+    :host(i-link) svg, :host(i-link) img {
         width: 100%;
         height: auto;
     }
@@ -116,7 +123,8 @@ function i_link (option, protocol) {
         width: var(--icon-size);
         height: var(--icon-size);
     }
-    :host(i-link) .cover {
+    :host(i-link) .avatar {
+        display: block;
         width: var(--img-size);
     }
     :host(i-link[role="menuitem"]) {
@@ -145,7 +153,8 @@ function i_link (option, protocol) {
 }
 
 function i_button (option, protocol) {
-    const {page, flow = 'ui-button', name, body, icon = '', img = undefined, role = 'button', mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
+    const {page, flow = 'ui-button', name, body, icon, img, role = 'button', mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
+    if (icon) var make_icon = i_icon({name: icon.name, path: icon.path ? icon.path : 'assets'})
     let is_current = current
     let is_checked = checked
     let is_disabled = disabled
@@ -160,6 +169,10 @@ function i_button (option, protocol) {
         send(message)
         const el = document.createElement('i-button')
         const text = document.createElement('span')
+        const avatar = document.createElement('span')
+        const image = document.createElement('img')
+        avatar.classList.add('avatar')
+        avatar.append(image)
         if (body != void 0) {
             text.classList.add('text')
             text.append(body)
@@ -171,22 +184,19 @@ function i_button (option, protocol) {
         el.onclick = handle_click
         const shadow = el.attachShadow({mode: 'open'})
         style_sheet(shadow, style)
-        if (icon || role.match(/option|listbox/) ) {
-            if (icon === '') shadow.append(body)
-            if (body === undefined) shadow.append(icon)
-            if (icon !== '' && body) shadow.append(icon, text)
-        } 
-        else if (img !== undefined) {
-            const cover = document.createElement('span')
-            const image = document.createElement('img')
+        // check icon, img and body if has value
+        const add_img = typeof img === 'string' && img.match(/http/) ? avatar : img ? img : undefined
+        const add_icon = icon ? make_icon : undefined
+        const add_text = body ? typeof body === 'string' && (add_icon || add_img) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
+        if (typeof img === 'string' && img.match(/http/)) {
             image.src = img
-            image.alt = 'name'
-            cover.append(image)
-            shadow.append(cover, text)
-            cover.classList.add('cover')
+            image.alt = name
         }
-        else shadow.append(body)
-
+        if (typeof body === 'object' && body.localName !== 'div') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))
+        if (add_icon) shadow.append(add_icon)
+        if (add_img) shadow.append(add_img)
+        if (add_text) shadow.append(add_text)
+       
         // define conditions
         if (state) {
             el.dataset.state = state
@@ -313,11 +323,11 @@ function i_button (option, protocol) {
     const style = `
     :host(i-button) {
         --size: ${size ? size : 'var(--primary-size)'};
-        --bold: ${weight ? weight : 'normal'};
+        --bold: ${weight ? weight : 'var(--weight300)'};
         --color: ${color ? color : 'var(--primary-color)'};
-        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
-        --width: ${width ? width : 'unset'};
-        --height: ${height ? height : 'unset'};
+        --bg-color: ${bg_color ? bg_color : 'var(--primary-bg-color)'};
+        ${width && `--width: ${width}`};
+        ${height && `--width: ${height}`};
         --opacity: ${opacity ? opacity : '1'};
         --padding: ${padding ? padding : '12px'};
         --margin: ${margin ? margin : '0'};
@@ -326,7 +336,7 @@ function i_button (option, protocol) {
         --border-color: ${border_color ? border_color : 'var(--primary-color)'};
         --border-opacity: ${border_opacity ? border_opacity : '1'};
         --border: var(--border-width) var(--border-style) hsla( var(--border-color), var(--border-opacity) );
-        --border-radius: ${border_radius ? border_radius : 'var(--primary-button-radius)'};
+        --border-radius: ${border_radius ? border_radius : 'var(--primary-radius)'};
         --fill: ${fill ? fill : 'var(--primary-color)'};
         --icon-size: ${icon_size ? icon_size : '16px'};
         --img-size: ${img_size ? img_size : '20px'};
@@ -336,9 +346,9 @@ function i_button (option, protocol) {
         --shadow-color: ${shadow_color ? shadow_color : 'var(--primary-color)'};
         --shadow-opacity: ${shadow_opacity ? shadow_opacity : '0'};
         --box-shadow: var(--offset_x) var(--offset-y) var(--blur) hsla( var(--shadow-color), var(--shadow-opacity) );
-        display: inline-grid;
+        display: grid;
         grid-auto-flow: column;
-        grid-column-gap: 5px;
+        gap: 6px;
         justify-content: center;
         align-items: center;
         ${width && 'width: var(--width);'};
@@ -356,14 +366,14 @@ function i_button (option, protocol) {
     }
     :host(i-button:hover), :host(i-button[role]:hover) {
         --weight: ${weight_hover ? weight_hover : 'initial'};
-        --color: ${color_hover ? color_hover : 'var(--color-white)'};
-        --size: ${size_hover ? size_hover : 'var(--size14)'};
-        --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--primary-color)'};
-        --border-color: ${border_color_hover ? border_color_hover : 'var(--primary-color)'};
+        --color: ${color_hover ? color_hover : 'var(--primary-hover-color)'};
+        --size: ${size_hover ? size_hover : 'var(--primary-hover-size)'};
+        --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--primary-hover-bg-color)'};
+        --border-color: ${border_color_hover ? border_color_hover : 'var(--primary-hover-color)'};
         --offset-x: ${offset_x_hover ? offset_x_hover : '0'};
         --offset-y: ${offset_y_hover ? offset_y_hover : '0'};
         --blur: ${blur_hover ? blur_hover : '50px'};
-        --shadow-color: ${shadow_color_hover ? shadow_color_hover : 'var(--primary-color)'};
+        --shadow-color: ${shadow_color_hover ? shadow_color_hover : 'var(--primary-hover-color)'};
         --shadow-opacity: ${shadow_opacity_hover ? shadow_opacity_hover : '0'};
     }
     :host(i-button) g {
@@ -371,14 +381,11 @@ function i_button (option, protocol) {
         transition: fill 0.3s ease-in-out;
     }
     :host(i-button:hover) g {
-        --fill: ${fill_hover ? fill_hover : 'var(--color-white)'};
-    }
-    :host(i-button[role="button"])  {
-
+        --fill: ${fill_hover ? fill_hover : 'var(--primary-hover-color)'};
     }
     :host(i-button) .col2 {
-        display: grid;
-        grid-auto-flow: column;
+        display: flex;
+        flex-direction: row;
         justify-content: center;
         align-items: center;
         column-gap: 8px;
@@ -388,14 +395,9 @@ function i_button (option, protocol) {
         width: var(--icon-size);
         height: var(--icon-size);
     }
-    :host(i-button) .cover { 
+    :host(i-button) .avatar { 
+        display: block;
         width: var(--img-size);
-    }
-    :host(i-button) .right .icon {
-        grid-column-start: 2;
-    }
-    :host(i-button) .left .icon {
-        grid-column-start: 1;
     }
     :host(i-button) svg,  :host(i-button) img {
         width: 100%;
@@ -430,38 +432,36 @@ function i_button (option, protocol) {
         --border-width: ${border_width ? border_width : '0'};
         --border-style: ${border_style ? border_style : 'solid'};
         --border-color: ${border_color ? border_color : 'var(--primary-color)'};
-        display: grid;
-        grid-template-columns: ${body && icon !== '' ? '1fr auto' : 'auto'};
         width: var(--width);
+        flex-direction: row-reverse;
     }
     :host(i-button[role="listbox"]) .text {
         grid-column-start: 1;
         text-align: left;
     }
-    ${body && icon !== '' ? ':host(i-button[role="listbox"]) .icon {grid-column-start: 2;}' : ''}
     :host(i-button[role="option"]) {
         --border-radius: ${border_radius ? border_radius : '0'};
         --size: ${size ? size : 'var(--primary-size)'};
         --color: ${color ? color : 'var(--primary-color)'};
-        display: grid;
-        grid-template-rows: 24px;
-        grid-template-columns: 20px auto;
-        justify-content: left;
     }
     :host(i-button[role="option"]) .text {
-        display: block;
-        grid-column-start: 2;
-        font-size: var(--size);
-        color: hsl(var(--color));
+    }
+    :host(i-button[role="option"]) .avatar ~ .text {
+    }
+    :host(i-button[role="option"]) .avatar {
     }
     :host(i-button[role="option"][aria-selected="true"]:hover) g {
-        --fill: ${fill ? fill : 'var(--color-white)'};
+        --fill: ${fill ? fill : 'var(--primary-hover-color)'};
     }
     :host(i-button[aria-current="true"]:hover) g, :host(i-button[role="option"][aria-current="true"]:hover) g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-white)'};
     }
     :host(i-button[role="option"][aria-selected="false"]) .icon {
-        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+    :host(i-button[role="option"][aria-selected="true"]) .icon {
+        opacity: 1;
     }
     :host(i-button[aria-current="true"]), :host(i-button[aria-current="true"]:hover) {
         --bold: ${current_weight ? current_weight : 'initial'};
