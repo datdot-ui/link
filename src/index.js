@@ -4,7 +4,7 @@ const i_icon = require('datdot-ui-icon')
 module.exports = {i_button, i_link}
 
 function i_link (option, protocol) {
-    const {page, flow = 'ui-link', name, body, link = {}, icon, img, role='link', disabled = false, theme} = option
+    const {page, flow = 'ui-link', name, body, link = {}, icon, cover, role='link', disabled = false, theme} = option
     if (icon) var make_icon = i_icon({name: icon.name, path: icon.path ? icon.path : 'assets'})
     let {url = '#', target = '_self'} = link
     let is_disabled = disabled
@@ -28,20 +28,21 @@ function i_link (option, protocol) {
         el.setAttribute('href', url)
         if (is_disabled) el.setAttribute('disabled', is_disabled)
         if (!target.match(/self/)) el.setAttribute('target', target)
+        if (icon && icon.align === 'right') el.classList.add(icon.align)
         style_sheet(shadow, style)
-        // check icon, img and body if has value
-        const add_img = typeof img === 'string' && img.match(/http/) ? avatar : img ? img : undefined
+        // check icon, cover and body if has value
+        let add_cover = typeof cover === 'string' ? avatar : cover ? cover : undefined
         const add_icon = icon ? make_icon : undefined
-        const add_text = body ? typeof body === 'string' && (add_icon || add_img ) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
-        if (typeof img === 'string' && img.match(/http/)) {
-            image.src = img
+        const add_text = body ? typeof body === 'string' && (add_icon || add_cover ) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
+        if (typeof cover === 'string') {
+            image.src = cover
             image.alt = name
         }
         if (add_icon) shadow.append(add_icon)
-        if (add_img) shadow.append(add_img)
+        if (add_cover) shadow.append(add_cover)
         if (add_text) shadow.append(add_text)
         send(message)
-        el.onclick = handle_open_link
+        if (!is_disabled) el.onclick = handle_open_link
         return el
     }
 
@@ -142,10 +143,19 @@ function i_link (option, protocol) {
     :host(i-link[role="menuitem"]:hover) svg g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-grey66)'};
     }
-    :host(i-link[disabled="true"]) {
-        --color: ${disabled_color ? disabled_color : 'var(--color-greyA2)'};
-        pointer-events: none; 
+    :host(i-link[disabled]), :host(i-link[disabled]:hover) {
+        --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
+        text-decoration: none;
         cursor: not-allowed;
+    }
+    :host(i-link[disabled]) g, :host(i-link[disabled]:hover) g {
+        --fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-fill)'};
+    }
+    :host(i-link[disabled]) .avatar {
+        opacity: 0.6;
+    }
+    :host(i-link.right) {
+        flex-direction: row-reverse;
     }
     ${custom_style}
     `
@@ -153,8 +163,8 @@ function i_link (option, protocol) {
 }
 
 function i_button (option, protocol) {
-    const {page, flow = 'ui-button', name, body, icon, img, role = 'button', mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
-    if (icon) var make_icon = i_icon({name: icon.name, path: icon.path ? icon.path : 'assets'})
+    const {page, flow = 'ui-button', name, body, icon, cover, role = 'button', mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
+    if (icon)  var make_icon = i_icon({name: icon.name, path: icon.path ? icon.path : 'assets'})
     let is_current = current
     let is_checked = checked
     let is_disabled = disabled
@@ -181,20 +191,21 @@ function i_button (option, protocol) {
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
         el.setAttribute('tabindex', 0)
-        el.onclick = handle_click
+        if (icon && icon.align === 'right') el.classList.add(icon.align)
+        if (!is_disabled) el.onclick = handle_click
         const shadow = el.attachShadow({mode: 'open'})
         style_sheet(shadow, style)
         // check icon, img and body if has value
-        const add_img = typeof img === 'string' && img.match(/http/) ? avatar : img ? img : undefined
+        let add_cover = typeof cover === 'string' ? avatar : cover ? cover : undefined
         const add_icon = icon ? make_icon : undefined
-        const add_text = body ? typeof body === 'string' && (add_icon || add_img) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
-        if (typeof img === 'string' && img.match(/http/)) {
-            image.src = img
+        const add_text = body ? typeof body === 'string' && (add_icon || add_cover) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
+        if (typeof cover === 'string') {
+            image.src = cover
             image.alt = name
         }
         if (typeof body === 'object' && body.localName !== 'div') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))
         if (add_icon) shadow.append(add_icon)
-        if (add_img) shadow.append(add_img)
+        if (add_cover) shadow.append(add_cover)
         if (add_text) shadow.append(add_text)
        
         // define conditions
@@ -309,7 +320,7 @@ function i_button (option, protocol) {
     if (theme && theme.props) {
         var {size, size_hover, current_size,
             weight, weight_hover, current_weight, current_hover_weight,
-            color, color_hover, current_color, current_bg_color, 
+            color, color_hover, current_color, current_bg_color, disabled_color, disabled_bg_color,
             current_hover_color, current_hover_bg_color,
             bg_color, bg_color_hover, border_color_hover,
             border_width, border_style, border_opacity, border_color, border_radius, 
@@ -378,7 +389,7 @@ function i_button (option, protocol) {
     }
     :host(i-button) g {
         fill: hsl(var(--fill));
-        transition: fill 0.3s ease-in-out;
+        transition: fill 0.1s ease-in-out;
     }
     :host(i-button:hover) g {
         --fill: ${fill_hover ? fill_hover : 'var(--primary-hover-color)'};
@@ -390,7 +401,7 @@ function i_button (option, protocol) {
         align-items: center;
         column-gap: 8px;
     }
-    :host(i-button) .icon  {
+    :host(i-button) .icon {
         display: block;
         width: var(--icon-size);
         height: var(--icon-size);
@@ -399,41 +410,18 @@ function i_button (option, protocol) {
         display: block;
         width: var(--img-size);
     }
-    :host(i-button) svg,  :host(i-button) img {
+    :host(i-button) svg, :host(i-button) img {
         width: 100%;
         height: auto;
     }
     :host(i-button[role="tab"]) {
         --width: ${width ? width : '100%'};
-        --size: ${size ? size : 'var(--primary-size)'};
-        --color: ${color ? color : 'var(--primary-color)'};
-        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
         --border-radius: ${border_radius ? border_radius : '0'};
-        --border-width: ${border_width ? border_width : '0'};
-        --border-style: ${border_style ? border_style : 'solid'};
-        --border-color: ${border_color ? border_color : 'var(--primary-color)'};
     }
     :host(i-button[role="switch"]) {
-        --width: ${width ? width : 'unset'};
         --size: ${size ? size : 'var(--primary-size)'};
-        --color: ${color ? color : 'var(--primary-color)'};
-        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
-        --border-radius: ${border_radius ? border_radius : '8px'};
-        --border-width: ${border_width ? border_width : '0'};
-        --border-style: ${border_style ? border_style : 'solid'};
-        --border-color: ${border_color ? border_color : 'var(--primary-color)'};
     }
     :host(i-button[role="listbox"]) {
-        --width: ${width ? width : 'unset'};
-        --size: ${size ? size : 'var(--primary-size)'};
-        --color: ${color ? color : 'var(--primary-color)'};
-        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
-        --border-radius: ${border_radius ? border_radius : '8px'};
-        --border-width: ${border_width ? border_width : '0'};
-        --border-style: ${border_style ? border_style : 'solid'};
-        --border-color: ${border_color ? border_color : 'var(--primary-color)'};
-        width: var(--width);
-        flex-direction: row-reverse;
     }
     :host(i-button[role="listbox"]) .text {
         grid-column-start: 1;
@@ -441,8 +429,6 @@ function i_button (option, protocol) {
     }
     :host(i-button[role="option"]) {
         --border-radius: ${border_radius ? border_radius : '0'};
-        --size: ${size ? size : 'var(--primary-size)'};
-        --color: ${color ? color : 'var(--primary-color)'};
     }
     :host(i-button[role="option"]) .text {
     }
@@ -450,28 +436,28 @@ function i_button (option, protocol) {
     }
     :host(i-button[role="option"]) .avatar {
     }
-    :host(i-button[role="option"][aria-selected="true"]:hover) g {
+    :host(i-button[role="option"][aria-selected="true"]:hover) > .icon g {
         --fill: ${fill ? fill : 'var(--primary-hover-color)'};
     }
     :host(i-button[aria-current="true"]:hover) g, :host(i-button[role="option"][aria-current="true"]:hover) g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-white)'};
     }
-    :host(i-button[role="option"][aria-selected="false"]) .icon {
+    :host(i-button[role="option"][aria-selected="false"]) > .icon {
         opacity: 0;
         transition: opacity 0.3s ease-in-out;
     }
-    :host(i-button[role="option"][aria-selected="true"]) .icon {
+    :host(i-button[role="option"][aria-selected="true"]) > .icon {
         opacity: 1;
     }
     :host(i-button[aria-current="true"]), :host(i-button[aria-current="true"]:hover) {
         --bold: ${current_weight ? current_weight : 'initial'};
-        --color: ${current_color ? current_color : 'var(--color-white)'};
-        --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-color)'};
-        --size: ${current_size ? current_size : 'var(--size14)'};
+        --color: ${current_color ? current_color : 'var(--primary-current-color)'};
+        --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-current-bg-color)'};
+        --size: ${current_size ? current_size : 'var(--primary-current-size)'};
         font-size: var(--size);
     }
-    :host(i-button[aria-current="true"]) g {
-        --fill: ${fill ? fill : 'var(--color-white)'};
+    :host(i-button[aria-current="true"]) > .icon g {
+        --fill: ${fill ? fill : 'var(--primary-hover-color)'};
     }
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
     :host(i-button[aria-checked="true"]:hover) {
@@ -484,49 +470,33 @@ function i_button (option, protocol) {
         --color: ${current_hover_color ? current_hover_color : 'var(--color-white)'};
         --bg-color: ${current_hover_bg_color ? current_hover_bg_color : 'var(--primary-color)'};
     }
-    :host(i-button[aria-expanded="true"]) g {
+    :host(i-button[aria-expanded="true"]) > .icon g {
         --fill: ${current_fill ? current_fill : 'var(--color-white)'};
     }
-    :host(i-button[aria-expanded="true"]:hover) g {
+    :host(i-button[aria-expanded="true"]:hover) > .icon g {
         --fill: ${current_hover_fill ? current_hover_fill : 'var(--color-white)'};
     }
-    :host(i-button[aria-checked="true"]) g {
+    :host(i-button[aria-checked="true"]) > .icon g {
         --fill: ${current_fill ? current_fill : 'var(--color-white)' };
     }
     :host(i-button[disabled]), :host(i-button[disabled]:hover) {
-        --color: ${color ? color : 'var(--color-dark)'};
-        --bg-color: ${bg_color ? bg_color : 'var(--color-white)'};
-        --color-opacity: .6;
-        --bg-color-opacity: .3;
-        --border-width: ${border_width ? border_width : '0'};
-        --border-style: ${border_style ? border_style : 'solid'};
-        --border-color: ${border_color ? border_color : 'var(--color)'};
-        --border-opacity: .6;
-        --border: var(--border-width) var(--border-style) hsla(var(--border-color), var(--border-opacity)); 
-        color: hsla(var(--color), var(--color-opacity));
-        background-color: hsla(var(--bg-color), var(--bg-color-opacity));
-        border: var(--border);
-        pointer-events: none;
+        --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
+        --bg-color: ${disabled_bg_color ? disabled_bg_color : 'var(--primary-disabled-bg-color)'};
         cursor: not-allowed;
+        opacity: 0.6;
     }
-    :host(i-button[role="listbox"][disabled]) {
-        --color: ${color ? color : 'var(--color-dark)'};
-        --bg-color: ${bg_color ? bg_color : 'var(--color-greyCB)'};
-        --color-opacity: .6;
-        --bg-color-opacity: .4;
-        --border-width: ${border_width ? border_width : '1px'};
-        --border-style: ${border_style ? border_style : 'solid'};
-        --border-color: ${border_color ? border_color : 'var(--color)'};
-        --border-opacity: .4;
-        --border: var(--border-width) var(--border-style) hsla(var(--border-color), var(--border-opacity)); 
-        color: hsla(var(--color), var(--color-opacity));
-        background-color: hsla(var(--bg-color), var(--bg-color-opacity));
-        border: var(--border);
+    :host(i-button[disabled]) g,  :host(i-button[disabled]:hover) g, 
+    :host(i-button[role="option"][disabled]:hover) > .icon g,
+    :host(i-button[role="option"][aria-current="true"]:hover) > .icon g {
+        --fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-fill)'};
     }
-    :host(i-button[role="listbox"][disabled]) g {
-        --fill: ${fill ? fill : 'var(--color-dark)'};
-        --fill-opacity: ${fill_opacity ? fill_opacity : '0.5'};
-        fill: hsla(var(--fill), var(--fill-opacity));
+    :host(i-button[disabled]) > .col2 .icon g {
+    }
+    :host(i-button.right) > .text {
+        grid-column-start: 1;
+    }
+    :host(i-button.right) > .icon {
+       grid-column-start: 2;
     }
     ${custom_style}
     `
