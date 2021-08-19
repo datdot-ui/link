@@ -180,7 +180,6 @@ function i_button (option, protocol) {
         const avatar = document.createElement('span')
         const image = document.createElement('img')
         avatar.classList.add('avatar')
-        avatar.append(image)
         if (body != void 0) {
             text.classList.add('text')
             text.append(body)
@@ -197,10 +196,7 @@ function i_button (option, protocol) {
         let add_cover = typeof cover === 'string' ? avatar : cover ? cover : undefined
         const add_icon = icon ? make_icon : undefined
         const add_text = body ? typeof body === 'string' && (add_icon || add_cover) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
-        if (typeof cover === 'string') {
-            image.src = cover
-            image.alt = name
-        }
+        if (typeof cover === 'string') avatar.append(img({src: cover, alt: name}))
         if (typeof body === 'object' && body.localName !== 'div') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))
         if (add_icon) shadow.append(add_icon)
         if (add_cover) shadow.append(add_cover)
@@ -316,7 +312,7 @@ function i_button (option, protocol) {
     const custom_style = theme ? theme.style : ''
     // set CSS variables
     if (theme && theme.props) {
-        var {size, size_hover, current_size,
+        var {size, size_hover, current_size, disabled_size,
             weight, weight_hover, current_weight, current_hover_weight,
             color, color_hover, current_color, current_bg_color, disabled_color, disabled_bg_color,
             current_hover_color, current_hover_bg_color,
@@ -481,6 +477,7 @@ function i_button (option, protocol) {
     }
     :host(i-button[disabled]), :host(i-button[disabled]:hover) {
         --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
+        --size: ${disabled_size ? disabled_size : 'var(--primary-size)'};
         --bg-color: ${disabled_bg_color ? disabled_bg_color : 'var(--primary-disabled-bg-color)'};
         cursor: not-allowed;
         opacity: 0.6;
