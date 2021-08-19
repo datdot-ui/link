@@ -3,6 +3,8 @@ const head = require('head')()
 const bel = require('bel')
 const csjs = require('csjs-inject')
 const { i_button, i_link } = require('..')
+// custom element
+const img_btn = require('img-btn')
 // datdot-ui dependences
 const terminal = require('datdot-terminal')
 const icon = require('datdot-ui-icon')
@@ -38,26 +40,30 @@ function demo () {
         }
     }, protocol('primary'))
 
-    const img_btn = button(
+    const rabbit_btn = img_btn(
     {
-        name: 'primary-img', 
-        body: 'datdot.org',
-        icon: {name: 'datdot-white'},
-        cover: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
-        theme:
-        { 
-            style: ` `, 
-            props: {
-                // border_width: '2px',
-                // border_style: 'dashed',
-                // border_color: 'var(--color-yellow)',
-                // color_hover: 'var(--color-white)',
-                // size_hover: 'var(--size16)',
-                // bg_color_hover: 'var(--color-black)',
-                img_size: '2.5vw',
-            }
+        name: 'rabbit', 
+        body: 'Rabbit', 
+        cover: 'https://images.unsplash.com/photo-1629122307243-c913571a1df6?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5MXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
+    }, i_button, protocol('rabbit'))
+    const dog_btn = img_btn(
+    {
+        name: 'dog', 
+        body: 'Dog', 
+        cover: 'https://images.unsplash.com/photo-1520087619250-584c0cbd35e8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDR8fGRvZ3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+        props: {
+            color: 'var(--color-purple)'
         }
-    }, protocol('primary-img'))
+    }, i_button, protocol('dog'))
+    const fox_btn = img_btn(
+    {
+        name: 'fox', 
+        body: 'Fox',
+        cover: './assets/photo-1557008075-7f2c5efa4cfd.jpeg',
+        props: {
+            color: 'var(--color-orange)'
+        }
+    },i_button, protocol('fox'))
 
     const disabled = button(
     {
@@ -292,7 +298,7 @@ function demo () {
             `,
             props: {
                 current_bg_color: 'var(--color-blue)',
-                img_size: '32px',
+                img_width: '32px',
                 fill: 'var(--color-flame)'
             }
         }
@@ -332,7 +338,7 @@ function demo () {
         },
         theme: {
             props: {
-                img_size: '44px'
+                img_width: '44px'
             }
         }
     }, protocol('link-playproject'))
@@ -341,7 +347,13 @@ function demo () {
         name: 'link3',
         role: 'link',
         body: 'Google',
-        disabled: true
+        // disabled: true
+        theme: {
+            props: {
+                color: 'var(--color-green)',
+                color_hover: 'var(--color-electric-violet)'
+            }
+        }
     }, protocol('link3'))
     
     const link4 = link(
@@ -369,14 +381,16 @@ function demo () {
         name: 'item1',
         role: 'menuitem',
         body: 'DatDot UI issues',
-        cover: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
+        icon: {name: 'datdot-white'},
+        // cover: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
             target: '_new'
         },
         theme: {
             props: {
-                // img_size: '20px'
+                // img_width: '20px'
+                icon_size: '20px'
             }
         }
     }, protocol('item1'))
@@ -391,7 +405,7 @@ function demo () {
         },
         theme: {
             props: {
-                img_size: '40px',
+                img_width: '40px',
             }
         }
     }, protocol('item2'))
@@ -421,20 +435,19 @@ function demo () {
         <section>
             <h2>Text</h2>
             <div class=${css.text}>
-                ${primary}${disabled}${toggle}${listbox}${option}${option1}
+                ${primary}${disabled}${toggle}
             </div>
         </section>
         <section>
             <h2>Icon</h2>
             <div class=${css.icon}>
-                ${cancel}${confirm}
-                ${previous}${next}
+                ${cancel}${confirm}${previous}${next}${listbox}${option}${option1}
             </div>
         </section>
         <section>
-            <h2>Imgage</h2>
+            <h2>Image</h2>
             <div class=${css.icon}>
-                ${img_btn}
+                ${rabbit_btn}${dog_btn}${fox_btn}
             </div>
         </section>
         <section>
@@ -673,12 +686,7 @@ body {
 .content {}
 .text, .icon {
     display: flex;
-}
-.text i-button {
-    margin-right: 10px;
-}
-.icon i-button {
-    margin-right: 10px;
+    gap: 10px;
 }
 [data-state="view"] {
     height: 100%;
@@ -740,7 +748,7 @@ body {
 `
 
 document.body.append(demo())
-},{"..":34,"../src/node_modules/message-maker":35,"bel":4,"csjs-inject":7,"datdot-terminal":24,"datdot-ui-icon":28,"head":2}],2:[function(require,module,exports){
+},{"..":35,"../src/node_modules/message-maker":37,"bel":5,"csjs-inject":8,"datdot-terminal":25,"datdot-ui-icon":29,"head":2,"img-btn":3}],2:[function(require,module,exports){
 module.exports = head
 
 function head (lang = 'utf8', title = 'Button - DatDot UI') {
@@ -751,6 +759,43 @@ function head (lang = 'utf8', title = 'Button - DatDot UI') {
     document.head.appendChild(meta)
 }
 },{}],3:[function(require,module,exports){
+module.exports = img_btn
+
+function img_btn ({name, body, cover, props = {}}, button, protocol) {
+    const {
+        img_width = '100px', 
+        img_height = '100px', 
+        weight = '600', 
+        size = 'var(--size24)', 
+        size_hover = 'var(--size36)', 
+        color = 'var(--color-amaranth-pink)', 
+        color_hover = 'var(--primary-hover-color)',
+        bg_color = 'var(--primary-bg-color)',
+        bg_color_hover = 'var(--color-greyD9)', 
+        border_radius = '0'
+    } = props
+    
+    return button(
+        {
+            name, 
+            body,
+            cover,
+            theme:
+            { 
+                style: `
+                .avatar {
+                    overflow: hidden;
+                    border-radius: 50px;
+                }
+                .avatar img {
+                    transform: translate(0, -10%);
+                }
+                `, 
+                props: { img_width, img_height, weight, size, size_hover, color, color_hover, bg_color, bg_color_hover, border_radius }
+            }
+        }, protocol)
+} 
+},{}],4:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
 var trailingSpaceRegex = /[\s]+$/
@@ -883,7 +928,7 @@ module.exports = function appendChild (el, childs) {
   }
 }
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 var hyperx = require('hyperx')
 var appendChild = require('./appendChild')
 
@@ -984,7 +1029,7 @@ module.exports = hyperx(belCreateElement, {comments: true})
 module.exports.default = module.exports
 module.exports.createElement = belCreateElement
 
-},{"./appendChild":3,"hyperx":32}],5:[function(require,module,exports){
+},{"./appendChild":4,"hyperx":33}],6:[function(require,module,exports){
 (function (global){(function (){
 'use strict';
 
@@ -1003,12 +1048,12 @@ function csjsInserter() {
 module.exports = csjsInserter;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"csjs":10,"insert-css":33}],6:[function(require,module,exports){
+},{"csjs":11,"insert-css":34}],7:[function(require,module,exports){
 'use strict';
 
 module.exports = require('csjs/get-css');
 
-},{"csjs/get-css":9}],7:[function(require,module,exports){
+},{"csjs/get-css":10}],8:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -1017,17 +1062,17 @@ module.exports = csjs;
 module.exports.csjs = csjs;
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":5,"./get-css":6}],8:[function(require,module,exports){
+},{"./csjs":6,"./get-css":7}],9:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/csjs');
 
-},{"./lib/csjs":14}],9:[function(require,module,exports){
+},{"./lib/csjs":15}],10:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/get-css');
 
-},{"./lib/get-css":18}],10:[function(require,module,exports){
+},{"./lib/get-css":19}],11:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -1037,7 +1082,7 @@ module.exports.csjs = csjs;
 module.exports.noScope = csjs({ noscope: true });
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":8,"./get-css":9}],11:[function(require,module,exports){
+},{"./csjs":9,"./get-css":10}],12:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1059,7 +1104,7 @@ module.exports = function encode(integer) {
   return str;
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -1103,7 +1148,7 @@ function getClassChain(obj) {
   return acc;
 }
 
-},{"./composition":13}],13:[function(require,module,exports){
+},{"./composition":14}],14:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -1183,7 +1228,7 @@ function ignoreComposition(values) {
  */
 function Composition() {}
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 'use strict';
 
 var extractExtends = require('./css-extract-extends');
@@ -1261,7 +1306,7 @@ function without(obj, unwanted) {
   }, {});
 }
 
-},{"./build-exports":12,"./composition":13,"./css-extract-extends":15,"./css-key":16,"./extract-exports":17,"./scopeify":23}],15:[function(require,module,exports){
+},{"./build-exports":13,"./composition":14,"./css-extract-extends":16,"./css-key":17,"./extract-exports":18,"./scopeify":24}],16:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -1314,7 +1359,7 @@ function getClassName(str) {
   return trimmed[0] === '.' ? trimmed.substr(1) : trimmed;
 }
 
-},{"./composition":13}],16:[function(require,module,exports){
+},{"./composition":14}],17:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1324,7 +1369,7 @@ function getClassName(str) {
 
 module.exports = ' css ';
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 var regex = require('./regex');
@@ -1351,7 +1396,7 @@ function getExport(css, regex) {
   return prop;
 }
 
-},{"./regex":20}],18:[function(require,module,exports){
+},{"./regex":21}],19:[function(require,module,exports){
 'use strict';
 
 var cssKey = require('./css-key');
@@ -1360,7 +1405,7 @@ module.exports = function getCss(csjs) {
   return csjs[cssKey];
 };
 
-},{"./css-key":16}],19:[function(require,module,exports){
+},{"./css-key":17}],20:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1378,7 +1423,7 @@ module.exports = function hashStr(str) {
   return hash >>> 0;
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
 var findClasses = /(\.)(?!\d)([^\s\.,{\[>+~#:)]*)(?![^{]*})/.source;
@@ -1394,7 +1439,7 @@ module.exports = {
   ignoreComments: ignoreComments,
 };
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 var ignoreComments = require('./regex').ignoreComments;
 
 module.exports = replaceAnimations;
@@ -1425,7 +1470,7 @@ function replaceAnimations(result) {
   return result;
 }
 
-},{"./regex":20}],22:[function(require,module,exports){
+},{"./regex":21}],23:[function(require,module,exports){
 'use strict';
 
 var encode = require('./base62-encode');
@@ -1439,7 +1484,7 @@ module.exports = function fileScoper(fileSrc) {
   }
 };
 
-},{"./base62-encode":11,"./hash-string":19}],23:[function(require,module,exports){
+},{"./base62-encode":12,"./hash-string":20}],24:[function(require,module,exports){
 'use strict';
 
 var fileScoper = require('./scoped-name');
@@ -1480,7 +1525,7 @@ function scopify(css, ignores) {
   return replaceAnimations(result);
 }
 
-},{"./regex":20,"./replace-animations":21,"./scoped-name":22}],24:[function(require,module,exports){
+},{"./regex":21,"./replace-animations":22,"./scoped-name":23}],25:[function(require,module,exports){
 const bel = require('bel')
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
@@ -1776,7 +1821,7 @@ log-list .list:last-child .function {
     padding-right: 5px;
 }
 `
-},{"bel":4,"generator-color":25,"message-maker":26,"support-style-sheet":27}],25:[function(require,module,exports){
+},{"bel":5,"generator-color":26,"message-maker":27,"support-style-sheet":28}],26:[function(require,module,exports){
  module.exports = {int2hsla, str2hashint}
  function int2hsla (i) { return `hsla(${i % 360}, 100%, 70%, 1)` }
  function str2hashint (str) {
@@ -1787,7 +1832,7 @@ log-list .list:last-child .function {
      })
      return hash
  }
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 module.exports = function message_maker (from) {
     let msg_id = 0
     return function make ({to, type, data = null, refs = []}) {
@@ -1796,7 +1841,7 @@ module.exports = function message_maker (from) {
         return message
     }
 }
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 module.exports = support_style_sheet
 function support_style_sheet (root, style) {
     return (() => {
@@ -1812,7 +1857,7 @@ function support_style_sheet (root, style) {
         }
     })()
 }
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 const style_sheet = require('support-style-sheet')
 const svg = require('svg')
 
@@ -1868,9 +1913,9 @@ module.exports = ({name, path, is_shadow = false, theme}) => {
     return symbol
 }
 
-},{"support-style-sheet":29,"svg":30}],29:[function(require,module,exports){
-arguments[4][27][0].apply(exports,arguments)
-},{"dup":27}],30:[function(require,module,exports){
+},{"support-style-sheet":30,"svg":31}],30:[function(require,module,exports){
+arguments[4][28][0].apply(exports,arguments)
+},{"dup":28}],31:[function(require,module,exports){
 module.exports = svg
 function svg (path) {
     const span = document.createElement('span')
@@ -1884,7 +1929,7 @@ function svg (path) {
     }
     return span
 }   
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -1905,7 +1950,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -2202,7 +2247,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":31}],33:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":32}],34:[function(require,module,exports){
 var inserted = {};
 
 module.exports = function (css, options) {
@@ -2226,10 +2271,11 @@ module.exports = function (css, options) {
     }
 };
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
 const i_icon = require('datdot-ui-icon')
+const img = require('make-image')
 module.exports = {i_button, i_link}
 
 function i_link (option, protocol) {
@@ -2246,10 +2292,8 @@ function i_link (option, protocol) {
         const shadow = el.attachShadow({mode: 'open'})
         const text = document.createElement('span')
         const avatar = document.createElement('span')
-        const image = document.createElement('img')
         avatar.classList.add('avatar')
         text.classList.add('text')
-        avatar.append(image)
         text.append(body)
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
@@ -2263,10 +2307,7 @@ function i_link (option, protocol) {
         let add_cover = typeof cover === 'string' ? avatar : cover ? cover : undefined
         const add_icon = icon ? make_icon : undefined
         const add_text = body ? typeof body === 'string' && (add_icon || add_cover ) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
-        if (typeof cover === 'string') {
-            image.src = cover
-            image.alt = name
-        }
+        if (typeof cover === 'string') avatar.append(img({src: cover, alt: name}))
         if (add_icon) shadow.append(add_icon)
         if (add_cover) shadow.append(add_cover)
         if (add_text) shadow.append(add_text)
@@ -2296,7 +2337,7 @@ function i_link (option, protocol) {
             bg_color, bg_color_hover,
             border_width, border_style, border_opacity, border_color, border_color_hover,  border_radius, 
             padding, margin, width, height, opacity,
-            fill, fill_hover, fill_opacity, icon_size, img_size,
+            fill, fill_hover, fill_opacity, icon_size, img_width, img_height,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
@@ -2313,7 +2354,8 @@ function i_link (option, protocol) {
         --padding: ${padding ? padding : '0'};
         --margin: ${margin ? margin : '0'};
         --icon-size: ${icon_size ? icon_size : '16px'};
-        --img-size: ${img_size ? img_size : '20px'};
+        --img-width: ${img_width ? img_width : '44px'};
+        --img-height: ${img_height ? img_height : 'auto'};
         display: inline-flex;
         flex-direction: row;
         align-items: center;
@@ -2355,7 +2397,8 @@ function i_link (option, protocol) {
     }
     :host(i-link) .avatar {
         display: block;
-        width: var(--img-size);
+        width: var(--img-width);
+        height: var(--img-height);
     }
     :host(i-link[role="menuitem"]) {
         --color: ${color ? color : 'var(--primary-color)'};
@@ -2553,8 +2596,8 @@ function i_button (option, protocol) {
             current_hover_color, current_hover_bg_color,
             bg_color, bg_color_hover, border_color_hover,
             border_width, border_style, border_opacity, border_color, border_radius, 
-            padding, margin, width, height, opacity,
-            fill, fill_hover, fill_opacity, img_size, icon_size, current_fill, current_hover_fill,
+            padding, margin, width, height, opacity, img_width, img_height,
+            fill, fill_hover, fill_opacity, icon_size, current_fill, current_hover_fill,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
@@ -2579,7 +2622,8 @@ function i_button (option, protocol) {
         --border-radius: ${border_radius ? border_radius : 'var(--primary-radius)'};
         --fill: ${fill ? fill : 'var(--primary-color)'};
         --icon-size: ${icon_size ? icon_size : '16px'};
-        --img-size: ${img_size ? img_size : '20px'};
+        --img-width: ${img_width ? img_width : '20px'};
+        --img-height: ${img_height ? img_height : 'auto'};
         --offset_x: ${offset_x ? offset_x : '0px'};
         --offset-y: ${offset_y ? offset_y : '6px'};
         --blur: ${blur ? blur : '30px'};
@@ -2637,7 +2681,8 @@ function i_button (option, protocol) {
     }
     :host(i-button) .avatar { 
         display: block;
-        width: var(--img-size);
+        width: var(--img-width);
+        height: var(--img-height);
     }
     :host(i-button) svg, :host(i-button) img {
         width: 100%;
@@ -2732,8 +2777,18 @@ function i_button (option, protocol) {
 
     return widget()
 }
-},{"datdot-ui-icon":28,"message-maker":35,"support-style-sheet":36}],35:[function(require,module,exports){
-arguments[4][26][0].apply(exports,arguments)
-},{"dup":26}],36:[function(require,module,exports){
+},{"datdot-ui-icon":29,"make-image":36,"message-maker":37,"support-style-sheet":38}],36:[function(require,module,exports){
+module.exports = img
+
+function img ({src, alt}) {
+    const img = document.createElement('img')
+    img.classList.add('avatar')
+    img.setAttribute('src', src)
+    img.setAttribute('alt', alt)
+    return img
+}
+},{}],37:[function(require,module,exports){
 arguments[4][27][0].apply(exports,arguments)
-},{"dup":27}]},{},[1]);
+},{"dup":27}],38:[function(require,module,exports){
+arguments[4][28][0].apply(exports,arguments)
+},{"dup":28}]},{},[1]);

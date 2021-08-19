@@ -2,6 +2,8 @@ const head = require('head')()
 const bel = require('bel')
 const csjs = require('csjs-inject')
 const { i_button, i_link } = require('..')
+// custom element
+const img_btn = require('img-btn')
 // datdot-ui dependences
 const terminal = require('datdot-terminal')
 const icon = require('datdot-ui-icon')
@@ -37,26 +39,30 @@ function demo () {
         }
     }, protocol('primary'))
 
-    const img_btn = button(
+    const rabbit_btn = img_btn(
     {
-        name: 'primary-img', 
-        body: 'datdot.org',
-        icon: {name: 'datdot-white'},
-        cover: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
-        theme:
-        { 
-            style: ` `, 
-            props: {
-                // border_width: '2px',
-                // border_style: 'dashed',
-                // border_color: 'var(--color-yellow)',
-                // color_hover: 'var(--color-white)',
-                // size_hover: 'var(--size16)',
-                // bg_color_hover: 'var(--color-black)',
-                img_size: '2.5vw',
-            }
+        name: 'rabbit', 
+        body: 'Rabbit', 
+        cover: 'https://images.unsplash.com/photo-1629122307243-c913571a1df6?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5MXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
+    }, i_button, protocol('rabbit'))
+    const dog_btn = img_btn(
+    {
+        name: 'dog', 
+        body: 'Dog', 
+        cover: 'https://images.unsplash.com/photo-1520087619250-584c0cbd35e8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDR8fGRvZ3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+        props: {
+            color: 'var(--color-purple)'
         }
-    }, protocol('primary-img'))
+    }, i_button, protocol('dog'))
+    const fox_btn = img_btn(
+    {
+        name: 'fox', 
+        body: 'Fox',
+        cover: './assets/photo-1557008075-7f2c5efa4cfd.jpeg',
+        props: {
+            color: 'var(--color-orange)'
+        }
+    },i_button, protocol('fox'))
 
     const disabled = button(
     {
@@ -291,7 +297,7 @@ function demo () {
             `,
             props: {
                 current_bg_color: 'var(--color-blue)',
-                img_size: '32px',
+                img_width: '32px',
                 fill: 'var(--color-flame)'
             }
         }
@@ -331,7 +337,7 @@ function demo () {
         },
         theme: {
             props: {
-                img_size: '44px'
+                img_width: '44px'
             }
         }
     }, protocol('link-playproject'))
@@ -340,7 +346,13 @@ function demo () {
         name: 'link3',
         role: 'link',
         body: 'Google',
-        disabled: true
+        // disabled: true
+        theme: {
+            props: {
+                color: 'var(--color-green)',
+                color_hover: 'var(--color-electric-violet)'
+            }
+        }
     }, protocol('link3'))
     
     const link4 = link(
@@ -368,14 +380,16 @@ function demo () {
         name: 'item1',
         role: 'menuitem',
         body: 'DatDot UI issues',
-        cover: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
+        icon: {name: 'datdot-white'},
+        // cover: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
             target: '_new'
         },
         theme: {
             props: {
-                // img_size: '20px'
+                // img_width: '20px'
+                icon_size: '20px'
             }
         }
     }, protocol('item1'))
@@ -390,7 +404,7 @@ function demo () {
         },
         theme: {
             props: {
-                img_size: '40px',
+                img_width: '40px',
             }
         }
     }, protocol('item2'))
@@ -420,20 +434,19 @@ function demo () {
         <section>
             <h2>Text</h2>
             <div class=${css.text}>
-                ${primary}${disabled}${toggle}${listbox}${option}${option1}
+                ${primary}${disabled}${toggle}
             </div>
         </section>
         <section>
             <h2>Icon</h2>
             <div class=${css.icon}>
-                ${cancel}${confirm}
-                ${previous}${next}
+                ${cancel}${confirm}${previous}${next}${listbox}${option}${option1}
             </div>
         </section>
         <section>
-            <h2>Imgage</h2>
+            <h2>Image</h2>
             <div class=${css.icon}>
-                ${img_btn}
+                ${rabbit_btn}${dog_btn}${fox_btn}
             </div>
         </section>
         <section>
@@ -672,12 +685,7 @@ body {
 .content {}
 .text, .icon {
     display: flex;
-}
-.text i-button {
-    margin-right: 10px;
-}
-.icon i-button {
-    margin-right: 10px;
+    gap: 10px;
 }
 [data-state="view"] {
     height: 100%;

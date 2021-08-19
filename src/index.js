@@ -1,6 +1,7 @@
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
 const i_icon = require('datdot-ui-icon')
+const img = require('make-image')
 module.exports = {i_button, i_link}
 
 function i_link (option, protocol) {
@@ -17,10 +18,8 @@ function i_link (option, protocol) {
         const shadow = el.attachShadow({mode: 'open'})
         const text = document.createElement('span')
         const avatar = document.createElement('span')
-        const image = document.createElement('img')
         avatar.classList.add('avatar')
         text.classList.add('text')
-        avatar.append(image)
         text.append(body)
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
@@ -34,10 +33,7 @@ function i_link (option, protocol) {
         let add_cover = typeof cover === 'string' ? avatar : cover ? cover : undefined
         const add_icon = icon ? make_icon : undefined
         const add_text = body ? typeof body === 'string' && (add_icon || add_cover ) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
-        if (typeof cover === 'string') {
-            image.src = cover
-            image.alt = name
-        }
+        if (typeof cover === 'string') avatar.append(img({src: cover, alt: name}))
         if (add_icon) shadow.append(add_icon)
         if (add_cover) shadow.append(add_cover)
         if (add_text) shadow.append(add_text)
@@ -67,7 +63,7 @@ function i_link (option, protocol) {
             bg_color, bg_color_hover,
             border_width, border_style, border_opacity, border_color, border_color_hover,  border_radius, 
             padding, margin, width, height, opacity,
-            fill, fill_hover, fill_opacity, icon_size, img_size,
+            fill, fill_hover, fill_opacity, icon_size, img_width, img_height,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
@@ -84,7 +80,8 @@ function i_link (option, protocol) {
         --padding: ${padding ? padding : '0'};
         --margin: ${margin ? margin : '0'};
         --icon-size: ${icon_size ? icon_size : '16px'};
-        --img-size: ${img_size ? img_size : '20px'};
+        --img-width: ${img_width ? img_width : '44px'};
+        --img-height: ${img_height ? img_height : 'auto'};
         display: inline-flex;
         flex-direction: row;
         align-items: center;
@@ -126,7 +123,8 @@ function i_link (option, protocol) {
     }
     :host(i-link) .avatar {
         display: block;
-        width: var(--img-size);
+        width: var(--img-width);
+        height: var(--img-height);
     }
     :host(i-link[role="menuitem"]) {
         --color: ${color ? color : 'var(--primary-color)'};
@@ -324,8 +322,8 @@ function i_button (option, protocol) {
             current_hover_color, current_hover_bg_color,
             bg_color, bg_color_hover, border_color_hover,
             border_width, border_style, border_opacity, border_color, border_radius, 
-            padding, margin, width, height, opacity,
-            fill, fill_hover, fill_opacity, img_size, icon_size, current_fill, current_hover_fill,
+            padding, margin, width, height, opacity, img_width, img_height,
+            fill, fill_hover, fill_opacity, icon_size, current_fill, current_hover_fill,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
@@ -350,7 +348,8 @@ function i_button (option, protocol) {
         --border-radius: ${border_radius ? border_radius : 'var(--primary-radius)'};
         --fill: ${fill ? fill : 'var(--primary-color)'};
         --icon-size: ${icon_size ? icon_size : '16px'};
-        --img-size: ${img_size ? img_size : '20px'};
+        --img-width: ${img_width ? img_width : '20px'};
+        --img-height: ${img_height ? img_height : 'auto'};
         --offset_x: ${offset_x ? offset_x : '0px'};
         --offset-y: ${offset_y ? offset_y : '6px'};
         --blur: ${blur ? blur : '30px'};
@@ -408,7 +407,8 @@ function i_button (option, protocol) {
     }
     :host(i-button) .avatar { 
         display: block;
-        width: var(--img-size);
+        width: var(--img-width);
+        height: var(--img-height);
     }
     :host(i-button) svg, :host(i-button) img {
         width: 100%;
