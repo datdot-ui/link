@@ -97,7 +97,7 @@ function i_link (option, protocol) {
         cursor: pointer;
     }
     :host(i-link:hover) {
-        --color: ${color_hover ? color_hover : 'var(--primary-link-hover-color)'};
+        --color: ${color_hover ? color_hover : 'var(--primary-link-color-hover)'};
         --size: ${size_hover ? size_hover : 'var(--primary-size)'};
         --deco: ${deco_hover ? deco_hover : 'underline'};
         --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--color-white)'};
@@ -371,14 +371,14 @@ function i_button (option, protocol) {
     }
     :host(i-button:hover), :host(i-button[role]:hover) {
         --weight: ${weight_hover ? weight_hover : 'initial'};
-        --color: ${color_hover ? color_hover : 'var(--primary-hover-color)'};
-        --size: ${size_hover ? size_hover : 'var(--primary-hover-size)'};
-        --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--primary-hover-bg-color)'};
-        --border-color: ${border_color_hover ? border_color_hover : 'var(--primary-hover-color)'};
+        --color: ${color_hover ? color_hover : 'var(--primary-color-hover)'};
+        --size: ${size_hover ? size_hover : 'var(--primary-size-hover)'};
+        --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--primary-bg-color-hover)'};
+        --border-color: ${border_color_hover ? border_color_hover : 'var(--primary-color-hover)'};
         --offset-x: ${offset_x_hover ? offset_x_hover : '0'};
         --offset-y: ${offset_y_hover ? offset_y_hover : '0'};
         --blur: ${blur_hover ? blur_hover : '50px'};
-        --shadow-color: ${shadow_color_hover ? shadow_color_hover : 'var(--primary-hover-color)'};
+        --shadow-color: ${shadow_color_hover ? shadow_color_hover : 'var(--primary-color-hover)'};
         --shadow-opacity: ${shadow_opacity_hover ? shadow_opacity_hover : '0'};
     }
     :host(i-button) g {
@@ -386,7 +386,7 @@ function i_button (option, protocol) {
         transition: fill 0.1s ease-in-out;
     }
     :host(i-button:hover) g {
-        --fill: ${fill_hover ? fill_hover : 'var(--primary-hover-color)'};
+        --fill: ${fill_hover ? fill_hover : 'var(--primary-color-hover)'};
     }
     :host(i-button) .col2 {
         display: flex;
@@ -431,11 +431,14 @@ function i_button (option, protocol) {
     }
     :host(i-button[role="option"]) .avatar {
     }
-    :host(i-button[role="option"][aria-selected="true"]:hover) > .icon g {
-        --fill: ${fill ? fill : 'var(--primary-hover-color)'};
+    :host(i-button[role="option"][aria-selected="true"]) .icon g {
+        --fill: ${fill ? fill : 'var(--primary-selected-icon-fill)'};
     }
-    :host(i-button[aria-current="true"]:hover) g, :host(i-button[role="option"][aria-current="true"]:hover) g {
-        --fill: ${fill_hover ? fill_hover : 'var(--color-white)'};
+    :host(i-button[role="option"][aria-selected="true"]:hover) .icon g{
+        --fill: ${fill_hover ? fill_hover : 'var(--primary-selected-icon-fill-hover)'};
+    }
+    :host(i-button[aria-current="true"]:hover) g, :host(i-button[aria-current="true"]:hover) g {
+        --fill: ${fill_hover ? fill_hover : 'var(--primary-current-icon-fill)'};
     }
     :host(i-button[role="option"][aria-selected="false"]) > .icon {
         opacity: 0;
@@ -451,8 +454,8 @@ function i_button (option, protocol) {
         --size: ${current_size ? current_size : 'var(--primary-current-size)'};
         font-size: var(--size);
     }
-    :host(i-button[aria-current="true"]) > .icon g {
-        --fill: ${fill ? fill : 'var(--primary-hover-color)'};
+    :host(i-button[aria-current="true"]) > .icon g, :host(i-button[aria-current="true"]:hover) > .icon g {
+        --fill: ${fill ? fill : 'var(--primary-current-icon-fill)'};
     }
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
     :host(i-button[aria-checked="true"]:hover) {
@@ -482,8 +485,7 @@ function i_button (option, protocol) {
         opacity: 0.6;
     }
     :host(i-button[disabled]) g,  :host(i-button[disabled]:hover) g, 
-    :host(i-button[role="option"][disabled]:hover) > .icon g,
-    :host(i-button[role="option"][aria-current="true"]:hover) > .icon g {
+    :host(i-button[role="option"][disabled]:hover) > .icon g {
         --fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-fill)'};
     }
     :host(i-button[disabled]) > .col2 .icon g {
