@@ -434,12 +434,10 @@ function i_button (option, protocol) {
     :host(i-button[role="option"][aria-selected="true"]) .icon g {
         --fill: ${fill ? fill : 'var(--primary-selected-icon-fill)'};
     }
-    :host(i-button[role="option"][aria-selected="true"]:hover) .icon g{
+    :host(i-button[role="option"][aria-selected="true"]:hover) .icon g {
         --fill: ${fill_hover ? fill_hover : 'var(--primary-selected-icon-fill-hover)'};
     }
-    :host(i-button[aria-current="true"]:hover) g, :host(i-button[aria-current="true"]:hover) g {
-        --fill: ${fill_hover ? fill_hover : 'var(--primary-current-icon-fill)'};
-    }
+
     :host(i-button[role="option"][aria-selected="false"]) > .icon {
         opacity: 0;
         transition: opacity 0.3s ease-in-out;
@@ -454,8 +452,11 @@ function i_button (option, protocol) {
         --size: ${current_size ? current_size : 'var(--primary-current-size)'};
         font-size: var(--size);
     }
-    :host(i-button[aria-current="true"]) > .icon g, :host(i-button[aria-current="true"]:hover) > .icon g {
+    :host(i-button[role="option"][aria-current="true"]) .icon g, :host(i-button[role="option"][aria-current="true"]:hover) .icon g {
         --fill: ${fill ? fill : 'var(--primary-current-icon-fill)'};
+    }
+    :host(i-button[aria-current="true"]:hover) g {
+        --fill: ${fill_hover ? fill_hover : 'var(--primary-current-icon-fill)'};
     }
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
     :host(i-button[aria-checked="true"]:hover) {
