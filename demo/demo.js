@@ -43,6 +43,7 @@ function demo () {
     {
         name: 'rabbit', 
         body: 'Rabbit', 
+        icon: {icon_name: 'rabbit'},
         cover: 'https://images.unsplash.com/photo-1629122307243-c913571a1df6?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5MXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
     }, i_button, protocol('rabbit'))
     const dog_btn = img_btn(
@@ -59,7 +60,7 @@ function demo () {
         name: 'fox', 
         body: 'Fox',
         cover: 'assets/photo-1557008075-7f2c5efa4cfd.jpeg',
-        disabled: true,
+        // disabled: true,
         props: {
             color: 'var(--color-orange)'
         }
@@ -686,6 +687,7 @@ body {
 .content {}
 .text, .icon {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
 }
 [data-state="view"] {
@@ -729,6 +731,7 @@ body {
 }
 .links {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 20px;
 }

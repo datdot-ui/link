@@ -44,6 +44,7 @@ function demo () {
     {
         name: 'rabbit', 
         body: 'Rabbit', 
+        icon: {icon_name: 'rabbit'},
         cover: 'https://images.unsplash.com/photo-1629122307243-c913571a1df6?ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5MXx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'
     }, i_button, protocol('rabbit'))
     const dog_btn = img_btn(
@@ -60,7 +61,7 @@ function demo () {
         name: 'fox', 
         body: 'Fox',
         cover: 'assets/photo-1557008075-7f2c5efa4cfd.jpeg',
-        disabled: true,
+        // disabled: true,
         props: {
             color: 'var(--color-orange)'
         }
@@ -687,6 +688,7 @@ body {
 .content {}
 .text, .icon {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
 }
 [data-state="view"] {
@@ -730,6 +732,7 @@ body {
 }
 .links {
     display: flex;
+    flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 20px;
 }
@@ -762,10 +765,13 @@ function head (lang = 'utf8', title = 'Button - DatDot UI') {
 },{}],3:[function(require,module,exports){
 module.exports = img_btn
 
-function img_btn ({name, body, cover, disabled, props = {}}, button, protocol) {
+function img_btn ({name, body, icon = {}, cover, disabled, props = {}}, button, protocol) {
+    // align: icon-center, icon-right, avatar-left, avatar-right, text-left
+    let {icon_name = 'edit', path, align = 'text-left'} = icon
     const {
+        icon_size = '20px',
         img_width = '100px', 
-        img_height = '100px', 
+        img_height = '100px',
         weight = '600', 
         size = 'var(--size24)', 
         size_hover = 'var(--size36)', 
@@ -774,27 +780,34 @@ function img_btn ({name, body, cover, disabled, props = {}}, button, protocol) {
         bg_color = 'var(--primary-bg-color)',
         bg_color_hover = 'var(--color-greyD9)', 
         border_radius = '0',
-        disabled_size = 'var(--size24)'
+        disabled_size = 'var(--size24)',
+        shadow_opacity = '0.2'
     } = props
     
     return button(
         {
             name, 
             body,
+            icon: {name: icon_name, path, align},
             cover,
             disabled,
             theme:
             { 
+                // to solve border-radius & overflow: hidden not working on safari
+                // -webkit-mask-image: -webkit-radial-gradient(white, black)
+                // transform: translateZ(0)
                 style: `
                 .avatar {
+                    -webkit-mask-image: -webkit-radial-gradient(white, black);
                     overflow: hidden;
-                    border-radius: 50px;
+                    border-radius: 50%;
+                    /*transform: translateZ(0);*/
                 }
                 .avatar img {
                     transform: translate(0, -10%);
                 }
                 `, 
-                props: { img_width, img_height, weight, size, size_hover, color, color_hover, bg_color, bg_color_hover, border_radius, disabled_size }
+                props: { icon_size, img_width, img_height, weight, size, size_hover, color, color_hover, bg_color, bg_color_hover, border_radius, disabled_size, shadow_opacity}
             }
         }, protocol)
 } 
@@ -2304,7 +2317,7 @@ function i_link (option, protocol) {
         el.setAttribute('href', url)
         if (is_disabled) el.setAttribute('disabled', is_disabled)
         if (!target.match(/self/)) el.setAttribute('target', target)
-        if (icon && icon.align === 'right') el.classList.add(icon.align)
+        if (icon && icon.align) el.classList.add(icon.align)
         style_sheet(shadow, style)
         // check icon, cover and body if has value
         let add_cover = typeof cover === 'string' ? avatar : cover ? cover : undefined
@@ -2455,7 +2468,6 @@ function i_button (option, protocol) {
         const el = document.createElement('i-button')
         const text = document.createElement('span')
         const avatar = document.createElement('span')
-        const image = document.createElement('img')
         avatar.classList.add('avatar')
         if (body != void 0) {
             text.classList.add('text')
@@ -2465,7 +2477,7 @@ function i_button (option, protocol) {
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
         el.setAttribute('tabindex', 0)
-        if (icon && icon.align === 'right') el.classList.add(icon.align)
+        if (icon && icon.align) el.classList.add(icon.align)
         if (!is_disabled) el.onclick = handle_click
         const shadow = el.attachShadow({mode: 'open'})
         style_sheet(shadow, style)
@@ -2766,11 +2778,50 @@ function i_button (option, protocol) {
     }
     :host(i-button[disabled]) > .col2 .icon g {
     }
-    :host(i-button.right) > .text {
+    :host(i-button.icon-right) > .text {
+        grid-column-start: 2;
+    }
+    :host(i-button.icon-right) > .avatar {
+        grid-column-start: 1;
+     }
+    :host(i-button.icon-right) > .icon {
+       grid-column-start: 3;
+    }
+    :host(i-button.icon-center) > .text {
+        grid-column-start: 3;
+    }
+    :host(i-button.icon-center) > .avatar {
+        grid-column-start: 1;
+     }
+    :host(i-button.icon-center) > .icon {
+       grid-column-start: 2;
+    }
+    :host(i-button.avatar-left) > .avatar {
         grid-column-start: 1;
     }
-    :host(i-button.right) > .icon {
-       grid-column-start: 2;
+    :host(i-button.avatar-left) > .text {
+        grid-column-start: 2;
+    }
+    :host(i-button.avatar-left) > .icon {
+        grid-column-start: 3;
+    }
+    :host(i-button.avatar-right) > .avatar {
+        grid-column-start: 3;
+    }
+    :host(i-button.avatar-right) > .text {
+        grid-column-start: 2;
+    }
+    :host(i-button.avatar-right) > .icon {
+        grid-column-start: 1;
+    }
+    :host(i-button.text-left) > .avatar {
+        grid-column-start: 2;
+    }
+    :host(i-button.text-left) > .text {
+        grid-column-start: 1;
+    }
+    :host(i-button.text-left) > .icon {
+        grid-column-start: 3;
     }
     ${custom_style}
     `

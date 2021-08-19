@@ -27,7 +27,7 @@ function i_link (option, protocol) {
         el.setAttribute('href', url)
         if (is_disabled) el.setAttribute('disabled', is_disabled)
         if (!target.match(/self/)) el.setAttribute('target', target)
-        if (icon && icon.align === 'right') el.classList.add(icon.align)
+        if (icon && icon.align) el.classList.add(icon.align)
         style_sheet(shadow, style)
         // check icon, cover and body if has value
         let add_cover = typeof cover === 'string' ? avatar : cover ? cover : undefined
@@ -178,7 +178,6 @@ function i_button (option, protocol) {
         const el = document.createElement('i-button')
         const text = document.createElement('span')
         const avatar = document.createElement('span')
-        const image = document.createElement('img')
         avatar.classList.add('avatar')
         if (body != void 0) {
             text.classList.add('text')
@@ -188,7 +187,7 @@ function i_button (option, protocol) {
         el.setAttribute('role', role)
         el.setAttribute('aria-label', name)
         el.setAttribute('tabindex', 0)
-        if (icon && icon.align === 'right') el.classList.add(icon.align)
+        if (icon && icon.align) el.classList.add(icon.align)
         if (!is_disabled) el.onclick = handle_click
         const shadow = el.attachShadow({mode: 'open'})
         style_sheet(shadow, style)
@@ -489,11 +488,50 @@ function i_button (option, protocol) {
     }
     :host(i-button[disabled]) > .col2 .icon g {
     }
-    :host(i-button.right) > .text {
+    :host(i-button.icon-right) > .text {
+        grid-column-start: 2;
+    }
+    :host(i-button.icon-right) > .avatar {
+        grid-column-start: 1;
+     }
+    :host(i-button.icon-right) > .icon {
+       grid-column-start: 3;
+    }
+    :host(i-button.icon-center) > .text {
+        grid-column-start: 3;
+    }
+    :host(i-button.icon-center) > .avatar {
+        grid-column-start: 1;
+     }
+    :host(i-button.icon-center) > .icon {
+       grid-column-start: 2;
+    }
+    :host(i-button.avatar-left) > .avatar {
         grid-column-start: 1;
     }
-    :host(i-button.right) > .icon {
-       grid-column-start: 2;
+    :host(i-button.avatar-left) > .text {
+        grid-column-start: 2;
+    }
+    :host(i-button.avatar-left) > .icon {
+        grid-column-start: 3;
+    }
+    :host(i-button.avatar-right) > .avatar {
+        grid-column-start: 3;
+    }
+    :host(i-button.avatar-right) > .text {
+        grid-column-start: 2;
+    }
+    :host(i-button.avatar-right) > .icon {
+        grid-column-start: 1;
+    }
+    :host(i-button.text-left) > .avatar {
+        grid-column-start: 2;
+    }
+    :host(i-button.text-left) > .text {
+        grid-column-start: 1;
+    }
+    :host(i-button.text-left) > .icon {
+        grid-column-start: 3;
     }
     ${custom_style}
     `
