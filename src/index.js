@@ -536,6 +536,15 @@ function i_button (option, protocol) {
     :host(i-button.text-left) > .icon {
         grid-column-start: 3;
     }
+    :host(i-button[role="menuitem"]) {
+        --color: ${color ? color : 'var(--primary-color)'};
+        --border-radius: ${border_radius ? border_radius : '0'};
+        background-color: transparent;
+    }
+    :host(i-button[role="menuitem"]:hover) {
+        --color: ${color_hover ? color_hover : 'var(--primary-color-hover)'};
+        background-color: transparent;
+    }
     ${custom_style}
     `
 
