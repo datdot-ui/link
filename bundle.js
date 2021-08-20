@@ -2719,6 +2719,11 @@ function i_button (option, protocol) {
     }
     :host(i-button[role="option"]) {
         --border-radius: ${border_radius ? border_radius : '0'};
+        background-color: transparent;
+    }
+    :host(i-button[role="option"][aria-current="true"]), :host(i-button[role="option"][aria-current="true"]:hover), 
+    :host(i-button[role="option"][disabled]), :host(i-button[role="option"][disabled]:hover) {
+        background-color: transparent;
     }
     :host(i-button[role="option"]) .text {
     }
@@ -2745,7 +2750,6 @@ function i_button (option, protocol) {
         --color: ${current_color ? current_color : 'var(--primary-current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-current-bg-color)'};
         --size: ${current_size ? current_size : 'var(--primary-current-size)'};
-        font-size: var(--size);
     }
     :host(i-button[role="option"][aria-current="true"]) .icon g, :host(i-button[role="option"][aria-current="true"]:hover) .icon g {
         --fill: ${fill ? fill : 'var(--primary-current-icon-fill)'};
