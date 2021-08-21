@@ -275,6 +275,7 @@ function demo () {
         // selected: true,
         theme : {
             props: {
+                opacity: '1',
                 current_bg_color: 'var(--color-blue)'
             }
         }
@@ -300,6 +301,7 @@ function demo () {
             } */
             `,
             props: {
+                opacity: '1',
                 current_bg_color: 'var(--color-blue)',
                 img_width: '32px',
                 // fill: 'var(--color-flame)',
@@ -658,6 +660,7 @@ const css = csjs`
     --primary-radius: 8px;
     --primary-link-color: var(--color-heavy-blue);
     --primary-link-color-hover: var(--color-dodger-blue);
+    --primary-disabled-size: var(--primary-size);
     --primary-disabled-color: var(--color-greyA2);
     --primary-disabled-bg-color: var(--color-greyEB);
     --primary-disabled-fill: var(--color-greyA2);

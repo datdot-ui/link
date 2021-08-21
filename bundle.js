@@ -276,6 +276,7 @@ function demo () {
         // selected: true,
         theme : {
             props: {
+                opacity: '1',
                 current_bg_color: 'var(--color-blue)'
             }
         }
@@ -301,6 +302,7 @@ function demo () {
             } */
             `,
             props: {
+                opacity: '1',
                 current_bg_color: 'var(--color-blue)',
                 img_width: '32px',
                 // fill: 'var(--color-flame)',
@@ -659,6 +661,7 @@ const css = csjs`
     --primary-radius: 8px;
     --primary-link-color: var(--color-heavy-blue);
     --primary-link-color-hover: var(--color-dodger-blue);
+    --primary-disabled-size: var(--primary-size);
     --primary-disabled-color: var(--color-greyA2);
     --primary-disabled-bg-color: var(--color-greyEB);
     --primary-disabled-fill: var(--color-greyA2);
@@ -2353,10 +2356,11 @@ function i_link (option, protocol) {
     const custom_style = theme ? theme.style : ''
     // set CSS variables
     if (theme && theme.props) {
-        var {size, size_hover, weight, color, color_hover, disabled_color,
+        var {size, size_hover, disabled_size, weight, 
+            color, color_hover, disabled_color,
             deco, deco_hover,
             bg_color, bg_color_hover,
-            border_width, border_style, border_opacity, border_color, border_color_hover,  border_radius, 
+            border_width, border_style, border_opacity, border_color, border_color_hover, border_radius, 
             padding, margin, width, height, opacity,
             fill, fill_hover, fill_opacity, disabled_fill,
             icon_size, img_width, img_height,
@@ -2438,6 +2442,7 @@ function i_link (option, protocol) {
         --fill: ${fill_hover ? fill_hover : 'var(--color-grey66)'};
     }
     :host(i-link[disabled]), :host(i-link[disabled]:hover) {
+        --size: ${disabled_size ? disabled_size : 'var(--primary-disabled-size)'};
         --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
         text-decoration: none;
         cursor: not-allowed;
@@ -2720,17 +2725,19 @@ function i_button (option, protocol) {
     }
     :host(i-button[role="option"]) {
         --border-radius: ${border_radius ? border_radius : '0'};
-        background-color: transparent;
+        --opacity: ${opacity ? opacity : '0'};
     }
-    :host(i-button[role="option"][aria-current="true"]), :host(i-button[role="option"][aria-current="true"]:hover), 
+    :host(i-button[role="option"][aria-current="true"]), :host(i-button[role="option"][aria-current="true"]:hover) {
+        --size: ${current_size ? current_size : 'var(--primary-current-size)'};
+        --color: ${current_color ? current_color : 'var(--primary-current-color)'};
+        --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-current-bg-color)'};
+        --opacity: ${opacity ? opacity : '0'}
+    } 
     :host(i-button[role="option"][disabled]), :host(i-button[role="option"][disabled]:hover) {
-        background-color: transparent;
-    }
-    :host(i-button[role="option"]) .text {
-    }
-    :host(i-button[role="option"]) .avatar ~ .text {
-    }
-    :host(i-button[role="option"]) .avatar {
+        --size: ${disabled_size ? disabled_size : 'var(--primary-disabled-size)'};
+        --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
+        --bg-color: ${disabled_bg_color ? disabled_bg_color : 'var(--primary-disabled-bg-color)'};
+        --opacity: ${opacity ? opacity : '0'}
     }
     :host(i-button[role="option"][aria-selected="true"]) .icon g {
         --fill: ${fill ? fill : 'var(--primary-selected-icon-fill)'};
@@ -2779,8 +2786,8 @@ function i_button (option, protocol) {
         --fill: ${current_fill ? current_fill : 'var(--color-white)' };
     }
     :host(i-button[disabled]), :host(i-button[disabled]:hover) {
+        --size: ${disabled_size ? disabled_size : 'var(--primary-disabled-size)'};
         --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
-        --size: ${disabled_size ? disabled_size : 'var(--primary-size)'};
         --bg-color: ${disabled_bg_color ? disabled_bg_color : 'var(--primary-disabled-bg-color)'};
         cursor: not-allowed;
         opacity: 0.6;
