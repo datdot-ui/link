@@ -665,8 +665,8 @@ const css = csjs`
     --primary-disabled-bg-color: var(--color-greyEB);
     --primary-disabled-fill: var(--color-greyA2);
     --primary-current-size: var(--primary-size);
-    --primary-current-color: var(--primary-bg-color);
-    --primary-current-bg-color: var(--primary-color);
+    --primary-current-color: var(--color-white);
+    --primary-current-bg-color: var(--color-black);
     --primary-selected-icon-fill: var(--primary-color);
     --primary-selected-icon-fill-hover: var(--primary-color-hover);
     --primary-current-icon-fill: var(--color-white);

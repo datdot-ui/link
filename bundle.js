@@ -666,8 +666,8 @@ const css = csjs`
     --primary-disabled-bg-color: var(--color-greyEB);
     --primary-disabled-fill: var(--color-greyA2);
     --primary-current-size: var(--primary-size);
-    --primary-current-color: var(--primary-bg-color);
-    --primary-current-bg-color: var(--primary-color);
+    --primary-current-color: var(--color-white);
+    --primary-current-bg-color: var(--color-black);
     --primary-selected-icon-fill: var(--primary-color);
     --primary-selected-icon-fill-hover: var(--primary-color-hover);
     --primary-current-icon-fill: var(--color-white);
@@ -2619,7 +2619,7 @@ function i_button (option, protocol) {
             bg_color, bg_color_hover, border_color_hover,
             border_width, border_style, border_opacity, border_color, border_radius, 
             padding, margin, width, height, opacity, img_width, img_height,
-            fill, fill_hover, fill_opacity, icon_size, current_fill, current_hover_fill, disabled_fill,
+            fill, fill_hover, fill_opacity, icon_size, selected_fill, selected_hover_fill, current_fill, current_hover_fill, disabled_fill,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
@@ -2740,10 +2740,10 @@ function i_button (option, protocol) {
         --opacity: ${opacity ? opacity : '0'}
     }
     :host(i-button[role="option"][aria-selected="true"]) .icon g {
-        --fill: ${fill ? fill : 'var(--primary-selected-icon-fill)'};
+        --fill: ${selected_fill ? selected_fill : 'var(--primary-selected-icon-fill)'};
     }
     :host(i-button[role="option"][aria-selected="true"]:hover) .icon g {
-        --fill: ${fill_hover ? fill_hover : 'var(--primary-selected-icon-fill-hover)'};
+        --fill: ${selected_hover_fill ? selected_hover_fill : 'var(--primary-selected-icon-fill-hover)'};
     }
 
     :host(i-button[role="option"][aria-selected="false"]) > .icon {
@@ -2760,7 +2760,7 @@ function i_button (option, protocol) {
         --size: ${current_size ? current_size : 'var(--primary-current-size)'};
     }
     :host(i-button[role="option"][aria-current="true"]) .icon g, :host(i-button[role="option"][aria-current="true"]:hover) .icon g {
-        --fill: ${fill ? fill : 'var(--primary-current-icon-fill)'};
+        --fill: ${current_fill ? current_fill : 'var(--primary-current-icon-fill)'};
     }
     :host(i-button[aria-current="true"]:hover) g {
         --fill: ${fill_hover ? fill_hover : 'var(--primary-current-icon-fill)'};
