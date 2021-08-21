@@ -550,6 +550,9 @@ function i_button (option, protocol) {
         --color: ${color_hover ? color_hover : 'var(--primary-color-hover)'};
         background-color: transparent;
     }
+    :host(i-button[role="menuitem"][disabled]), :host(i-button[role="menuitem"][disabled]):hover {
+        --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
+    }
     :host(i-button[role="menuitem"][disabled]) g ,
     :host(i-button[role="menuitem"][disabled]:hover) g {
         --fill: ${disabled_fill ? disabled_fill : 'var(--primary-disabled-fill)'};
