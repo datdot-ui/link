@@ -146,7 +146,7 @@ function i_link (option, protocol) {
         text-decoration: none;
         cursor: not-allowed;
     }
-    :host(i-link[disabled]) g, :host(i-link[disabled]:hover) g {
+    :host(i-link[disabled]) g, :host(i-link[disabled]:hover) g, :host(i-link[role][disabled]) g, :host(i-link[role][disabled]:hover) g {
         --fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-fill)'};
     }
     :host(i-link[disabled]) .avatar {
