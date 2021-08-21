@@ -434,10 +434,20 @@ function demo () {
             }
         }
     }, protocol('item3'))
+    const item4 = button(
+    {
+        name: 'item4',
+        role: 'menuitem',
+        body: 'Menu item',
+        theme: {
+            props: {
+                color_hover: 'var(--color-greyA2)'
+            }
+        }
+    }, protocol('item4'))
     // content
     const content = bel`
     <div class=${css.content}>
-        <span>test</span>
         <a name="top"></a>
         <section>
             <h2>Text</h2>
@@ -472,7 +482,7 @@ function demo () {
         </section>
         <section>
             <h2>Menu item</h2>
-            <nav class=${css.links}>${item1}${item2}${item3}</nav>
+            <nav class=${css.links}>${item1}${item2}${item3}${item4}</nav>
         </section>
     </div>`
     const container = bel`<div class="${css.container}">${content}</div>`
@@ -487,7 +497,7 @@ function demo () {
         const role = head[0].split(' / ')[1]
         const from = head[0].split(' / ')[0]
         const make = message_maker(`${from} / ${role} / Demo`)
-        if (role === 'button') return recipients['logs']( make({type: 'triggered'}) )
+        if (role.match(/button|menuitem/)) return recipients['logs']( make({type: 'triggered'}) )
         if (role === 'tab') return handle_tab_event(from, data)
         if (role === 'switch') return handle_toggle_event(make, from, data)
         if (role === 'listbox') return handle_dropdown_menu_event(make, from, data)
@@ -2338,18 +2348,41 @@ function i_link (option, protocol) {
         send(message)
         if (!is_disabled) el.onclick = handle_open_link
         return el
-    }
+    
+        // function handle_click () {
+        //     if (is_current) return
+        //     const type = 'click'
+        //     if (role === 'tab') return send( make({type, data: is_checked}) )
+        //     if (role === 'switch') return send( make({type, data: is_checked}) )
+        //     if (role === 'listbox') {
+        //         is_expanded = !is_expanded
+        //         return send( make({type, data: {expanded: is_expanded}}) )
+        //     }
+        //     if (role === 'option') {
+        //         is_selected = !is_selected
+        //         return send( make({type, data: {selected: is_selected}}) )
+        //     }
+        //     send( make({type}) )
+        // }
 
-    function handle_open_link () {
-        if (target.match(/_/)) window.open(url, target)
-        if (target.match(/#/) && target.length > 1) {
-            document.querySelector(target).src = url
+        function handle_open_link () {
+            const type = 'click'
+            if (target.match(/_/)) {
+                window.open(url, target)
+            }
+            if (target.match(/#/) && target.length > 1) {
+                const el = document.querySelector(target)
+                el.src = url
+            }
+            send(make({type: 'go to', data: {url, window: target}}))
+
         }
-    }
 
-    // protocol get msg
-    function get (msg) {
-        const { head, refs, type, data } = msg
+        // protocol get msg
+        function get (msg) {
+            const { head, refs, type, data } = msg
+        }
+
     }
 
     // insert CSS style

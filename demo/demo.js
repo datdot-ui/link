@@ -433,10 +433,20 @@ function demo () {
             }
         }
     }, protocol('item3'))
+    const item4 = button(
+    {
+        name: 'item4',
+        role: 'menuitem',
+        body: 'Menu item',
+        theme: {
+            props: {
+                color_hover: 'var(--color-greyA2)'
+            }
+        }
+    }, protocol('item4'))
     // content
     const content = bel`
     <div class=${css.content}>
-        <span>test</span>
         <a name="top"></a>
         <section>
             <h2>Text</h2>
@@ -471,7 +481,7 @@ function demo () {
         </section>
         <section>
             <h2>Menu item</h2>
-            <nav class=${css.links}>${item1}${item2}${item3}</nav>
+            <nav class=${css.links}>${item1}${item2}${item3}${item4}</nav>
         </section>
     </div>`
     const container = bel`<div class="${css.container}">${content}</div>`
@@ -486,7 +496,7 @@ function demo () {
         const role = head[0].split(' / ')[1]
         const from = head[0].split(' / ')[0]
         const make = message_maker(`${from} / ${role} / Demo`)
-        if (role === 'button') return recipients['logs']( make({type: 'triggered'}) )
+        if (role.match(/button|menuitem/)) return recipients['logs']( make({type: 'triggered'}) )
         if (role === 'tab') return handle_tab_event(from, data)
         if (role === 'switch') return handle_toggle_event(make, from, data)
         if (role === 'listbox') return handle_dropdown_menu_event(make, from, data)

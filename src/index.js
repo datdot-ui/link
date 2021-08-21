@@ -40,18 +40,41 @@ function i_link (option, protocol) {
         send(message)
         if (!is_disabled) el.onclick = handle_open_link
         return el
-    }
+    
+        // function handle_click () {
+        //     if (is_current) return
+        //     const type = 'click'
+        //     if (role === 'tab') return send( make({type, data: is_checked}) )
+        //     if (role === 'switch') return send( make({type, data: is_checked}) )
+        //     if (role === 'listbox') {
+        //         is_expanded = !is_expanded
+        //         return send( make({type, data: {expanded: is_expanded}}) )
+        //     }
+        //     if (role === 'option') {
+        //         is_selected = !is_selected
+        //         return send( make({type, data: {selected: is_selected}}) )
+        //     }
+        //     send( make({type}) )
+        // }
 
-    function handle_open_link () {
-        if (target.match(/_/)) window.open(url, target)
-        if (target.match(/#/) && target.length > 1) {
-            document.querySelector(target).src = url
+        function handle_open_link () {
+            const type = 'click'
+            if (target.match(/_/)) {
+                window.open(url, target)
+            }
+            if (target.match(/#/) && target.length > 1) {
+                const el = document.querySelector(target)
+                el.src = url
+            }
+            send(make({type: 'go to', data: {url, window: target}}))
+
         }
-    }
 
-    // protocol get msg
-    function get (msg) {
-        const { head, refs, type, data } = msg
+        // protocol get msg
+        function get (msg) {
+            const { head, refs, type, data } = msg
+        }
+
     }
 
     // insert CSS style
