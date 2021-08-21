@@ -2358,7 +2358,8 @@ function i_link (option, protocol) {
             bg_color, bg_color_hover,
             border_width, border_style, border_opacity, border_color, border_color_hover,  border_radius, 
             padding, margin, width, height, opacity,
-            fill, fill_hover, fill_opacity, icon_size, img_width, img_height,
+            fill, fill_hover, fill_opacity, disabled_fill,
+            icon_size, img_width, img_height,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
@@ -2442,7 +2443,7 @@ function i_link (option, protocol) {
         cursor: not-allowed;
     }
     :host(i-link[disabled]) g, :host(i-link[disabled]:hover) g, :host(i-link[role][disabled]) g, :host(i-link[role][disabled]:hover) g {
-        --fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-fill)'};
+        --fill: ${disabled_fill ? disabled_fill : 'var(--primary-disabled-fill)'};
     }
     :host(i-link[disabled]) .avatar {
         opacity: 0.6;
@@ -2613,7 +2614,7 @@ function i_button (option, protocol) {
             bg_color, bg_color_hover, border_color_hover,
             border_width, border_style, border_opacity, border_color, border_radius, 
             padding, margin, width, height, opacity, img_width, img_height,
-            fill, fill_hover, fill_opacity, icon_size, current_fill, current_hover_fill,
+            fill, fill_hover, fill_opacity, icon_size, current_fill, current_hover_fill, disabled_fill,
             shadow_color, offset_x, offset_y, blur, shadow_opacity,
             shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
         } = theme.props
