@@ -2784,8 +2784,8 @@ function i_button (option, protocol) {
         cursor: not-allowed;
         opacity: 0.6;
     }
-    :host(i-button[disabled]) g,  :host(i-button[disabled]:hover) g, 
-    :host(i-button[role="option"][disabled]:hover) > .icon g {
+    :host(i-button[role][disabled]) g,  :host(i-button[role][disabled]:hover) g, 
+    :host(i-button[role][disabled]:hover) > .icon g {
         --fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-fill)'};
     }
     :host(i-button[disabled]) > .col2 .icon g {
