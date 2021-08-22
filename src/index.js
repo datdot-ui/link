@@ -6,7 +6,7 @@ module.exports = {i_button, i_link}
 
 function i_link (option, protocol) {
     const {page, flow = 'ui-link', name, body, link = {}, icon, cover, role='link', disabled = false, theme} = option
-    if (icon) var make_icon = i_icon({name: icon.name, path: icon.path ? icon.path : 'assets'})
+    if (icon) var make_icon = i_icon({name: icon.name, path: icon.path})
     let {url = '#', target = '_self'} = link
     let is_disabled = disabled
     
@@ -188,7 +188,7 @@ function i_link (option, protocol) {
 
 function i_button (option, protocol) {
     const {page, flow = 'ui-button', name, body, icon, cover, role = 'button', mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
-    if (icon)  var make_icon = i_icon({name: icon.name, path: icon.path ? icon.path : 'assets'})
+    if (icon)  var make_icon = i_icon({name: icon.name, path: icon.path})
     let is_current = current
     let is_checked = checked
     let is_disabled = disabled
