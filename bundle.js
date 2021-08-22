@@ -2427,7 +2427,7 @@ function i_link (option, protocol) {
         text-decoration: var(--deco);
         padding: var(--padding);
         margin: var(--margin);
-        transition: color 0.5s, font-size 0.5s ease-in-out;
+        transition: color .5s, background-color .5s, font-size .5s ease-in-out;
         cursor: pointer;
     }
     :host(i-link:hover) {
@@ -2701,7 +2701,7 @@ function i_button (option, protocol) {
         border-radius: var(--border-radius);
         box-shadow: var(--box-shadow);
         padding: var(--padding);
-        transition: font-size .3s, color .3s, background-color .3s ease-in-out;
+        transition: font-size .3s, color .3s, background-color .3s, border .3s, box-shadow .3s ease-in-out;
         cursor: pointer;
     }
     :host(i-button:hover), :host(i-button[role]:hover) {
