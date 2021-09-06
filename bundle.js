@@ -40,6 +40,47 @@ function demo () {
         }
     }, protocol('primary'))
 
+    // image buttons
+    const thumb1_btn = button(
+    {
+        name: 'thumb-cover', 
+        body: 'Cover',
+        cover: 'https://cdn.pixabay.com/photo/2021/08/14/04/15/mountains-6544522_960_720.jpg',
+        classlist: 'avatar-row-1 text-row-2',
+        theme:
+        { 
+            props: {
+                width: '50vw',
+                size_hover: '25px',
+                // avatar_width: '100%',
+            },
+            grid: {
+                button: {
+                    rows: '1fr auto',
+                    justify: 'items-center'
+                },
+                text: {
+                    row: '2'
+                }
+            }
+        }
+    }, protocol('thumb-cover'))
+    
+    const thumb2_btn = button(
+    {
+        name: 'thumb-toggle', 
+        body: 'Blossom', 
+        role: 'switch', 
+        cover: 'https://cdn.pixabay.com/photo/2016/02/27/06/43/cherry-blossom-tree-1225186_960_720.jpg',
+        // checked: false, 
+        theme : {
+            style: ``,
+            props: {
+                size_hover: 'var(--size26)',
+            }
+        }
+    }, protocol('thumb-toggle'))
+
     const rabbit_btn = img_btn(
     {
         name: 'rabbit', 
@@ -50,7 +91,7 @@ function demo () {
     const dog_btn = img_btn(
     {
         name: 'dog', 
-        body: 'Dog', 
+        body: 'Dog',
         cover: 'https://images.unsplash.com/photo-1520087619250-584c0cbd35e8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDR8fGRvZ3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
         props: {
             color: 'var(--color-purple)'
@@ -90,7 +131,8 @@ function demo () {
         name: 'toggle', 
         body: 'Toggle', 
         role: 'switch', 
-        checked: false, 
+        // cover: 'https://cdn.pixabay.com/photo/2016/02/27/06/43/cherry-blossom-tree-1225186_960_720.jpg',
+        // checked: false, 
         theme : {
             style: ``,
             props: {
@@ -145,9 +187,12 @@ function demo () {
     const tab4 = button(
     {
         page: 'JOBS', 
-        name: 'tab4', 
-        icon: icon_notice, 
-        body: bel`<div class="col2">Tab4 ${icon_notice}</div>`, 
+        name: 'notice', 
+        icons: {
+            icon: icon_notice
+        },
+        body: 'Notice',
+        // body: bel`<div class="col2">Tab4 ${icon(icon_notice)}</div>`, 
         role: 'tab', 
         current: true, 
         theme: { 
@@ -157,31 +202,45 @@ function demo () {
                     fill: 'var(--color-maya-blue)', 
                     fill_hover:  'var(--color-maya-blue)', 
                     icon_size: '24px'
+            },
+            grid: {
+                text: {
+                    column: '1'
                 }
             }
-    }, tab_protocol('tab4'))
+        }
+    }, tab_protocol('notice'))
     const tab5 = button(
     {
         page: 'JOBS', 
-        name: 'tab5', 
+        name: 'warning', 
         // icon: icon_warning,
-        body: bel`<div class="col2">Tab5 ${icon({...icon_warning})}</div>`, 
+        cover: 'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
+        body: bel`<div class="col2">Warning ${icon(icon_warning)}</div>`, 
         role: 'tab', 
         theme: { 
             props: {
                     current_color:'var(--color-orange)', 
                     fill: 'var(--color-orange)', 
                     fill_hover: 'var(--color-orange)', 
-                    icon_size: '30px'
+                    icon_size: '30px', 
+                    avatar_width: '100px',
+            },
+            grid: {
+                avatar: {
+                    column: '2'
                 }
             }
-    }, tab_protocol('tab5'))
+        }
+    }, tab_protocol('warning'))
     const tab6 = button(
     {
         page: 'JOBS', 
-        name: 'tab6', 
-        icon: icon_search, 
-        body: bel`<div class="col2"><span class="text">Tab6</span> ${icon({name: 'option'})}</div>`, 
+        name: 'search',
+        icons: {
+            icon: icon_search
+        }, 
+        body: bel`<div class="col2"><span class="text">Search</span> ${icon({name: 'option'})}</div>`, 
         role: 'tab',
         disabled: true,
         theme: { 
@@ -193,7 +252,7 @@ function demo () {
                 icon_size: '24px', 
             }
         }
-    }, tab_protocol('tab6'))
+    }, tab_protocol('search'))
     const demo_icon_tab = bel`
     <nav class=${css.tabs}>
         ${tab4}${tab5}${tab6}
@@ -208,8 +267,7 @@ function demo () {
     const cancel = button(
     {
         name: 'cancel', 
-        // icon: icon_cancel,
-        body: icon({...icon_cancel}),
+        body: icon(icon_cancel),
         // cover: icon(icon_cancel),
         theme: {
             style: ``,
@@ -222,7 +280,9 @@ function demo () {
     const confirm = button(
     {
         name: 'confirm', 
-        icon: icon_confirm, 
+        icons: {
+            icon: icon_confirm
+        }, 
         theme: {
             props: {
                 fill: 'var(--color-green)',
@@ -233,7 +293,7 @@ function demo () {
     const previous = button(
     {
         name: 'previous', 
-        body: bel`<div class="col2">${icon({...icon_previous})}<span class="text">Previous</span></div>`, 
+        body: bel`<div class="col2">${icon(icon_previous)}<span class="text">Previous</span></div>`, 
         theme: {
             style: ``,
             props: {
@@ -245,14 +305,21 @@ function demo () {
     const next = button(
     {
         name: 'next',
-        icon: {name: 'arrow-right', align: 'icon-right'},
+        // cover: 'https://images.unsplash.com/photo-1529448005898-b19fc13465b7?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fG5leHR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+        icons: {
+            icon: icon_next,
+        },
+        // classlist: 'text-col-1',
         body: 'Next',
         // body: bel`<div class="col2">${icon({name: 'arrow-right'})} Next</div>`, 
         theme: {
             // props: {
             //     fill: 'var(--color-green)',
             //     fill_hover: 'var(--color-bright-yellow-crayola)'
-        // }
+            // },
+            grid: {
+                icon: {column: '2'}
+            }
     }}, protocol('next'))
 
     const listbox = button(
@@ -260,53 +327,126 @@ function demo () {
         name: 'filter', 
         role: 'listbox',
         body: 'Filter', 
-        icon: {name: 'filter'},
+        icons: {
+            select: {
+                name: 'filter',
+            }
+        },
+        // classlist: 'icon-col-2',
         expanded: false,
         theme : {
             
         }
     }, protocol('filter'))
 
+    const listbox1 = button(
+        {
+            name: 'selector', 
+            role: 'listbox',
+            body: 'Single select',
+            icons: {
+                select: {name: 'arrow-down'},
+            },
+            expanded: false,
+            theme : {
+                props: {
+                    avatar_width: '32px'
+                },
+                grid: {
+                    // option: {
+                    //     columns: '1fr auto 1fr',
+                    //     auto: {
+                    //         auto_columns: '150px'
+                    //     }
+                    // }
+                }
+            }
+        }, protocol('selector'))
+
     const option = button(
     {
-        name: 'option', 
-        body: 'Option', 
+        name: 'option-star', 
+        body: 'Star', 
         role: 'option',
-        icon: {name: 'check'},
-        // selected: true,
+        icons: {
+            list: {
+                name: 'star',
+            }
+        },
+        // classlist: 'icon-col-2',
+        selected: true,
         theme : {
             props: {
                 opacity: '1',
                 current_bg_color: 'var(--color-blue)'
             }
         }
-    }, protocol('option'))
+    }, protocol('option-star'))
     const option1 = button(
     {
         name: 'datdot app', 
-        body: bel`<div class="col2">${icon({name: 'datdot-black'})} DatDot app</div>`, 
+        body: 'DatDot app', 
         role: 'option',
-        icon: {name: 'check'},
+        icons: {
+            icon: {
+                name: 'datdot-white', 
+            }
+        },
         cover: 'data:image/png;base64,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',
         // cover: icon({name: 'star'}),
-        selected: true,
+        selected: false,
         // current: true,
         // disabled: true,
         theme : {
             style: `
-            :host(i-button) .col2 .icon {
-                --icon-size: 30px;
+            /* :host(i-button) {
+                grid-template-areas: "icon option";
             }
-            /* :host(i-button[disabled]) .col2 g {
-                --fill: var(--color-blue);
-            } */
+            :host(i-button) .option {
+                grid-template-areas: "icon avatar text";
+                grid-area: option;
+            }
+            :host(i-button) .option > .avatar {
+                grid-area: avatar;
+            }
+            :host(i-button) .option > .text {
+                grid-area: text;
+            }*/
             `,
             props: {
                 opacity: '1',
                 current_bg_color: 'var(--color-blue)',
-                img_width: '32px',
+                avatar_width: '32px',
+                // list_icon_size: '40px',
                 // fill: 'var(--color-flame)',
                 // fill_hover: 'var(--color-flame)'
+            },
+            grid: {
+                button: {
+                    areas: 'icon option',
+                    rows: 'auto',
+                    columns: 'auto 1fr',
+                    auto: {
+                        auto_flow: 'column'
+                    },
+                      gap: '0 5px'
+                },
+                text: {
+                    area: 'text'
+                },
+                option: {
+                    areas: 'icon avatar text',
+                    area: 'option',
+                    rows: 'auto',
+                    auto: {
+                        auto_flow: 'column'
+                    },
+                    align: 'items-center',
+                    gap: '0 5px'
+                },
+                icon: {
+                    area: 'icon'
+                }
             }
         }
     }, protocol('datdot app'))
@@ -317,7 +457,12 @@ function demo () {
         name: 'link-datdot',
         role: 'link',
         body: 'datdot.org',
-        icon: {name: 'plan-list', align: 'right'},
+        icons: {
+            icon: {
+                name: 'plan-list'
+            }
+        },
+        classlist: 'icon-col-2',
         link: {
             url: 'http://datdot.org',
             target: '#frame'
@@ -336,7 +481,7 @@ function demo () {
         name: 'link-playproject',
         role: 'link',
         body: 'playproject.io',
-        // icon: {name: 'datdot-black', align: 'right'},
+        // icon: {name: 'datdot-black', classlist: 'col2-right'},
         cover: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
         disabled: true,
         link: {
@@ -345,7 +490,7 @@ function demo () {
         },
         theme: {
             props: {
-                img_width: '44px'
+                avatar_width: '44px'
             }
         }
     }, protocol('link-playproject'))
@@ -388,7 +533,11 @@ function demo () {
         name: 'item1',
         role: 'menuitem',
         body: 'DatDot UI issues',
-        icon: {name: 'datdot-white'},
+        icons: {
+            icon: {
+                name: 'datdot-white'
+            }
+        },
         // cover: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
@@ -396,7 +545,7 @@ function demo () {
         },
         theme: {
             props: {
-                // img_width: '20px'
+                avatar_width: '30px',
                 icon_size: '20px'
             }
         }
@@ -412,7 +561,7 @@ function demo () {
         },
         theme: {
             props: {
-                img_width: '40px',
+                avatar_width: '40px',
             }
         }
     }, protocol('item2'))
@@ -458,13 +607,17 @@ function demo () {
         <section>
             <h2>Icon</h2>
             <div class=${css.icon}>
-                ${cancel}${confirm}${previous}${next}${listbox}${option}${option1}
+                ${cancel}${confirm}${previous}${next}${listbox}${listbox1}${option}${option1}
             </div>
         </section>
         <section>
             <h2>Image</h2>
             <div class=${css.icon}>
                 ${rabbit_btn}${dog_btn}${fox_btn}
+            </div>
+            <h2>Thumb</h2>
+            <div class=${css.thumb}>
+                ${thumb1_btn}${thumb2_btn}
             </div>
         </section>
         <section>
@@ -513,7 +666,7 @@ function demo () {
             const make = message_maker(`${current} / tab / Demo`)
             recipients[current]( make({type, data: state}) )
             if (from === tab.dataset.name) return recipients['logs']( make({type, data: {selected: state, current: state}}) )
-            return recipients['logs']( make({type, data: {selected: state, current: state}}) )
+            // return recipients['logs']( make({type, data: {selected: state, current: state}}) )
         })
     }
 
@@ -554,6 +707,9 @@ function demo () {
         recipients[from]({type, data: state})
         recipients['logs']( make({to: `options`, type, data: {selected: state ? from : ''} }) )
     }
+    function handle_changed_event (type, data) {
+        recipients['selector']({type, data})
+    }
     // protocols
     function tab_protocol (name) {
         return send => {
@@ -580,6 +736,7 @@ function demo () {
         const { type, data } = msg
         recipients['logs'](msg)
         if (type === 'click') return handle_click_event(msg)
+        if (type === 'changed') handle_changed_event(type, data)
     }
 }
 
@@ -670,18 +827,25 @@ const css = csjs`
     --primary-border-color: var(--color-black);
     --primary-border-opacity: 1;
     --primary-radius: 8px;
+    --primary-avatar-radius: 0px;
     --primary-link-color: var(--color-heavy-blue);
     --primary-link-color-hover: var(--color-dodger-blue);
     --primary-disabled-size: var(--primary-size);
     --primary-disabled-color: var(--color-greyA2);
     --primary-disabled-bg-color: var(--color-greyEB);
     --primary-disabled-fill: var(--color-greyA2);
+    --primary-current-fill: var(--primary-color-hover);
     --primary-current-size: var(--primary-size);
     --primary-current-color: var(--color-white);
     --primary-current-bg-color: var(--color-black);
     --primary-selected-icon-fill: var(--primary-color);
     --primary-selected-icon-fill-hover: var(--primary-color-hover);
     --primary-current-icon-fill: var(--color-white);
+    --primary-icon-size: var(--size16);
+    --primary-selector-icon-size: var(--size24);
+    --primary-selector-icon-fill: var(--color-flame);
+    --primary-list-icon-size: var(--size32);
+    --primary-list-icon-fill: var(--color-blue);
 }
 html {
     font-size: 62.5%;
@@ -689,6 +853,7 @@ html {
 }
 *, *:before, *:after {
     box-sizing: border-box;
+    position: relative;
 }
 body {
     -webkit-text-size-adjust: 100%;
@@ -708,7 +873,7 @@ body {
 .text, .icon {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px 8px;
 }
 [data-state="view"] {
     height: 100%;
@@ -733,7 +898,7 @@ body {
     grid-template-rows: min-content;
     grid-template-columns: 90%;
     justify-content: center;
-    align-items: start;
+    classlist-items: start;
     background-color: var(--color-white);
     height: 100%;
     overflow: hidden auto;
@@ -755,6 +920,9 @@ body {
     gap: 12px;
     margin-bottom: 20px;
 }
+.thumb i-button:first-child {
+   margin-bottom: 20px;
+}
 @media (max-width: 768px) {
     [data-state="debug"] {
         grid-template-rows: 65% 35%;
@@ -771,7 +939,7 @@ body {
 `
 
 document.body.append(demo())
-},{"..":35,"../src/node_modules/message-maker":37,"bel":5,"csjs-inject":8,"datdot-terminal":25,"datdot-ui-icon":29,"head":2,"img-btn":3}],2:[function(require,module,exports){
+},{"..":35,"../src/node_modules/message-maker":40,"bel":5,"csjs-inject":8,"datdot-terminal":25,"datdot-ui-icon":29,"head":2,"img-btn":3}],2:[function(require,module,exports){
 module.exports = head
 
 function head (lang = 'utf8', title = 'Button - DatDot UI') {
@@ -785,12 +953,11 @@ function head (lang = 'utf8', title = 'Button - DatDot UI') {
 module.exports = img_btn
 
 function img_btn ({name, body, icon = {}, cover, disabled, props = {}}, button, protocol) {
-    // align: icon-center, icon-right, avatar-left, avatar-right, text-left
-    let {icon_name = 'edit', path, align = 'text-left'} = icon
+    var {icon_name = 'edit', path, classlist} = icon
     const {
         icon_size = '20px',
-        img_width = '100px', 
-        img_height = '100px',
+        avatar_width = '100px', 
+        avatar_height = '100px',
         weight = '600', 
         size = 'var(--size24)', 
         size_hover = 'var(--size36)', 
@@ -799,16 +966,19 @@ function img_btn ({name, body, icon = {}, cover, disabled, props = {}}, button, 
         bg_color = 'var(--primary-bg-color)',
         bg_color_hover = 'var(--color-greyD9)', 
         border_radius = '0',
+        avatar_radius = '50%',
         disabled_size = 'var(--size24)',
         shadow_opacity = '0.2'
     } = props
-    
     return button(
         {
             name, 
             body,
-            icon: {name: icon_name, path, align},
+            icons: {
+                icon: {name: icon_name, path}
+            },
             cover,
+            classlist,
             disabled,
             theme:
             { 
@@ -816,17 +986,38 @@ function img_btn ({name, body, icon = {}, cover, disabled, props = {}}, button, 
                 // -webkit-mask-image: -webkit-radial-gradient(white, black)
                 // transform: translateZ(0)
                 style: `
-                .avatar {
-                    -webkit-mask-image: -webkit-radial-gradient(white, black);
-                    overflow: hidden;
-                    border-radius: 50%;
-                    /*transform: translateZ(0);*/
-                }
-                .avatar img {
-                    transform: translate(0, -10%);
+                :host(i-button) .avatar img {
+                    transform: translate(0, -12%);
                 }
                 `, 
-                props: { icon_size, img_width, img_height, weight, size, size_hover, color, color_hover, bg_color, bg_color_hover, border_radius, disabled_size, shadow_opacity}
+                props: { icon_size, avatar_width, avatar_height, weight, size, size_hover, color, color_hover, bg_color, bg_color_hover, border_radius, avatar_radius, disabled_size, shadow_opacity},
+                grid: {
+                    button: {
+                        // areas: ['icon text', 'avatar avatar'],
+                        rows: 'auto 1fr',
+                        columns: 'repeat(auto-fill, minmax(0, auto)) auto',
+                        justify: 'items-center'
+                    },
+                    icon: {
+                        // area: 'icon',
+                        row: '1',
+                        column: '1',
+                        justify: 'self-right'
+                    },
+                    avatar: {
+                        // area: 'avatar',
+                        row: '2',
+                        column: 'span 3',
+                        // justify: 'self-center'
+                    },
+                    text: {
+                        // area: 'text',
+                        row: '1',
+                        column: '2 / span 2',
+                        justify: 'self-left'
+
+                    }
+                }
             }
         }, protocol)
 } 
@@ -2309,34 +2500,35 @@ module.exports = function (css, options) {
 },{}],35:[function(require,module,exports){
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
-const i_icon = require('datdot-ui-icon')
 const img = require('make-image')
+const i_icon = require('datdot-ui-icon')
+const make_element = require('make-element')
+const {main_icon, select_icon, list_icon} = require('make-icon')
+const make_grid = require('make-grid')
+
 module.exports = {i_button, i_link}
 
 function i_link (option, protocol) {
-    const {page, flow = 'ui-link', name, body, link = {}, icon, cover, role='link', disabled = false, theme} = option
-    if (icon) var make_icon = i_icon({name: icon.name, path: icon.path})
+    const {page = '*', flow = 'ui-link', name, role='link', body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = option
+    const { icon } = icons
+    const make_icon = icons && icon ? main_icon(icon) : undefined
     let {url = '#', target = '_self'} = link
     let is_disabled = disabled
-    
+
     function widget () {
         const send = protocol(get)
-        const make = message_maker(`${name} / ${role} / ${flow}`)
+        const make = message_maker(`${name} / ${role} / ${flow} / ${page}`)
         const message = make({to: 'demo.js', type: 'ready'})
-        const el = document.createElement('i-link')
+        const el = make_element({name: 'i-link', role})
         const shadow = el.attachShadow({mode: 'open'})
-        const text = document.createElement('span')
-        const avatar = document.createElement('span')
-        avatar.classList.add('avatar')
-        text.classList.add('text')
+        const text = make_element({name: 'span', classlist: 'text'})
+        const avatar = make_element({name: 'span', classlist: 'avatar'})
         text.append(body)
-        el.setAttribute('role', role)
-        el.setAttribute('aria-label', name)
-        el.setAttribute('tabindex', '-1')
+        el.setAttribute('aria-label', body)
         el.setAttribute('href', url)
-        if (is_disabled) el.setAttribute('disabled', is_disabled)
+        if (is_disabled) set_attr ({aria: 'disabled', prop: is_disabled})
         if (!target.match(/self/)) el.setAttribute('target', target)
-        if (icon && icon.align) el.classList.add(icon.align)
+        if (classlist) el.classList.add(classlist)
         style_sheet(shadow, style)
         // check icon, cover and body if has value
         let add_cover = typeof cover === 'string' ? avatar : cover ? cover : undefined
@@ -2349,25 +2541,12 @@ function i_link (option, protocol) {
         send(message)
         if (!is_disabled) el.onclick = handle_open_link
         return el
-    
-        // function handle_click () {
-        //     if (is_current) return
-        //     const type = 'click'
-        //     if (role === 'tab') return send( make({type, data: is_checked}) )
-        //     if (role === 'switch') return send( make({type, data: is_checked}) )
-        //     if (role === 'listbox') {
-        //         is_expanded = !is_expanded
-        //         return send( make({type, data: {expanded: is_expanded}}) )
-        //     }
-        //     if (role === 'option') {
-        //         is_selected = !is_selected
-        //         return send( make({type, data: {selected: is_selected}}) )
-        //     }
-        //     send( make({type}) )
-        // }
 
+        function set_attr ({aria, prop}) {
+            el.setAttribute(`aria-${aria}`, prop)
+        }
+    
         function handle_open_link () {
-            const type = 'click'
             if (target.match(/_/)) {
                 window.open(url, target)
             }
@@ -2376,7 +2555,6 @@ function i_link (option, protocol) {
                 el.src = url
             }
             send(make({type: 'go to', data: {url, window: target}}))
-
         }
 
         // protocol get msg
@@ -2389,19 +2567,19 @@ function i_link (option, protocol) {
     // insert CSS style
     const custom_style = theme ? theme.style : ''
     // set CSS variables
-    if (theme && theme.props) {
-        var {size, size_hover, disabled_size, weight, 
-            color, color_hover, disabled_color,
-            deco, deco_hover,
-            bg_color, bg_color_hover,
-            border_width, border_style, border_opacity, border_color, border_color_hover, border_radius, 
-            padding, margin, width, height, opacity,
-            fill, fill_hover, fill_opacity, disabled_fill,
-            icon_size, img_width, img_height,
-            shadow_color, offset_x, offset_y, blur, shadow_opacity,
-            shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
-        } = theme.props
-    }
+    const {props = {}, grid = {}} = theme
+    const {size, size_hover, disabled_size, weight, 
+        color, color_hover, disabled_color,
+        deco, deco_hover,
+        bg_color, bg_color_hover,
+        border_width, border_style, border_opacity, border_color, border_color_hover, border_radius, 
+        padding, margin, width, height, opacity,
+        fill, fill_hover, fill_opacity, disabled_fill,
+        icon_size, 
+        avatar_width, avatar_height, avatar_radius,
+        shadow_color, offset_x, offset_y, blur, shadow_opacity,
+        shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
+    } = props
 
     const style = `
     :host(i-link) {
@@ -2413,9 +2591,7 @@ function i_link (option, protocol) {
         --deco: ${deco ? deco : 'none'};
         --padding: ${padding ? padding : '0'};
         --margin: ${margin ? margin : '0'};
-        --icon-size: ${icon_size ? icon_size : '16px'};
-        --img-width: ${img_width ? img_width : '44px'};
-        --img-height: ${img_height ? img_height : 'auto'};
+        --icon-size: ${icon_size ? icon_size : 'var(--primary-icon-size)'};
         display: inline-flex;
         flex-direction: row;
         align-items: center;
@@ -2456,9 +2632,13 @@ function i_link (option, protocol) {
         height: var(--icon-size);
     }
     :host(i-link) .avatar {
+        --avatar-width: ${avatar_width ? avatar_width : '100%'};
+        --avatar-height: ${avatar_height ? avatar_height : 'auto'};
+        --avatar-radius: ${avatar_radius ? avatar_radius : 'var(--primary-avatar-radius)'};
         display: block;
-        width: var(--img-width);
-        height: var(--img-height);
+        width: var(--avatar-width);
+        height: var(--avatar-height);
+        border-radius: var(--avatar-radius);
     }
     :host(i-link[role="menuitem"]) {
         --color: ${color ? color : 'var(--primary-color)'};
@@ -2496,8 +2676,11 @@ function i_link (option, protocol) {
 }
 
 function i_button (option, protocol) {
-    const {page, flow = 'ui-button', name, body, icon, cover, role = 'button', mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme} = option
-    if (icon)  var make_icon = i_icon({name: icon.name, path: icon.path})
+    const {page = "*", flow = 'ui-button', name, role = 'button', body = '', icons = {}, cover, classlist = null, mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme = {}} = option
+    const {icon, select = {}, list = {}} = icons
+    const make_icon = icon ? main_icon(icon) : undefined
+    if (role === 'listbox') var make_select_icon = select_icon(select)
+    if (role === 'option') var make_list_icon = list_icon(list)
     let is_current = current
     let is_checked = checked
     let is_disabled = disabled
@@ -2506,110 +2689,114 @@ function i_button (option, protocol) {
 
     function widget () {
         const send = protocol(get)
-        const make = message_maker(`${name} / ${role} / ${flow}`)
+        const make = message_maker(`${name} / ${role} / ${flow} / ${page}`)
         const data = role === 'tab' ?  {selected: is_current ? 'true' : is_selected, current: is_current} : role === 'switch' ? {checked: is_checked} : role === 'listbox' ? {expanded: is_expanded} : disabled ? {disabled} : role === 'option' ? {selected: is_selected, current: is_current} : null
         const message = make({to: 'demo.js', type: 'ready', data})
         send(message)
-        const el = document.createElement('i-button')
-        const text = document.createElement('span')
-        const avatar = document.createElement('span')
-        avatar.classList.add('avatar')
-        if (body != void 0) {
-            text.classList.add('text')
-            text.append(body)
-        }
-        el.dataset.name = name
-        el.setAttribute('role', role)
-        el.setAttribute('aria-label', name)
-        el.setAttribute('tabindex', 0)
-        if (icon && icon.align) el.classList.add(icon.align)
-        if (!is_disabled) el.onclick = handle_click
+        const el = make_element({name: 'i-button', role, classlist })
         const shadow = el.attachShadow({mode: 'open'})
-        style_sheet(shadow, style)
+        const text = make_element({name: 'span', classlist: 'text'})
+        const avatar = make_element({name: 'span', classlist: 'avatar'})
+        const selector = make_element({name: 'span', classlist: 'selector'})
+        const option = make_element({name: 'span', classlist: 'option'})
+        
         // check icon, img and body if has value
-        let add_cover = typeof cover === 'string' ? avatar : cover ? cover : undefined
-        const add_icon = icon ? make_icon : undefined
-        const add_text = body ? typeof body === 'string' && (add_icon || add_cover) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
+        const add_cover = typeof cover === 'string' ? avatar : cover ? cover : undefined
+        const add_text = body && typeof body === 'string' ? text : body
         if (typeof cover === 'string') avatar.append(img({src: cover, alt: name}))
         if (typeof body === 'object' && body.localName !== 'div') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))
-        if (add_icon) shadow.append(add_icon)
-        if (add_cover) shadow.append(add_cover)
-        if (add_text) shadow.append(add_text)
-       
-        // define conditions
-        if (state) {
-            el.dataset.state = state
-            el.setAttribute('aria-live', 'assertive')
-        }
-        if (role === 'tab') {
-            el.dataset.current = is_current
-            el.setAttribute('aria-selected', false)
-        }
-        if (role === 'switch') {
-            el.setAttribute('aria-checked', is_checked)
-        }
-        if (role === 'listbox') {
-            el.setAttribute('aria-haspopup', role)
-        }
-        if (disabled) {
-            el.setAttribute('aria-disabled', is_disabled)
-            el.setAttribute('disabled', is_disabled)
-        } else {
-            el.removeAttribute('aria-disabled')
-            el.removeAttribute('disabled')
-        }
-        if (is_checked) {
-            el.setAttribute('aria-checked', is_checked)
-        }
-        if (current) {
-            is_selected = current
-            el.setAttribute('aria-current', is_current)
-        }
-        if (is_selected || !is_selected && role.match(/option/)) {
-            el.setAttribute('aria-selected', is_selected)
-        } 
-        if (is_expanded) {
-            el.setAttribute('aria-expanded', is_expanded)
-        }
+        if (!is_disabled) el.onclick = handle_click
+        text.append(body)
+        style_sheet(shadow, style)
+        append_items()
+        init_attr()
+         
         return el
+
+        function init_attr () {
+            // define conditions
+            if (state) set_attr({aria: 'aria-live', prop: 'assertive'})
+            if (role === 'tab') {
+                set_attr({aria: 'selected', prop: is_selected})
+                el.dataset.name = name
+            }
+            if (role === 'switch') set_attr({aria: 'checked', prop: is_checked})
+            if (role === 'listbox') set_attr({aria: 'haspopup', prop: role})
+
+            if (disabled) {
+                set_attr({aria: 'disabled', prop: is_disabled})
+                el.setAttribute('disabled', is_disabled)
+            } 
+            if (is_checked) set_attr({aria: 'checked', prop: is_checked})
+            if (is_current) {
+                is_selected = is_current
+                set_attr({aria: 'current', prop: is_current})
+            }
+            if (is_selected || !is_selected && role.match(/option/)) {
+                set_attr({aria: 'selected', prop: is_selected})
+            } 
+            if (is_expanded) {
+                set_attr({aria: 'selected', prop: is_expanded})
+            }
+        }
+
+        function set_attr ({aria, prop}) {
+            el.setAttribute(`aria-${aria}`, prop)
+        }
+
+        // make element to append into shadowDOM
+        function append_items() {
+            const items = [make_icon, add_cover, add_text]
+            const target = role === 'listbox' ? selector : role === 'option' ?  option : shadow
+            // selector or dropdown button
+            if (role === 'listbox') shadow.append(make_select_icon, target)
+            // list of selector or dropdown menu
+            if (role === 'option') shadow.append(make_list_icon, target)
+            items.forEach( item => {
+                if (item === undefined) return
+                target.append(item)
+            })
+        }
 
         // toggle
         function switched_event (data) {
             is_checked = data
             if (!is_checked) return el.removeAttribute('aria-checked')
-            el.setAttribute('aria-checked', is_checked)
+            set_attr({aria: 'checked', prop: is_checked})
         }
         // dropdown menu
         function expanded_event (data) {
             is_expanded = !data
-            el.setAttribute('aria-expanded', is_expanded)
+            set_attr({aria: 'expanded', prop: is_expanded})
         }
         // tab checked
         function checked_event (data) {
             is_checked = data
             is_current = is_checked
-            el.setAttribute('aria-selected', is_checked)
-            el.setAttribute('aria-current', is_checked)
+            set_attr({aria: 'selected', prop: is_checked})
+            set_attr({aria: 'current', prop: is_current})
             el.dataset.current = is_current
         }
-        function selected_event (body) {
-            is_selected = body
-            el.setAttribute('aria-selected', is_selected)
+        function selected_event (state) {
+            const content = {body: option.cloneNode(true)}
+            is_selected = state
+            set_attr({aria: 'selected', prop: is_selected})
             if (mode === 'single-select') {
-                is_current = body
-                el.setAttribute('aria-current', is_current)
+                is_current = is_selected
+                set_attr({aria: 'current', prop: is_current})
             }
+            // option is selected then send selected items to selector button
+            if (is_selected) send(make({to: 'selector', type: 'changed', data: content }))
         }
-        function changed_event (body) {
-            const { childNodes } = shadow
-            const lists = shadow.firstChild.tagName !== 'STYLE' ? childNodes : [...childNodes].filter( (child, index) => index !== 0)
-            const [icon, text] = lists
-            if (text) {
-                text.textContent = body
-            } else {
-                shadow.lastChild.textContent = body
-                el.ariaLabel = body
+
+        function changed_event (data) {
+            if (role === 'listbox') {
+                const { body } = data
+                selector.innerHTML = ''
+                selector.append(body)
+                return
             }
+            if (role.match(/button|tab|switch/)) text.textContent = data
         }
         // button click
         function handle_click () {
@@ -2623,7 +2810,7 @@ function i_button (option, protocol) {
             }
             if (role === 'option') {
                 is_selected = !is_selected
-                return send( make({type, data: {selected: is_selected}}) )
+                return send( make({type, data: {selected: is_selected }}) )
             }
             send( make({type}) )
         }
@@ -2631,33 +2818,38 @@ function i_button (option, protocol) {
         function get (msg) {
             const { head, refs, type, data } = msg
             // toggle
-            if (type === 'switched') return switched_event(data)
+            if (type.match(/switched/)) return switched_event(data)
             // dropdown
             if (type.match(/expanded|unexpanded/)) return expanded_event(!data)
             // tab, checkbox
             if (type.match(/checked|unchecked/)) return checked_event(data)
             // option
             if (type.match(/selected|unselected/)) return selected_event(data)
-            if (type === 'changed') return changed_event(data)
+            if (type.match(/changed/)) return changed_event(data)
         }
     }
    
     // insert CSS style
     const custom_style = theme ? theme.style : ''
     // set CSS variables
-    if (theme && theme.props) {
-        var {size, size_hover, current_size, disabled_size,
-            weight, weight_hover, current_weight, current_hover_weight,
-            color, color_hover, current_color, current_bg_color, disabled_color, disabled_bg_color,
-            current_hover_color, current_hover_bg_color,
-            bg_color, bg_color_hover, border_color_hover,
-            border_width, border_style, border_opacity, border_color, border_radius, 
-            padding, margin, width, height, opacity, img_width, img_height,
-            fill, fill_hover, fill_opacity, icon_size, selected_fill, selected_hover_fill, current_fill, current_hover_fill, disabled_fill,
-            shadow_color, offset_x, offset_y, blur, shadow_opacity,
-            shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
-        } = theme.props
-    }
+    const {props = {}, grid = {}} = theme
+    const {size, size_hover, current_size, disabled_size,
+        icon_size, col_icon_size, selector_icon_size, list_icon_size,
+        weight, weight_hover, current_weight, current_hover_weight,
+        color, color_hover, current_color, current_bg_color, disabled_color, disabled_bg_color,
+        current_hover_color, current_hover_bg_color,
+        bg_color, bg_color_hover, border_color_hover,
+        border_width, border_style, border_opacity, border_color, border_radius, 
+        padding, margin, width, height, opacity, 
+        avatar_width, avatar_height, avatar_radius,
+        fill, fill_hover,
+        selected_fill, selected_hover_fill, current_fill, current_hover_fill, disabled_fill,
+        selector_icon_fill, list_icon_fill,
+        shadow_color, offset_x, offset_y, blur, shadow_opacity,
+        shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
+    } = props
+
+    console.log(avatar_width, role === 'tab', name);
 
     const style = `
     :host(i-button) {
@@ -2666,7 +2858,7 @@ function i_button (option, protocol) {
         --color: ${color ? color : 'var(--primary-color)'};
         --bg-color: ${bg_color ? bg_color : 'var(--primary-bg-color)'};
         ${width && `--width: ${width}`};
-        ${height && `--width: ${height}`};
+        ${height && `--height: ${height}`};
         --opacity: ${opacity ? opacity : '1'};
         --padding: ${padding ? padding : '12px'};
         --margin: ${margin ? margin : '0'};
@@ -2677,22 +2869,17 @@ function i_button (option, protocol) {
         --border: var(--border-width) var(--border-style) hsla( var(--border-color), var(--border-opacity) );
         --border-radius: ${border_radius ? border_radius : 'var(--primary-radius)'};
         --fill: ${fill ? fill : 'var(--primary-color)'};
-        --icon-size: ${icon_size ? icon_size : '16px'};
-        --img-width: ${img_width ? img_width : '20px'};
-        --img-height: ${img_height ? img_height : 'auto'};
         --offset_x: ${offset_x ? offset_x : '0px'};
         --offset-y: ${offset_y ? offset_y : '6px'};
         --blur: ${blur ? blur : '30px'};
         --shadow-color: ${shadow_color ? shadow_color : 'var(--primary-color)'};
         --shadow-opacity: ${shadow_opacity ? shadow_opacity : '0'};
         --box-shadow: var(--offset_x) var(--offset-y) var(--blur) hsla( var(--shadow-color), var(--shadow-opacity) );
-        display: grid;
-        grid-auto-flow: column;
-        gap: 6px;
-        justify-content: center;
-        align-items: center;
+        display: inline-grid;
+        ${grid.button ? make_grid(grid.button) : make_grid({auto: {auto_flow: 'column'}, gap: '5px', justify: 'content-center', align: 'items-center'})}
         ${width && 'width: var(--width);'};
         ${height && 'height: var(--height);'};
+        max-width: 100%;
         font-size: var(--size);
         font-weight: var(--bold);
         color: hsl( var(--color) );
@@ -2703,6 +2890,7 @@ function i_button (option, protocol) {
         padding: var(--padding);
         transition: font-size .3s, color .3s, background-color .3s, border .3s, box-shadow .3s ease-in-out;
         cursor: pointer;
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
     }
     :host(i-button:hover), :host(i-button[role]:hover) {
         --weight: ${weight_hover ? weight_hover : 'initial'};
@@ -2726,21 +2914,35 @@ function i_button (option, protocol) {
     :host(i-button) .col2 {
         display: flex;
         flex-direction: row;
+        column-gap: 8px;
         justify-content: center;
         align-items: center;
-        column-gap: 8px;
     }
-    :host(i-button) .icon {
+    :host(i-button) .avatar {
+        --avatar-width: ${avatar_width ? avatar_width : '100%'};
+        --avatar-height: ${avatar_height ? avatar_height : 'auto'};
+        --avatar-radius: ${avatar_radius ? avatar_radius : 'var(--primary-avatar-radius)'};
+        position: relative;
         display: block;
-        width: var(--icon-size);
-        height: var(--icon-size);
+        width: var(--avatar-width);
+        height: var(--avatar-height);
+        max-width: 100%;
+        max-height: 100%;
+        border-radius: var(--avatar-radius);
+        -webkit-mask-image: -webkit-radial-gradient(white, black);
+        overflow: hidden;
+        transition: width .3s, height .3s ease-in-out;
+        ${make_grid(grid.avatar)}
     }
-    :host(i-button) .avatar { 
-        display: block;
-        width: var(--img-width);
-        height: var(--img-height);
+    :host(i-button) img {
+        max-width: 100%;
+        transform: scale(1);
+        transition: transform 0.3s, scale 0.3s linear;
     }
-    :host(i-button) svg, :host(i-button) img {
+    :host(i-button:hover) .avatar img {
+        transform: scale(1.3);
+    }
+    :host(i-button) svg {
         width: 100%;
         height: auto;
     }
@@ -2753,9 +2955,11 @@ function i_button (option, protocol) {
     }
     :host(i-button[role="listbox"]) {
     }
+    :host(i-button[role="listbox"]) > .icon {
+        --icon-size: ${selector_icon_size ? selector_icon_size : 'var(--primary-selector-icon-size)'};
+        ${grid.icon ? make_grid(grid.icon) : make_grid({column: '2'})}
+    }
     :host(i-button[role="listbox"]) .text {
-        grid-column-start: 1;
-        text-align: left;
     }
     :host(i-button[role="option"]) {
         --border-radius: ${border_radius ? border_radius : '0'};
@@ -2810,8 +3014,8 @@ function i_button (option, protocol) {
         --color: ${current_hover_color ? current_hover_color : 'var(--color-white)'};
         --bg-color: ${current_hover_bg_color ? current_hover_bg_color : 'var(--primary-color)'};
     }
-    :host(i-button[aria-expanded="true"]) > .icon g {
-        --fill: ${current_fill ? current_fill : 'var(--color-white)'};
+    :host(i-button[aria-expanded="true"]) > .icon g, :host(i-button[role="listbox"][aria-expanded="true"]) > .icon g {
+        --fill: ${current_fill ? current_fill : 'var(--primary-current-fill)'};
     }
     :host(i-button[aria-expanded="true"]:hover) > .icon g {
         --fill: ${current_hover_fill ? current_hover_fill : 'var(--color-white)'};
@@ -2826,56 +3030,9 @@ function i_button (option, protocol) {
         cursor: not-allowed;
         opacity: 0.6;
     }
-    :host(i-button[disabled]) g,  :host(i-button[disabled]:hover) g, 
+    :host(i-button[disabled]) g, :host(i-button[disabled]:hover) g, 
     :host(i-button[role="option"][disabled]:hover) > .icon g {
         --fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-fill)'};
-    }
-    :host(i-button[disabled]) > .col2 .icon g {
-    }
-    :host(i-button.icon-right) > .text {
-        grid-column-start: 2;
-    }
-    :host(i-button.icon-right) > .avatar {
-        grid-column-start: 1;
-     }
-    :host(i-button.icon-right) > .icon {
-       grid-column-start: 3;
-    }
-    :host(i-button.icon-center) > .text {
-        grid-column-start: 3;
-    }
-    :host(i-button.icon-center) > .avatar {
-        grid-column-start: 1;
-     }
-    :host(i-button.icon-center) > .icon {
-       grid-column-start: 2;
-    }
-    :host(i-button.avatar-left) > .avatar {
-        grid-column-start: 1;
-    }
-    :host(i-button.avatar-left) > .text {
-        grid-column-start: 2;
-    }
-    :host(i-button.avatar-left) > .icon {
-        grid-column-start: 3;
-    }
-    :host(i-button.avatar-right) > .avatar {
-        grid-column-start: 3;
-    }
-    :host(i-button.avatar-right) > .text {
-        grid-column-start: 2;
-    }
-    :host(i-button.avatar-right) > .icon {
-        grid-column-start: 1;
-    }
-    :host(i-button.text-left) > .avatar {
-        grid-column-start: 2;
-    }
-    :host(i-button.text-left) > .text {
-        grid-column-start: 1;
-    }
-    :host(i-button.text-left) > .icon {
-        grid-column-start: 3;
     }
     :host(i-button[role="menuitem"]) {
         --color: ${color ? color : 'var(--primary-color)'};
@@ -2893,12 +3050,162 @@ function i_button (option, protocol) {
     :host(i-button[role="menuitem"][disabled]:hover) g {
         --fill: ${disabled_fill ? disabled_fill : 'var(--primary-disabled-fill)'};
     }
+    :host(i-button[role="listbox"]) .icon g {
+        --fill: ${selector_icon_fill ? selector_icon_fill : 'var(--primary-selector-icon-fill)'};
+    } 
+    :host(i-button[role="listbox"]) .selector .icon {
+        --icon-size: ${selector_icon_size ? selector_icon_size : 'var(--primary-selector-icon-size)'};
+    }
+    :host(i-button[role="listbox"]) .option .icon, 
+    :host(i-button[role="option"]) .option .icon {
+        --icon-size: ${list_icon_size ? list_icon_size : 'var(--primary-list-icon-size)'};
+    }
+    :host(i-button[role="listbox"]) .option .icon g, 
+    :host(i-button[role="option"]) .option .icon g  {
+        --fill: ${list_icon_fill ? list_icon_fill : 'var(--primary-list-icon-fill)'};
+    }
+    /* define grid */
+    :host(i-button) .text {
+        ${make_grid(grid.text)}
+    }
+    :host(i-button) .icon {
+        --icon-size: ${icon_size ? icon_size : 'var(--primary-icon-size)'};
+        display: block;
+        width: var(--icon-size);
+        height: var(--icon-size);
+        ${make_grid(grid.icon)}
+    }
+    :host(i-button) .selector {
+        display: grid;
+        ${make_grid(grid.selector)}
+    }
+    :host(i-button) .option {
+        display: grid;
+        ${make_grid(grid.option)}
+    }
     ${custom_style}
     `
 
     return widget()
 }
-},{"datdot-ui-icon":29,"make-image":36,"message-maker":37,"support-style-sheet":38}],36:[function(require,module,exports){
+},{"datdot-ui-icon":29,"make-element":36,"make-grid":37,"make-icon":38,"make-image":39,"message-maker":40,"support-style-sheet":41}],36:[function(require,module,exports){
+module.exports = make_element
+
+function make_element({name = '', classlist = null, role }) {
+    const el = document.createElement(name)
+    if (classlist) ste_class()
+    if (role) set_role()
+    return el
+
+    function ste_class () {
+        el.className = classlist
+    }
+    
+    function set_role () {
+        const tabindex = role === 'button' ? 0 : -1
+        el.setAttribute('role', role)
+        el.setAttribute('tabindex',  tabindex)
+    }
+}
+
+
+},{}],37:[function(require,module,exports){
+module.exports = make_grid
+
+function make_grid (opts = {}) {
+    const {areas, area, rows, columns, row, auto = {}, column, gap, justify, align} = opts
+    let style = ''
+    grid_init ()
+    return style
+
+    function grid_init () {
+        make_rows()
+        make_columns()
+        make_auto()
+        make_row()
+        make_column()
+        make_justify()
+        make_align()
+        make_gap()
+        make_area()
+        make_areas()
+    }
+     
+    function make_areas () {
+        if (typeof areas === 'object') {
+            let template = `grid-template-areas:`
+            areas.map( a => template += `"${a}"`)
+            return style += template + ';'
+        }
+        if (typeof areas === 'string') return areas ? style +=`grid-template-areas: "${areas}";` : ''
+    }
+    function make_area () {
+        return area ? style += `grid-area: ${area};` : ''
+    }
+
+    function make_rows () { 
+        return rows ? style +=  `grid-template-rows: ${rows};` : ''
+    }
+
+    function make_columns () {
+        return columns ? style += `grid-template-columns: ${columns};` : ''
+    }
+
+    function make_row () {
+        return row ? style += `grid-row: ${row};` : ''
+    }
+
+    function make_column () {
+        return column ? style += `grid-column: ${column};` : ''
+    }
+
+    function make_justify () {
+        if (justify === void 0) return
+        const result = justify.split('-')
+        const [type, method] = result
+        return style += `justify-${type}: ${method};`
+    }
+
+    function make_align () {
+        if (align === void 0) return
+        const result = align.split('-')
+        const [type, method] = result
+        return style += `align-${type}: ${method};`
+    }
+
+    function make_gap () {
+        if (gap === void 0) return ''
+        return style += `grid-gap: ${gap};`
+    }
+
+    function make_auto () {
+        const {auto_flow = null, auto_rows = null, auto_columns = null} = auto
+        const grid_auto = auto_rows ? `grid-auto-rows: ${auto_rows};` : auto_columns ? `grid-auto-columns: ${auto_columns};` : auto_flow ? `grid-auto-flow: ${auto_flow};` : ''
+        return style += grid_auto
+    }
+}
+},{}],38:[function(require,module,exports){
+const i_icon = require('datdot-ui-icon')
+
+module.exports = {main_icon, select_icon, list_icon}
+
+function main_icon ({name, path}) {
+    const el = i_icon({name, path})
+    return el
+}
+
+function select_icon ({name = 'arrow-down', path}) {
+    const el =  i_icon({name, path})
+    return el
+}
+
+function list_icon ({name = 'check', path} ) {
+    const el =  i_icon({name, path})
+    return el
+}
+
+
+},{"datdot-ui-icon":29}],39:[function(require,module,exports){
 module.exports = img
 
 function img ({src, alt}) {
@@ -2907,8 +3214,8 @@ function img ({src, alt}) {
     img.setAttribute('alt', alt)
     return img
 }
-},{}],37:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 arguments[4][27][0].apply(exports,arguments)
-},{"dup":27}],38:[function(require,module,exports){
+},{"dup":27}],41:[function(require,module,exports){
 arguments[4][28][0].apply(exports,arguments)
 },{"dup":28}]},{},[1]);

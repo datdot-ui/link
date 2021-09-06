@@ -39,6 +39,47 @@ function demo () {
         }
     }, protocol('primary'))
 
+    // image buttons
+    const thumb1_btn = button(
+    {
+        name: 'thumb-cover', 
+        body: 'Cover',
+        cover: 'https://cdn.pixabay.com/photo/2021/08/14/04/15/mountains-6544522_960_720.jpg',
+        classlist: 'avatar-row-1 text-row-2',
+        theme:
+        { 
+            props: {
+                width: '50vw',
+                size_hover: '25px',
+                // avatar_width: '100%',
+            },
+            grid: {
+                button: {
+                    rows: '1fr auto',
+                    justify: 'items-center'
+                },
+                text: {
+                    row: '2'
+                }
+            }
+        }
+    }, protocol('thumb-cover'))
+    
+    const thumb2_btn = button(
+    {
+        name: 'thumb-toggle', 
+        body: 'Blossom', 
+        role: 'switch', 
+        cover: 'https://cdn.pixabay.com/photo/2016/02/27/06/43/cherry-blossom-tree-1225186_960_720.jpg',
+        // checked: false, 
+        theme : {
+            style: ``,
+            props: {
+                size_hover: 'var(--size26)',
+            }
+        }
+    }, protocol('thumb-toggle'))
+
     const rabbit_btn = img_btn(
     {
         name: 'rabbit', 
@@ -49,7 +90,7 @@ function demo () {
     const dog_btn = img_btn(
     {
         name: 'dog', 
-        body: 'Dog', 
+        body: 'Dog',
         cover: 'https://images.unsplash.com/photo-1520087619250-584c0cbd35e8?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDR8fGRvZ3xlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
         props: {
             color: 'var(--color-purple)'
@@ -89,7 +130,8 @@ function demo () {
         name: 'toggle', 
         body: 'Toggle', 
         role: 'switch', 
-        checked: false, 
+        // cover: 'https://cdn.pixabay.com/photo/2016/02/27/06/43/cherry-blossom-tree-1225186_960_720.jpg',
+        // checked: false, 
         theme : {
             style: ``,
             props: {
@@ -144,9 +186,12 @@ function demo () {
     const tab4 = button(
     {
         page: 'JOBS', 
-        name: 'tab4', 
-        icon: icon_notice, 
-        body: bel`<div class="col2">Tab4 ${icon_notice}</div>`, 
+        name: 'notice', 
+        icons: {
+            icon: icon_notice
+        },
+        body: 'Notice',
+        // body: bel`<div class="col2">Tab4 ${icon(icon_notice)}</div>`, 
         role: 'tab', 
         current: true, 
         theme: { 
@@ -156,31 +201,45 @@ function demo () {
                     fill: 'var(--color-maya-blue)', 
                     fill_hover:  'var(--color-maya-blue)', 
                     icon_size: '24px'
+            },
+            grid: {
+                text: {
+                    column: '1'
                 }
             }
-    }, tab_protocol('tab4'))
+        }
+    }, tab_protocol('notice'))
     const tab5 = button(
     {
         page: 'JOBS', 
-        name: 'tab5', 
+        name: 'warning', 
         // icon: icon_warning,
-        body: bel`<div class="col2">Tab5 ${icon({...icon_warning})}</div>`, 
+        cover: 'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
+        body: bel`<div class="col2">Warning ${icon(icon_warning)}</div>`, 
         role: 'tab', 
         theme: { 
             props: {
                     current_color:'var(--color-orange)', 
                     fill: 'var(--color-orange)', 
                     fill_hover: 'var(--color-orange)', 
-                    icon_size: '30px'
+                    icon_size: '30px', 
+                    avatar_width: '100px',
+            },
+            grid: {
+                avatar: {
+                    column: '2'
                 }
             }
-    }, tab_protocol('tab5'))
+        }
+    }, tab_protocol('warning'))
     const tab6 = button(
     {
         page: 'JOBS', 
-        name: 'tab6', 
-        icon: icon_search, 
-        body: bel`<div class="col2"><span class="text">Tab6</span> ${icon({name: 'option'})}</div>`, 
+        name: 'search',
+        icons: {
+            icon: icon_search
+        }, 
+        body: bel`<div class="col2"><span class="text">Search</span> ${icon({name: 'option'})}</div>`, 
         role: 'tab',
         disabled: true,
         theme: { 
@@ -192,7 +251,7 @@ function demo () {
                 icon_size: '24px', 
             }
         }
-    }, tab_protocol('tab6'))
+    }, tab_protocol('search'))
     const demo_icon_tab = bel`
     <nav class=${css.tabs}>
         ${tab4}${tab5}${tab6}
@@ -207,8 +266,7 @@ function demo () {
     const cancel = button(
     {
         name: 'cancel', 
-        // icon: icon_cancel,
-        body: icon({...icon_cancel}),
+        body: icon(icon_cancel),
         // cover: icon(icon_cancel),
         theme: {
             style: ``,
@@ -221,7 +279,9 @@ function demo () {
     const confirm = button(
     {
         name: 'confirm', 
-        icon: icon_confirm, 
+        icons: {
+            icon: icon_confirm
+        }, 
         theme: {
             props: {
                 fill: 'var(--color-green)',
@@ -232,7 +292,7 @@ function demo () {
     const previous = button(
     {
         name: 'previous', 
-        body: bel`<div class="col2">${icon({...icon_previous})}<span class="text">Previous</span></div>`, 
+        body: bel`<div class="col2">${icon(icon_previous)}<span class="text">Previous</span></div>`, 
         theme: {
             style: ``,
             props: {
@@ -244,14 +304,21 @@ function demo () {
     const next = button(
     {
         name: 'next',
-        icon: {name: 'arrow-right', align: 'icon-right'},
+        // cover: 'https://images.unsplash.com/photo-1529448005898-b19fc13465b7?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTF8fG5leHR8ZW58MHx8MHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
+        icons: {
+            icon: icon_next,
+        },
+        // classlist: 'text-col-1',
         body: 'Next',
         // body: bel`<div class="col2">${icon({name: 'arrow-right'})} Next</div>`, 
         theme: {
             // props: {
             //     fill: 'var(--color-green)',
             //     fill_hover: 'var(--color-bright-yellow-crayola)'
-        // }
+            // },
+            grid: {
+                icon: {column: '2'}
+            }
     }}, protocol('next'))
 
     const listbox = button(
@@ -259,53 +326,126 @@ function demo () {
         name: 'filter', 
         role: 'listbox',
         body: 'Filter', 
-        icon: {name: 'filter'},
+        icons: {
+            select: {
+                name: 'filter',
+            }
+        },
+        // classlist: 'icon-col-2',
         expanded: false,
         theme : {
             
         }
     }, protocol('filter'))
 
+    const listbox1 = button(
+        {
+            name: 'selector', 
+            role: 'listbox',
+            body: 'Single select',
+            icons: {
+                select: {name: 'arrow-down'},
+            },
+            expanded: false,
+            theme : {
+                props: {
+                    avatar_width: '32px'
+                },
+                grid: {
+                    // option: {
+                    //     columns: '1fr auto 1fr',
+                    //     auto: {
+                    //         auto_columns: '150px'
+                    //     }
+                    // }
+                }
+            }
+        }, protocol('selector'))
+
     const option = button(
     {
-        name: 'option', 
-        body: 'Option', 
+        name: 'option-star', 
+        body: 'Star', 
         role: 'option',
-        icon: {name: 'check'},
-        // selected: true,
+        icons: {
+            list: {
+                name: 'star',
+            }
+        },
+        // classlist: 'icon-col-2',
+        selected: true,
         theme : {
             props: {
                 opacity: '1',
                 current_bg_color: 'var(--color-blue)'
             }
         }
-    }, protocol('option'))
+    }, protocol('option-star'))
     const option1 = button(
     {
         name: 'datdot app', 
-        body: bel`<div class="col2">${icon({name: 'datdot-black'})} DatDot app</div>`, 
+        body: 'DatDot app', 
         role: 'option',
-        icon: {name: 'check'},
+        icons: {
+            icon: {
+                name: 'datdot-white', 
+            }
+        },
         cover: 'data:image/png;base64,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',
         // cover: icon({name: 'star'}),
-        selected: true,
+        selected: false,
         // current: true,
         // disabled: true,
         theme : {
             style: `
-            :host(i-button) .col2 .icon {
-                --icon-size: 30px;
+            /* :host(i-button) {
+                grid-template-areas: "icon option";
             }
-            /* :host(i-button[disabled]) .col2 g {
-                --fill: var(--color-blue);
-            } */
+            :host(i-button) .option {
+                grid-template-areas: "icon avatar text";
+                grid-area: option;
+            }
+            :host(i-button) .option > .avatar {
+                grid-area: avatar;
+            }
+            :host(i-button) .option > .text {
+                grid-area: text;
+            }*/
             `,
             props: {
                 opacity: '1',
                 current_bg_color: 'var(--color-blue)',
-                img_width: '32px',
+                avatar_width: '32px',
+                // list_icon_size: '40px',
                 // fill: 'var(--color-flame)',
                 // fill_hover: 'var(--color-flame)'
+            },
+            grid: {
+                button: {
+                    areas: 'icon option',
+                    rows: 'auto',
+                    columns: 'auto 1fr',
+                    auto: {
+                        auto_flow: 'column'
+                    },
+                      gap: '0 5px'
+                },
+                text: {
+                    area: 'text'
+                },
+                option: {
+                    areas: 'icon avatar text',
+                    area: 'option',
+                    rows: 'auto',
+                    auto: {
+                        auto_flow: 'column'
+                    },
+                    align: 'items-center',
+                    gap: '0 5px'
+                },
+                icon: {
+                    area: 'icon'
+                }
             }
         }
     }, protocol('datdot app'))
@@ -316,7 +456,12 @@ function demo () {
         name: 'link-datdot',
         role: 'link',
         body: 'datdot.org',
-        icon: {name: 'plan-list', align: 'right'},
+        icons: {
+            icon: {
+                name: 'plan-list'
+            }
+        },
+        classlist: 'icon-col-2',
         link: {
             url: 'http://datdot.org',
             target: '#frame'
@@ -335,7 +480,7 @@ function demo () {
         name: 'link-playproject',
         role: 'link',
         body: 'playproject.io',
-        // icon: {name: 'datdot-black', align: 'right'},
+        // icon: {name: 'datdot-black', classlist: 'col2-right'},
         cover: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
         disabled: true,
         link: {
@@ -344,7 +489,7 @@ function demo () {
         },
         theme: {
             props: {
-                img_width: '44px'
+                avatar_width: '44px'
             }
         }
     }, protocol('link-playproject'))
@@ -387,7 +532,11 @@ function demo () {
         name: 'item1',
         role: 'menuitem',
         body: 'DatDot UI issues',
-        icon: {name: 'datdot-white'},
+        icons: {
+            icon: {
+                name: 'datdot-white'
+            }
+        },
         // cover: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
@@ -395,7 +544,7 @@ function demo () {
         },
         theme: {
             props: {
-                // img_width: '20px'
+                avatar_width: '30px',
                 icon_size: '20px'
             }
         }
@@ -411,7 +560,7 @@ function demo () {
         },
         theme: {
             props: {
-                img_width: '40px',
+                avatar_width: '40px',
             }
         }
     }, protocol('item2'))
@@ -457,13 +606,17 @@ function demo () {
         <section>
             <h2>Icon</h2>
             <div class=${css.icon}>
-                ${cancel}${confirm}${previous}${next}${listbox}${option}${option1}
+                ${cancel}${confirm}${previous}${next}${listbox}${listbox1}${option}${option1}
             </div>
         </section>
         <section>
             <h2>Image</h2>
             <div class=${css.icon}>
                 ${rabbit_btn}${dog_btn}${fox_btn}
+            </div>
+            <h2>Thumb</h2>
+            <div class=${css.thumb}>
+                ${thumb1_btn}${thumb2_btn}
             </div>
         </section>
         <section>
@@ -512,7 +665,7 @@ function demo () {
             const make = message_maker(`${current} / tab / Demo`)
             recipients[current]( make({type, data: state}) )
             if (from === tab.dataset.name) return recipients['logs']( make({type, data: {selected: state, current: state}}) )
-            return recipients['logs']( make({type, data: {selected: state, current: state}}) )
+            // return recipients['logs']( make({type, data: {selected: state, current: state}}) )
         })
     }
 
@@ -553,6 +706,9 @@ function demo () {
         recipients[from]({type, data: state})
         recipients['logs']( make({to: `options`, type, data: {selected: state ? from : ''} }) )
     }
+    function handle_changed_event (type, data) {
+        recipients['selector']({type, data})
+    }
     // protocols
     function tab_protocol (name) {
         return send => {
@@ -579,6 +735,7 @@ function demo () {
         const { type, data } = msg
         recipients['logs'](msg)
         if (type === 'click') return handle_click_event(msg)
+        if (type === 'changed') handle_changed_event(type, data)
     }
 }
 
@@ -669,18 +826,25 @@ const css = csjs`
     --primary-border-color: var(--color-black);
     --primary-border-opacity: 1;
     --primary-radius: 8px;
+    --primary-avatar-radius: 0px;
     --primary-link-color: var(--color-heavy-blue);
     --primary-link-color-hover: var(--color-dodger-blue);
     --primary-disabled-size: var(--primary-size);
     --primary-disabled-color: var(--color-greyA2);
     --primary-disabled-bg-color: var(--color-greyEB);
     --primary-disabled-fill: var(--color-greyA2);
+    --primary-current-fill: var(--primary-color-hover);
     --primary-current-size: var(--primary-size);
     --primary-current-color: var(--color-white);
     --primary-current-bg-color: var(--color-black);
     --primary-selected-icon-fill: var(--primary-color);
     --primary-selected-icon-fill-hover: var(--primary-color-hover);
     --primary-current-icon-fill: var(--color-white);
+    --primary-icon-size: var(--size16);
+    --primary-selector-icon-size: var(--size24);
+    --primary-selector-icon-fill: var(--color-flame);
+    --primary-list-icon-size: var(--size32);
+    --primary-list-icon-fill: var(--color-blue);
 }
 html {
     font-size: 62.5%;
@@ -688,6 +852,7 @@ html {
 }
 *, *:before, *:after {
     box-sizing: border-box;
+    position: relative;
 }
 body {
     -webkit-text-size-adjust: 100%;
@@ -707,7 +872,7 @@ body {
 .text, .icon {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px 8px;
 }
 [data-state="view"] {
     height: 100%;
@@ -732,7 +897,7 @@ body {
     grid-template-rows: min-content;
     grid-template-columns: 90%;
     justify-content: center;
-    align-items: start;
+    classlist-items: start;
     background-color: var(--color-white);
     height: 100%;
     overflow: hidden auto;
@@ -753,6 +918,9 @@ body {
     flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 20px;
+}
+.thumb i-button:first-child {
+   margin-bottom: 20px;
 }
 @media (max-width: 768px) {
     [data-state="debug"] {
