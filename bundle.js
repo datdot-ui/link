@@ -204,8 +204,15 @@ function demo () {
                     icon_size: '24px'
             },
             grid: {
-                text: {
+                button: {
+                    justify: 'items-center',
+                    align: 'items-center'
+                },
+                icon: {
                     column: '1'
+                },
+                text: {
+                    row: '2'
                 }
             }
         }
@@ -224,11 +231,21 @@ function demo () {
                     fill: 'var(--color-orange)', 
                     fill_hover: 'var(--color-orange)', 
                     icon_size: '30px', 
-                    avatar_width: '100px',
+                    // avatar_width: '100px',
             },
             grid: {
+                button: {
+                    row: 'auto',
+                    columns: 'minmax(50px, 1fr) auto',
+                    auto: {
+                        auto_flow: 'column',
+                        auto_rows: 'auto',
+                        auto_columns: '1fr auto'
+                    }
+                },
                 avatar: {
-                    column: '2'
+                    // row: '2',
+                    // column: '2'
                 }
             }
         }
@@ -353,12 +370,32 @@ function demo () {
                     avatar_width: '32px'
                 },
                 grid: {
-                    // option: {
-                    //     columns: '1fr auto 1fr',
-                    //     auto: {
-                    //         auto_columns: '150px'
-                    //     }
-                    // }
+                    button: {
+                        areas: ["selector icon"],
+                        auto: {
+                            auto_flow: 'column'
+                        },
+                        align: 'items-center',
+                        gap: '5px'
+                    },
+                    selector: {
+                        area: 'selector'
+                    },
+                    option: {
+                        areas: ['avatar icon text'],
+                        // area: 'option'
+                        align: 'items-center',
+                        gap: '5px'
+                    },
+                    avatar: {
+                        area: 'avatar'
+                    },
+                    text: {
+                        area: 'text'
+                    },
+                    icon: {
+                        area: 'icon'
+                    }
                 }
             }
         }, protocol('selector'))
@@ -426,21 +463,18 @@ function demo () {
                     areas: 'icon option',
                     rows: 'auto',
                     columns: 'auto 1fr',
-                    auto: {
-                        auto_flow: 'column'
-                    },
-                      gap: '0 5px'
+                    auto: 'flow-column',
+                    gap: '0 5px',
+                    align: 'items-center'
                 },
                 text: {
                     area: 'text'
                 },
                 option: {
-                    areas: 'icon avatar text',
+                    areas: 'avatar icon text',
                     area: 'option',
                     rows: 'auto',
-                    auto: {
-                        auto_flow: 'column'
-                    },
+                    auto: 'flow-column',
                     align: 'items-center',
                     gap: '0 5px'
                 },
@@ -462,7 +496,7 @@ function demo () {
                 name: 'plan-list'
             }
         },
-        classlist: 'icon-col-2',
+        // classlist: 'icon-col-2',
         link: {
             url: 'http://datdot.org',
             target: '#frame'
@@ -516,7 +550,7 @@ function demo () {
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
             target: '_new'
-        },
+        }
     }, protocol('datdot-ui-issues'))
     const link5 = link(
     {
@@ -547,7 +581,25 @@ function demo () {
             props: {
                 avatar_width: '30px',
                 icon_size: '20px'
+            },
+            grid: {
+                text: {
+                    column: '1'
+                }
             }
+            // grid: {
+            //     link: {
+            //         areas: "icon text",
+            //         align: 'items-center',
+            //         gap: '5px'
+            //     },
+            //     text: {
+            //         area: 'text'
+            //     },
+            //     icon: {
+            //         area: 'icon'
+            //     }
+            // }
         }
     }, protocol('item1'))
     const item2 = link(
@@ -2501,7 +2553,6 @@ module.exports = function (css, options) {
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
 const img = require('make-image')
-const i_icon = require('datdot-ui-icon')
 const make_element = require('make-element')
 const {main_icon, select_icon, list_icon} = require('make-icon')
 const make_grid = require('make-grid')
@@ -2581,6 +2632,7 @@ function i_link (option, protocol) {
         shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
     } = props
 
+    const grid_link = grid.link ? grid.link : {auto: {auto_flow: 'column'}, align: 'items-center', gap: '4px'}
     const style = `
     :host(i-link) {
         --size: ${size ? size : 'var(--primary-size)'};
@@ -2592,10 +2644,7 @@ function i_link (option, protocol) {
         --padding: ${padding ? padding : '0'};
         --margin: ${margin ? margin : '0'};
         --icon-size: ${icon_size ? icon_size : 'var(--primary-icon-size)'};
-        display: inline-flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 4px;
+        display: inline-grid;
         font-size: var(--size);
         font-weight: var(--weight);
         color: hsl(var(--color));
@@ -2605,6 +2654,7 @@ function i_link (option, protocol) {
         margin: var(--margin);
         transition: color .5s, background-color .5s, font-size .5s ease-in-out;
         cursor: pointer;
+        ${make_grid(grid_link)}
     }
     :host(i-link:hover) {
         --color: ${color_hover ? color_hover : 'var(--primary-link-color-hover)'};
@@ -2626,10 +2676,13 @@ function i_link (option, protocol) {
     :host(i-link:hover) svg g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-dodger-blue)'};
     }
-    :host(i-link) .text {}
+    :host(i-link) .text {
+        ${make_grid(grid.text)}
+    }
     :host(i-link) .icon {
         width: var(--icon-size);
         height: var(--icon-size);
+        ${make_grid(grid.icon)}
     }
     :host(i-link) .avatar {
         --avatar-width: ${avatar_width ? avatar_width : '100%'};
@@ -2639,6 +2692,7 @@ function i_link (option, protocol) {
         width: var(--avatar-width);
         height: var(--avatar-height);
         border-radius: var(--avatar-radius);
+        ${make_grid(grid.avatar)}
     }
     :host(i-link[role="menuitem"]) {
         --color: ${color ? color : 'var(--primary-color)'};
@@ -2849,7 +2903,7 @@ function i_button (option, protocol) {
         shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
     } = props
 
-    console.log(avatar_width, role === 'tab', name);
+    const grid_option = grid.option ? grid.option : {auto: {auto_flow: 'column'}, align: 'items-center', gap: '5px', justify: 'items-center'}
 
     const style = `
     :host(i-button) {
@@ -3081,14 +3135,14 @@ function i_button (option, protocol) {
     }
     :host(i-button) .option {
         display: grid;
-        ${make_grid(grid.option)}
+        ${make_grid(grid_option)}
     }
     ${custom_style}
     `
 
     return widget()
 }
-},{"datdot-ui-icon":29,"make-element":36,"make-grid":37,"make-icon":38,"make-image":39,"message-maker":40,"support-style-sheet":41}],36:[function(require,module,exports){
+},{"make-element":36,"make-grid":37,"make-icon":38,"make-image":39,"message-maker":40,"support-style-sheet":41}],36:[function(require,module,exports){
 module.exports = make_element
 
 function make_element({name = '', classlist = null, role }) {
@@ -3180,8 +3234,10 @@ function make_grid (opts = {}) {
 
     function make_auto () {
         const {auto_flow = null, auto_rows = null, auto_columns = null} = auto
-        const grid_auto = auto_rows ? `grid-auto-rows: ${auto_rows};` : auto_columns ? `grid-auto-columns: ${auto_columns};` : auto_flow ? `grid-auto-flow: ${auto_flow};` : ''
-        return style += grid_auto
+        const grid_auto_flow = auto_flow ? `grid-auto-flow: ${auto_flow};` : ''
+        const grid_auto_rows = auto_rows ? `grid-auto-rows: ${auto_rows};` : ''
+        const grid_auto_columns = auto_columns ? `grid-auto-columns: ${auto_columns};` : ''
+        return style += `${grid_auto_flow}${grid_auto_rows}${grid_auto_columns}`
     }
 }
 },{}],38:[function(require,module,exports){

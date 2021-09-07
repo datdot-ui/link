@@ -1,7 +1,6 @@
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
 const img = require('make-image')
-const i_icon = require('datdot-ui-icon')
 const make_element = require('make-element')
 const {main_icon, select_icon, list_icon} = require('make-icon')
 const make_grid = require('make-grid')
@@ -81,6 +80,7 @@ function i_link (option, protocol) {
         shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
     } = props
 
+    const grid_link = grid.link ? grid.link : {auto: {auto_flow: 'column'}, align: 'items-center', gap: '4px'}
     const style = `
     :host(i-link) {
         --size: ${size ? size : 'var(--primary-size)'};
@@ -92,10 +92,7 @@ function i_link (option, protocol) {
         --padding: ${padding ? padding : '0'};
         --margin: ${margin ? margin : '0'};
         --icon-size: ${icon_size ? icon_size : 'var(--primary-icon-size)'};
-        display: inline-flex;
-        flex-direction: row;
-        align-items: center;
-        gap: 4px;
+        display: inline-grid;
         font-size: var(--size);
         font-weight: var(--weight);
         color: hsl(var(--color));
@@ -105,6 +102,7 @@ function i_link (option, protocol) {
         margin: var(--margin);
         transition: color .5s, background-color .5s, font-size .5s ease-in-out;
         cursor: pointer;
+        ${make_grid(grid_link)}
     }
     :host(i-link:hover) {
         --color: ${color_hover ? color_hover : 'var(--primary-link-color-hover)'};
@@ -126,10 +124,13 @@ function i_link (option, protocol) {
     :host(i-link:hover) svg g {
         --fill: ${fill_hover ? fill_hover : 'var(--color-dodger-blue)'};
     }
-    :host(i-link) .text {}
+    :host(i-link) .text {
+        ${make_grid(grid.text)}
+    }
     :host(i-link) .icon {
         width: var(--icon-size);
         height: var(--icon-size);
+        ${make_grid(grid.icon)}
     }
     :host(i-link) .avatar {
         --avatar-width: ${avatar_width ? avatar_width : '100%'};
@@ -139,6 +140,7 @@ function i_link (option, protocol) {
         width: var(--avatar-width);
         height: var(--avatar-height);
         border-radius: var(--avatar-radius);
+        ${make_grid(grid.avatar)}
     }
     :host(i-link[role="menuitem"]) {
         --color: ${color ? color : 'var(--primary-color)'};
@@ -349,7 +351,7 @@ function i_button (option, protocol) {
         shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
     } = props
 
-    console.log(avatar_width, role === 'tab', name);
+    const grid_option = grid.option ? grid.option : {auto: {auto_flow: 'column'}, align: 'items-center', gap: '5px', justify: 'items-center'}
 
     const style = `
     :host(i-button) {
@@ -581,7 +583,7 @@ function i_button (option, protocol) {
     }
     :host(i-button) .option {
         display: grid;
-        ${make_grid(grid.option)}
+        ${make_grid(grid_option)}
     }
     ${custom_style}
     `

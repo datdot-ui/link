@@ -203,8 +203,15 @@ function demo () {
                     icon_size: '24px'
             },
             grid: {
-                text: {
+                button: {
+                    justify: 'items-center',
+                    align: 'items-center'
+                },
+                icon: {
                     column: '1'
+                },
+                text: {
+                    row: '2'
                 }
             }
         }
@@ -223,11 +230,21 @@ function demo () {
                     fill: 'var(--color-orange)', 
                     fill_hover: 'var(--color-orange)', 
                     icon_size: '30px', 
-                    avatar_width: '100px',
+                    // avatar_width: '100px',
             },
             grid: {
+                button: {
+                    row: 'auto',
+                    columns: 'minmax(50px, 1fr) auto',
+                    auto: {
+                        auto_flow: 'column',
+                        auto_rows: 'auto',
+                        auto_columns: '1fr auto'
+                    }
+                },
                 avatar: {
-                    column: '2'
+                    // row: '2',
+                    // column: '2'
                 }
             }
         }
@@ -352,12 +369,32 @@ function demo () {
                     avatar_width: '32px'
                 },
                 grid: {
-                    // option: {
-                    //     columns: '1fr auto 1fr',
-                    //     auto: {
-                    //         auto_columns: '150px'
-                    //     }
-                    // }
+                    button: {
+                        areas: ["selector icon"],
+                        auto: {
+                            auto_flow: 'column'
+                        },
+                        align: 'items-center',
+                        gap: '5px'
+                    },
+                    selector: {
+                        area: 'selector'
+                    },
+                    option: {
+                        areas: ['avatar icon text'],
+                        // area: 'option'
+                        align: 'items-center',
+                        gap: '5px'
+                    },
+                    avatar: {
+                        area: 'avatar'
+                    },
+                    text: {
+                        area: 'text'
+                    },
+                    icon: {
+                        area: 'icon'
+                    }
                 }
             }
         }, protocol('selector'))
@@ -425,21 +462,18 @@ function demo () {
                     areas: 'icon option',
                     rows: 'auto',
                     columns: 'auto 1fr',
-                    auto: {
-                        auto_flow: 'column'
-                    },
-                      gap: '0 5px'
+                    auto: 'flow-column',
+                    gap: '0 5px',
+                    align: 'items-center'
                 },
                 text: {
                     area: 'text'
                 },
                 option: {
-                    areas: 'icon avatar text',
+                    areas: 'avatar icon text',
                     area: 'option',
                     rows: 'auto',
-                    auto: {
-                        auto_flow: 'column'
-                    },
+                    auto: 'flow-column',
                     align: 'items-center',
                     gap: '0 5px'
                 },
@@ -461,7 +495,7 @@ function demo () {
                 name: 'plan-list'
             }
         },
-        classlist: 'icon-col-2',
+        // classlist: 'icon-col-2',
         link: {
             url: 'http://datdot.org',
             target: '#frame'
@@ -515,7 +549,7 @@ function demo () {
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
             target: '_new'
-        },
+        }
     }, protocol('datdot-ui-issues'))
     const link5 = link(
     {
@@ -546,7 +580,25 @@ function demo () {
             props: {
                 avatar_width: '30px',
                 icon_size: '20px'
+            },
+            grid: {
+                text: {
+                    column: '1'
+                }
             }
+            // grid: {
+            //     link: {
+            //         areas: "icon text",
+            //         align: 'items-center',
+            //         gap: '5px'
+            //     },
+            //     text: {
+            //         area: 'text'
+            //     },
+            //     icon: {
+            //         area: 'icon'
+            //     }
+            // }
         }
     }, protocol('item1'))
     const item2 = link(
