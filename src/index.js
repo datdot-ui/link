@@ -479,6 +479,9 @@ function i_button (option, protocol) {
         --bg-color: ${disabled_bg_color ? disabled_bg_color : 'var(--primary-disabled-bg-color)'};
         --opacity: ${opacity ? opacity : '0'}
     }
+    :host(i-button[disabled]:hover) img {
+        transform: scale(1);
+    }
     :host(i-button[role="option"][aria-selected="true"]) .icon g {
         --fill: ${selected_fill ? selected_fill : 'var(--primary-selected-icon-fill)'};
     }

@@ -622,7 +622,9 @@ function demo () {
         name: 'item3',
         role: 'menuitem',
         body: 'twitter',
-        icon: {name: 'icon-svg.168b89d5', path: 'https://abs.twimg.com/responsive-web/client-web'},
+        icons: {
+            icon: {name: 'icon-svg.168b89d5', path: 'https://abs.twimg.com/responsive-web/client-web'}
+        },
         link: {
             url: 'https://twitter.com/home',
             target: '_blank'
@@ -894,6 +896,8 @@ const css = csjs`
     --primary-selected-icon-fill-hover: var(--primary-color-hover);
     --primary-current-icon-fill: var(--color-white);
     --primary-icon-size: var(--size16);
+    --primary-list-bg-color: var(--primary-bg-color);
+    --primary-list-bg-color-hover: var(--primary-bg-color-hover);
     --primary-selector-icon-size: var(--size24);
     --primary-selector-icon-fill: var(--color-flame);
     --primary-list-icon-size: var(--size32);
@@ -3030,6 +3034,9 @@ function i_button (option, protocol) {
         --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
         --bg-color: ${disabled_bg_color ? disabled_bg_color : 'var(--primary-disabled-bg-color)'};
         --opacity: ${opacity ? opacity : '0'}
+    }
+    :host(i-button[disabled]:hover) img {
+        transform: scale(1);
     }
     :host(i-button[role="option"][aria-selected="true"]) .icon g {
         --fill: ${selected_fill ? selected_fill : 'var(--primary-selected-icon-fill)'};

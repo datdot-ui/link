@@ -621,7 +621,9 @@ function demo () {
         name: 'item3',
         role: 'menuitem',
         body: 'twitter',
-        icon: {name: 'icon-svg.168b89d5', path: 'https://abs.twimg.com/responsive-web/client-web'},
+        icons: {
+            icon: {name: 'icon-svg.168b89d5', path: 'https://abs.twimg.com/responsive-web/client-web'}
+        },
         link: {
             url: 'https://twitter.com/home',
             target: '_blank'
@@ -893,6 +895,8 @@ const css = csjs`
     --primary-selected-icon-fill-hover: var(--primary-color-hover);
     --primary-current-icon-fill: var(--color-white);
     --primary-icon-size: var(--size16);
+    --primary-list-bg-color: var(--primary-bg-color);
+    --primary-list-bg-color-hover: var(--primary-bg-color-hover);
     --primary-selector-icon-size: var(--size24);
     --primary-selector-icon-fill: var(--color-flame);
     --primary-list-icon-size: var(--size32);
