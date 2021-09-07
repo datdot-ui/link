@@ -502,7 +502,9 @@ function i_button (option, protocol) {
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-current-bg-color)'};
         --size: ${current_size ? current_size : 'var(--primary-current-size)'};
     }
-    :host(i-button[role="option"][aria-current="true"]) .icon g, :host(i-button[role="option"][aria-current="true"]:hover) .icon g {
+    :host(i-button[role="option"][aria-current="true"]) .icon g, :host(i-button[role="option"][aria-current="true"]:hover) .icon g,
+    :host(i-button[role="option"][aria-current="true"]) .option .icon g, :host(i-button[role="option"][aria-current="true"]:hover) .option .icon g 
+    {
         --fill: ${current_fill ? current_fill : 'var(--primary-current-icon-fill)'};
     }
     :host(i-button[aria-current="true"]:hover) g {
