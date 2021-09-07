@@ -367,7 +367,7 @@ function demo () {
             expanded: false,
             theme : {
                 props: {
-                    avatar_width: '32px'
+                    // selector_avatar_width: '100px'
                 },
                 grid: {
                     button: {
@@ -454,7 +454,8 @@ function demo () {
                 opacity: '1',
                 current_bg_color: 'var(--color-blue)',
                 avatar_width: '32px',
-                // list_icon_size: '40px',
+                // icon_size: '20px',
+                // list_icon_size: '100px',
                 // fill: 'var(--color-flame)',
                 // fill_hover: 'var(--color-flame)'
             },
@@ -901,9 +902,13 @@ const css = csjs`
     --primary-selector-icon-size: var(--size24);
     --primary-selector-icon-fill: var(--color-flame);
     --primary-selector-hover-icon-fill: var(--color-blue);
+    --primary-selector-avatar-width: 30px;
+    --primary-selector-avatar-height: auto;
     --primary-list-icon-size: var(--size32);
     --primary-list-icon-fill: var(--color-blue);
     --primary-list-hover-icon-fill: var(--color-blue);
+    --primary-list-avatar-width: 30px;
+    --primary-list-avatar-height: auto;
 }
 html {
     font-size: 62.5%;
@@ -2904,7 +2909,8 @@ function i_button (option, protocol) {
         avatar_width, avatar_height, avatar_radius,
         fill, fill_hover,
         selected_fill, selected_hover_fill, current_fill, current_hover_fill, disabled_fill,
-        selector_icon_fill, selector_hover_icon_fill, list_icon_fill, list_hover_icon_fill,
+        selector_icon_fill, selector_hover_icon_fill, selector_avatar_width, selector_avatar_height,
+        list_icon_fill, list_hover_icon_fill, list_avatar_width, list_avatar_height,
         shadow_color, offset_x, offset_y, blur, shadow_opacity,
         shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
     } = props
@@ -3021,9 +3027,17 @@ function i_button (option, protocol) {
     }
     :host(i-button[role="listbox"]) .text {
     }
+    :host(i-button[role="listbox"]) .avatar {
+        --avatar-width: ${selector_avatar_width ? selector_avatar_width : 'var(--primary-selector-avatar-width)'};
+        --avatar-height: ${selector_avatar_height ? selector_avatar_height : 'var(--primary-selector-avatar-height)'};
+    }
     :host(i-button[role="option"]) {
         --border-radius: ${border_radius ? border_radius : '0'};
         --opacity: ${opacity ? opacity : '0'};
+    }
+    :host(i-button[role="option"]) .avatar {
+        --avatar-width: ${list_avatar_width ? list_avatar_width : 'var(--primary-list-avatar-width)'};
+        --avatar-height: ${list_avatar_height ? list_avatar_height : 'var(--primary-list-avatar-height)'};
     }
     :host(i-button[role="option"][aria-current="true"]), :host(i-button[role="option"][aria-current="true"]:hover) {
         --size: ${current_size ? current_size : 'var(--primary-current-size)'};

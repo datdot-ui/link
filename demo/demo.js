@@ -366,7 +366,7 @@ function demo () {
             expanded: false,
             theme : {
                 props: {
-                    avatar_width: '32px'
+                    // selector_avatar_width: '100px'
                 },
                 grid: {
                     button: {
@@ -453,7 +453,8 @@ function demo () {
                 opacity: '1',
                 current_bg_color: 'var(--color-blue)',
                 avatar_width: '32px',
-                // list_icon_size: '40px',
+                // icon_size: '20px',
+                // list_icon_size: '100px',
                 // fill: 'var(--color-flame)',
                 // fill_hover: 'var(--color-flame)'
             },
@@ -900,9 +901,13 @@ const css = csjs`
     --primary-selector-icon-size: var(--size24);
     --primary-selector-icon-fill: var(--color-flame);
     --primary-selector-hover-icon-fill: var(--color-blue);
+    --primary-selector-avatar-width: 30px;
+    --primary-selector-avatar-height: auto;
     --primary-list-icon-size: var(--size32);
     --primary-list-icon-fill: var(--color-blue);
     --primary-list-hover-icon-fill: var(--color-blue);
+    --primary-list-avatar-width: 30px;
+    --primary-list-avatar-height: auto;
 }
 html {
     font-size: 62.5%;
