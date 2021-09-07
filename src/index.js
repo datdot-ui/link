@@ -346,7 +346,7 @@ function i_button (option, protocol) {
         avatar_width, avatar_height, avatar_radius,
         fill, fill_hover,
         selected_fill, selected_hover_fill, current_fill, current_hover_fill, disabled_fill,
-        selector_icon_fill, list_icon_fill,
+        selector_icon_fill, selector_hover_icon_fill, list_icon_fill, list_hover_icon_fill,
         shadow_color, offset_x, offset_y, blur, shadow_opacity,
         shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
     } = props
@@ -472,7 +472,7 @@ function i_button (option, protocol) {
         --color: ${current_color ? current_color : 'var(--primary-current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-current-bg-color)'};
         --opacity: ${opacity ? opacity : '0'}
-    } 
+    }
     :host(i-button[role="option"][disabled]), :host(i-button[role="option"][disabled]:hover) {
         --size: ${disabled_size ? disabled_size : 'var(--primary-disabled-size)'};
         --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
@@ -557,11 +557,14 @@ function i_button (option, protocol) {
     :host(i-button[role="menuitem"][disabled]:hover) g {
         --fill: ${disabled_fill ? disabled_fill : 'var(--primary-disabled-fill)'};
     }
-    :host(i-button[role="listbox"]) .icon g {
-        --fill: ${selector_icon_fill ? selector_icon_fill : 'var(--primary-selector-icon-fill)'};
-    } 
-    :host(i-button[role="listbox"]) .selector .icon {
+    :host(i-button[role="listbox"]) > .icon {
         --icon-size: ${selector_icon_size ? selector_icon_size : 'var(--primary-selector-icon-size)'};
+    }
+    :host(i-button[role="listbox"]) > .icon g {
+        --fill: ${selector_icon_fill ? selector_icon_fill : 'var(--primary-selector-icon-fill)'};
+    }
+    :host(i-button[role="listbox"]:hover) > .icon g {
+        --fill: ${selector_hover_icon_fill ? selector_hover_icon_fill : 'var(--primary-selector-hover-icon-fill)'};
     }
     :host(i-button[role="listbox"]) .option .icon, 
     :host(i-button[role="option"]) .option .icon {
@@ -570,6 +573,10 @@ function i_button (option, protocol) {
     :host(i-button[role="listbox"]) .option .icon g, 
     :host(i-button[role="option"]) .option .icon g  {
         --fill: ${list_icon_fill ? list_icon_fill : 'var(--primary-list-icon-fill)'};
+    }
+    :host(i-button[role="listbox"]:hover) .option .icon g, 
+    :host(i-button[role="option"]:hover) .option .icon g  {
+        --fill: ${list_hover_icon_fill ? list_hover_icon_fill : 'var(--primary-list-hover-icon-fill)'};
     }
     /* define grid */
     :host(i-button) .text {

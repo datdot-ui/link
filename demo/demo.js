@@ -893,14 +893,16 @@ const css = csjs`
     --primary-current-bg-color: var(--color-black);
     --primary-selected-icon-fill: var(--primary-color);
     --primary-selected-icon-fill-hover: var(--primary-color-hover);
-    --primary-current-icon-fill: var(--color-white);
+    --primary-current-icon-fill: var(--primary-current-fill);
     --primary-icon-size: var(--size16);
     --primary-list-bg-color: var(--primary-bg-color);
     --primary-list-bg-color-hover: var(--primary-bg-color-hover);
     --primary-selector-icon-size: var(--size24);
     --primary-selector-icon-fill: var(--color-flame);
+    --primary-selector-hover-icon-fill: var(--color-blue);
     --primary-list-icon-size: var(--size32);
     --primary-list-icon-fill: var(--color-blue);
+    --primary-list-hover-icon-fill: var(--color-blue);
 }
 html {
     font-size: 62.5%;
