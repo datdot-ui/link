@@ -454,8 +454,9 @@ function demo () {
                 opacity: '1',
                 current_bg_color: 'var(--color-blue)',
                 avatar_width: '32px',
-                // icon_size: '20px',
-                // list_icon_size: '100px',
+                icon_size: '42px',
+                list_icon_size: '36px',
+                selected_fill: 'var(--color-flame)'
                 // fill: 'var(--color-flame)',
                 // fill_hover: 'var(--color-flame)'
             },
@@ -899,14 +900,14 @@ const css = csjs`
     --primary-icon-size: var(--size16);
     --primary-list-bg-color: var(--primary-bg-color);
     --primary-list-bg-color-hover: var(--primary-bg-color-hover);
-    --primary-selector-icon-size: var(--size24);
+    --primary-selector-icon-size: var(--size20);
     --primary-selector-icon-fill: var(--color-flame);
     --primary-selector-hover-icon-fill: var(--color-blue);
     --primary-selector-avatar-width: 30px;
     --primary-selector-avatar-height: auto;
-    --primary-list-icon-size: var(--size32);
+    --primary-list-icon-size: var(--size20);
     --primary-list-icon-fill: var(--color-blue);
-    --primary-list-hover-icon-fill: var(--color-blue);
+    --primary-list-hover-icon-fill: var(--color-flame);
     --primary-list-avatar-width: 30px;
     --primary-list-avatar-height: auto;
 }
@@ -3054,10 +3055,10 @@ function i_button (option, protocol) {
     :host(i-button[disabled]:hover) img {
         transform: scale(1);
     }
-    :host(i-button[role="option"][aria-selected="true"]) .icon g {
+    :host(i-button[role="option"][aria-selected="true"]) > .icon g {
         --fill: ${selected_fill ? selected_fill : 'var(--primary-selected-icon-fill)'};
     }
-    :host(i-button[role="option"][aria-selected="true"]:hover) .icon g {
+    :host(i-button[role="option"][aria-selected="true"]:hover) > .icon g {
         --fill: ${selected_hover_fill ? selected_hover_fill : 'var(--primary-selected-icon-fill-hover)'};
     }
 
@@ -3074,7 +3075,7 @@ function i_button (option, protocol) {
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-current-bg-color)'};
         --size: ${current_size ? current_size : 'var(--primary-current-size)'};
     }
-    :host(i-button[role="option"][aria-current="true"]) .icon g, :host(i-button[role="option"][aria-current="true"]:hover) .icon g,
+    :host(i-button[role="option"][aria-current="true"]) > .icon g, :host(i-button[role="option"][aria-current="true"]:hover) > .icon g,
     :host(i-button[role="option"][aria-current="true"]) .option .icon g, :host(i-button[role="option"][aria-current="true"]:hover) .option .icon g 
     {
         --fill: ${current_fill ? current_fill : 'var(--primary-current-icon-fill)'};
@@ -3142,16 +3143,13 @@ function i_button (option, protocol) {
     :host(i-button[role="listbox"]:hover) > .icon g {
         --fill: ${selector_hover_icon_fill ? selector_hover_icon_fill : 'var(--primary-selector-hover-icon-fill)'};
     }
-    :host(i-button[role="listbox"]) .option .icon, 
-    :host(i-button[role="option"]) .option .icon {
+    :host(i-button[role="option"]) > .icon {
         --icon-size: ${list_icon_size ? list_icon_size : 'var(--primary-list-icon-size)'};
     }
-    :host(i-button[role="listbox"]) .option .icon g, 
-    :host(i-button[role="option"]) .option .icon g  {
+    :host(i-button[role="option"]) > .icon g  {
         --fill: ${list_icon_fill ? list_icon_fill : 'var(--primary-list-icon-fill)'};
     }
-    :host(i-button[role="listbox"]:hover) .option .icon g, 
-    :host(i-button[role="option"]:hover) .option .icon g  {
+    :host(i-button[role="option"]:hover) .icon g  {
         --fill: ${list_hover_icon_fill ? list_hover_icon_fill : 'var(--primary-list-hover-icon-fill)'};
     }
     /* define grid */

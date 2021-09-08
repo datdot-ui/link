@@ -453,8 +453,9 @@ function demo () {
                 opacity: '1',
                 current_bg_color: 'var(--color-blue)',
                 avatar_width: '32px',
-                // icon_size: '20px',
-                // list_icon_size: '100px',
+                icon_size: '42px',
+                list_icon_size: '36px',
+                selected_fill: 'var(--color-flame)'
                 // fill: 'var(--color-flame)',
                 // fill_hover: 'var(--color-flame)'
             },
@@ -898,14 +899,14 @@ const css = csjs`
     --primary-icon-size: var(--size16);
     --primary-list-bg-color: var(--primary-bg-color);
     --primary-list-bg-color-hover: var(--primary-bg-color-hover);
-    --primary-selector-icon-size: var(--size24);
+    --primary-selector-icon-size: var(--size20);
     --primary-selector-icon-fill: var(--color-flame);
     --primary-selector-hover-icon-fill: var(--color-blue);
     --primary-selector-avatar-width: 30px;
     --primary-selector-avatar-height: auto;
-    --primary-list-icon-size: var(--size32);
+    --primary-list-icon-size: var(--size20);
     --primary-list-icon-fill: var(--color-blue);
-    --primary-list-hover-icon-fill: var(--color-blue);
+    --primary-list-hover-icon-fill: var(--color-flame);
     --primary-list-avatar-width: 30px;
     --primary-list-avatar-height: auto;
 }

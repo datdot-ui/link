@@ -491,10 +491,10 @@ function i_button (option, protocol) {
     :host(i-button[disabled]:hover) img {
         transform: scale(1);
     }
-    :host(i-button[role="option"][aria-selected="true"]) .icon g {
+    :host(i-button[role="option"][aria-selected="true"]) > .icon g {
         --fill: ${selected_fill ? selected_fill : 'var(--primary-selected-icon-fill)'};
     }
-    :host(i-button[role="option"][aria-selected="true"]:hover) .icon g {
+    :host(i-button[role="option"][aria-selected="true"]:hover) > .icon g {
         --fill: ${selected_hover_fill ? selected_hover_fill : 'var(--primary-selected-icon-fill-hover)'};
     }
 
@@ -511,7 +511,7 @@ function i_button (option, protocol) {
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--primary-current-bg-color)'};
         --size: ${current_size ? current_size : 'var(--primary-current-size)'};
     }
-    :host(i-button[role="option"][aria-current="true"]) .icon g, :host(i-button[role="option"][aria-current="true"]:hover) .icon g,
+    :host(i-button[role="option"][aria-current="true"]) > .icon g, :host(i-button[role="option"][aria-current="true"]:hover) > .icon g,
     :host(i-button[role="option"][aria-current="true"]) .option .icon g, :host(i-button[role="option"][aria-current="true"]:hover) .option .icon g 
     {
         --fill: ${current_fill ? current_fill : 'var(--primary-current-icon-fill)'};
@@ -579,16 +579,13 @@ function i_button (option, protocol) {
     :host(i-button[role="listbox"]:hover) > .icon g {
         --fill: ${selector_hover_icon_fill ? selector_hover_icon_fill : 'var(--primary-selector-hover-icon-fill)'};
     }
-    :host(i-button[role="listbox"]) .option .icon, 
-    :host(i-button[role="option"]) .option .icon {
+    :host(i-button[role="option"]) > .icon {
         --icon-size: ${list_icon_size ? list_icon_size : 'var(--primary-list-icon-size)'};
     }
-    :host(i-button[role="listbox"]) .option .icon g, 
-    :host(i-button[role="option"]) .option .icon g  {
+    :host(i-button[role="option"]) > .icon g  {
         --fill: ${list_icon_fill ? list_icon_fill : 'var(--primary-list-icon-fill)'};
     }
-    :host(i-button[role="listbox"]:hover) .option .icon g, 
-    :host(i-button[role="option"]:hover) .option .icon g  {
+    :host(i-button[role="option"]:hover) .icon g  {
         --fill: ${list_hover_icon_fill ? list_hover_icon_fill : 'var(--primary-list-hover-icon-fill)'};
     }
     /* define grid */
