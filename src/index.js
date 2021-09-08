@@ -606,6 +606,15 @@ function i_button (option, protocol) {
         display: grid;
         ${make_grid(grid_option)}
     }
+    :host(i-button) .option > .icon {
+        ${make_grid(grid.option_icon)}
+    }
+    :host(i-button) .option > .avatar {
+        ${make_grid(grid.option_avatar)}
+    }
+    :host(i-button) .option > .text {
+        ${make_grid(grid.option_text)}
+    }
     ${custom_style}
     `
 
