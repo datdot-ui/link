@@ -3270,7 +3270,7 @@ function make_grid (opts = {}) {
 
     function make_gap () {
         if (gap === void 0) return ''
-        return style += `grid-gap: ${gap};`
+        return style += `gap: ${gap};`
     }
 
     function make_auto () {
