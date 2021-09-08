@@ -544,10 +544,14 @@ function i_button (option, protocol) {
         --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
         --bg-color: ${disabled_bg_color ? disabled_bg_color : 'var(--primary-disabled-bg-color)'};
         cursor: not-allowed;
-        opacity: 0.6;
     }
     :host(i-button[disabled]) g, :host(i-button[disabled]:hover) g, 
-    :host(i-button[role="option"][disabled]:hover) > .icon g {
+    :host(i-button[role="option"][disabled]) > .icon g, 
+    :host(i-button[role="option"][disabled]:hover) > .icon g,
+    :host(i-button[role="listbox"][disabled]) .option .icon g, 
+    :host(i-button[role="listbox"][disabled]:hover) .option .icon g, 
+    :host(i-button[role="option"][disabled]) .option .icon g,
+    :host(i-button[role="option"][disabled]:hover) .option .icon g {
         --fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-fill)'};
     }
     :host(i-button[role="menuitem"]) {
