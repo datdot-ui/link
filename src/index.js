@@ -129,7 +129,6 @@ function i_link (option, protocol) {
     }
     :host(i-link) .icon {
         width: var(--icon-size);
-        height: var(--icon-size);
         ${make_grid(grid.icon)}
     }
     :host(i-link) .avatar {
@@ -596,7 +595,6 @@ function i_button (option, protocol) {
         --icon-size: ${icon_size ? icon_size : 'var(--primary-icon-size)'};
         display: block;
         width: var(--icon-size);
-        height: var(--icon-size);
         ${make_grid(grid.icon)}
     }
     :host(i-button) .selector {
