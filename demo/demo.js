@@ -894,19 +894,19 @@ const css = csjs`
     --primary-current-color: var(--color-white);
     --primary-current-bg-color: var(--color-black);
     --primary-selected-icon-fill: var(--primary-color);
-    --primary-selected-hover-icon-fill: var(--primary-color-hover);
+    --primary-selected-icon-fill-hover: var(--primary-color-hover);
     --primary-current-icon-fill: var(--primary-current-fill);
     --primary-icon-size: var(--size16);
     --primary-list-bg-color: var(--primary-bg-color);
     --primary-list-bg-color-hover: var(--primary-bg-color-hover);
     --primary-selector-icon-size: var(--size20);
     --primary-selector-icon-fill: var(--color-flame);
-    --primary-selector-hover-icon-fill: var(--color-blue);
+    --primary-selector-icon-fill-hover: var(--color-blue);
     --primary-selector-avatar-width: 30px;
     --primary-selector-avatar-height: auto;
     --primary-list-icon-size: var(--size20);
     --primary-list-icon-fill: var(--color-blue);
-    --primary-list-hover-icon-fill: var(--color-flame);
+    --primary-list-icon-fill-hover: var(--color-flame);
     --primary-list-avatar-width: 30px;
     --primary-list-avatar-height: auto;
 }

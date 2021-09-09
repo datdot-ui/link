@@ -83,10 +83,10 @@ function i_link (option, protocol) {
     const grid_link = grid.link ? grid.link : {auto: {auto_flow: 'column'}, align: 'items-center', gap: '4px'}
     const style = `
     :host(i-link) {
-        --size: ${size ? size : 'var(--primary-size)'};
+        --size: ${size ? size : 'var(--primary-link-size)'};
         --weight: ${weight ? weight : 'var(--weight300)'};
         --color: ${color ? color : 'var(--primary-link-color)'};
-        --bg-color: ${bg_color ? bg_color : 'var(--primary-bg-color)'};
+        --bg-color: ${bg_color ? bg_color : 'var(--primary-link-bg-color)'};
         --opacity: ${opacity ? opacity : '0'};
         --deco: ${deco ? deco : 'none'};
         --padding: ${padding ? padding : '0'};
@@ -106,7 +106,7 @@ function i_link (option, protocol) {
     }
     :host(i-link:hover) {
         --color: ${color_hover ? color_hover : 'var(--primary-link-color-hover)'};
-        --size: ${size_hover ? size_hover : 'var(--primary-size)'};
+        --size: ${size_hover ? size_hover : 'var(--primary-link-size-hover)'};
         --deco: ${deco_hover ? deco_hover : 'underline'};
         --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--color-white)'};
         --opacity: ${opacity ? opacity : '0'};
@@ -117,12 +117,12 @@ function i_link (option, protocol) {
         height: auto;
     }
     :host(i-link) svg g {
-        --icon-fill: ${icon_fill ? icon_fill : 'var(--color-heavy-blue)'};
+        --icon-fill: ${icon_fill ? icon_fill : 'var(--primary-link-icon-fill)'};
         fill: hsl(var(--icon-fill));
         transition: fill 0.5s ease-in-out;
     }
     :host(i-link:hover) svg g {
-        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--color-dodger-blue)'};
+        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--primary-link-icon-fill-hover)'};
     }
     :host(i-link) .text {
         ${make_grid(grid.text)}
@@ -345,8 +345,8 @@ function i_button (option, protocol) {
         avatar_width, avatar_height, avatar_radius,
         icon_fill, icon_fill_hover,
         selected_icon_fill, selected_hover_icon_fill, current_icon_fill, current_hover_icon_fill, disabled_icon_fill,
-        selector_icon_fill, selector_hover_icon_fill, selector_avatar_width, selector_avatar_height,
-        list_icon_fill, list_hover_icon_fill, list_avatar_width, list_avatar_height,
+        selector_icon_fill, selector_icon_fill_hover, selector_avatar_width, selector_avatar_height,
+        list_icon_fill, list_icon_fill_hover, list_avatar_width, list_avatar_height,
         shadow_color, offset_x, offset_y, blur, shadow_opacity,
         shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
     } = props
@@ -370,7 +370,7 @@ function i_button (option, protocol) {
         --border-opacity: ${border_opacity ? border_opacity : '1'};
         --border: var(--border-width) var(--border-style) hsla( var(--border-color), var(--border-opacity) );
         --border-radius: ${border_radius ? border_radius : 'var(--primary-radius)'};
-        --icon-fill: ${icon_fill ? icon_fill : 'var(--primary-color)'};
+        --icon-fill: ${icon_fill ? icon_fill : 'var(--primary-icon-fill)'};
         --offset_x: ${offset_x ? offset_x : '0px'};
         --offset-y: ${offset_y ? offset_y : '6px'};
         --blur: ${blur ? blur : '30px'};
@@ -411,7 +411,7 @@ function i_button (option, protocol) {
         transition: fill 0.1s ease-in-out;
     }
     :host(i-button:hover) g {
-        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--primary-color-hover)'};
+        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--primary-icon-fill-hover)'};
     }
     :host(i-button) .col2 {
         display: flex;
@@ -494,7 +494,7 @@ function i_button (option, protocol) {
         --icon-fill: ${selected_icon_fill ? selected_icon_fill : 'var(--primary-selected-icon-fill)'};
     }
     :host(i-button[role="option"][aria-selected="true"]:hover) > .icon g {
-        --icon-fill: ${selected_hover_icon_fill ? selected_hover_icon_fill : 'var(--primary-selected-hover-icon-fill)'};
+        --icon-fill: ${selected_hover_icon_fill ? selected_hover_icon_fill : 'var(--primary-selected-icon-fill-hover)'};
     }
 
     :host(i-button[role="option"][aria-selected="false"]) > .icon {
@@ -576,7 +576,7 @@ function i_button (option, protocol) {
         --icon-fill: ${selector_icon_fill ? selector_icon_fill : 'var(--primary-selector-icon-fill)'};
     }
     :host(i-button[role="listbox"]:hover) > .icon g {
-        --icon-fill: ${selector_hover_icon_fill ? selector_hover_icon_fill : 'var(--primary-selector-hover-icon-fill)'};
+        --icon-fill: ${selector_icon_fill_hover ? selector_icon_fill_hover : 'var(--primary-selector-icon-fill-hover)'};
     }
     :host(i-button[role="option"]) > .icon {
         --icon-size: ${list_icon_size ? list_icon_size : 'var(--primary-list-icon-size)'};
@@ -585,7 +585,7 @@ function i_button (option, protocol) {
         --icon-fill: ${list_icon_fill ? list_icon_fill : 'var(--primary-list-icon-fill)'};
     }
     :host(i-button[role="option"]:hover) .icon g  {
-        --icon-fill: ${list_hover_icon_fill ? list_hover_icon_fill : 'var(--primary-list-hover-icon-fill)'};
+        --icon-fill: ${list_icon_fill_hover ? list_icon_fill_hover : 'var(--primary-list-icon-fill-hover)'};
     }
     /* define grid */
     :host(i-button) .text {
