@@ -73,7 +73,7 @@ function i_link (option, protocol) {
         bg_color, bg_color_hover,
         border_width, border_style, border_opacity, border_color, border_color_hover, border_radius, 
         padding, margin, width, height, opacity,
-        fill, fill_hover, fill_opacity, disabled_fill,
+        icon_fill, icon_fill_hover, disabled_icon_fill,
         icon_size, 
         avatar_width, avatar_height, avatar_radius,
         shadow_color, offset_x, offset_y, blur, shadow_opacity,
@@ -117,12 +117,12 @@ function i_link (option, protocol) {
         height: auto;
     }
     :host(i-link) svg g {
-        --fill: ${fill ? fill : 'var(--color-heavy-blue)'};
-        fill: hsl(var(--fill));
+        --icon-fill: ${icon_fill ? icon_fill : 'var(--color-heavy-blue)'};
+        fill: hsl(var(--icon-fill));
         transition: fill 0.5s ease-in-out;
     }
     :host(i-link:hover) svg g {
-        --fill: ${fill_hover ? fill_hover : 'var(--color-dodger-blue)'};
+        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--color-dodger-blue)'};
     }
     :host(i-link) .text {
         ${make_grid(grid.text)}
@@ -152,10 +152,10 @@ function i_link (option, protocol) {
         background-color: transparent;
     }
     :host(i-link[role="menuitem"]) svg g {
-        --fill: ${fill ? fill : 'var(--color-primary-color)'};
+        --icon-fill: ${icon_fill ? icon_fill : 'var(--color-primary-color)'};
     }
     :host(i-link[role="menuitem"]:hover) svg g {
-        --fill: ${fill_hover ? fill_hover : 'var(--color-grey66)'};
+        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--color-grey66)'};
     }
     :host(i-link[disabled]), :host(i-link[disabled]:hover) {
         --size: ${disabled_size ? disabled_size : 'var(--primary-disabled-size)'};
@@ -164,7 +164,7 @@ function i_link (option, protocol) {
         cursor: not-allowed;
     }
     :host(i-link[disabled]) g, :host(i-link[disabled]:hover) g, :host(i-link[role][disabled]) g, :host(i-link[role][disabled]:hover) g {
-        --fill: ${disabled_fill ? disabled_fill : 'var(--primary-disabled-fill)'};
+        --icon-fill: ${disabled_icon_fill ? disabled_icon_fill : 'var(--primary-disabled-fill)'};
     }
     :host(i-link[disabled]) .avatar {
         opacity: 0.6;
@@ -344,8 +344,8 @@ function i_button (option, protocol) {
         border_width, border_style, border_opacity, border_color, border_radius, 
         padding, margin, width, height, opacity, 
         avatar_width, avatar_height, avatar_radius,
-        fill, fill_hover,
-        selected_fill, selected_hover_fill, current_fill, current_hover_fill, disabled_fill,
+        icon_fill, icon_fill_hover,
+        selected_icon_fill, selected_hover_icon_fill, current_icon_fill, current_hover_icon_fill, disabled_icon_fill,
         selector_icon_fill, selector_hover_icon_fill, selector_avatar_width, selector_avatar_height,
         list_icon_fill, list_hover_icon_fill, list_avatar_width, list_avatar_height,
         shadow_color, offset_x, offset_y, blur, shadow_opacity,
@@ -371,7 +371,7 @@ function i_button (option, protocol) {
         --border-opacity: ${border_opacity ? border_opacity : '1'};
         --border: var(--border-width) var(--border-style) hsla( var(--border-color), var(--border-opacity) );
         --border-radius: ${border_radius ? border_radius : 'var(--primary-radius)'};
-        --fill: ${fill ? fill : 'var(--primary-color)'};
+        --icon-fill: ${icon_fill ? icon_fill : 'var(--primary-color)'};
         --offset_x: ${offset_x ? offset_x : '0px'};
         --offset-y: ${offset_y ? offset_y : '6px'};
         --blur: ${blur ? blur : '30px'};
@@ -408,11 +408,11 @@ function i_button (option, protocol) {
         --shadow-opacity: ${shadow_opacity_hover ? shadow_opacity_hover : '0'};
     }
     :host(i-button) g {
-        fill: hsl(var(--fill));
+        fill: hsl(var(--icon-fill));
         transition: fill 0.1s ease-in-out;
     }
     :host(i-button:hover) g {
-        --fill: ${fill_hover ? fill_hover : 'var(--primary-color-hover)'};
+        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--primary-color-hover)'};
     }
     :host(i-button) .col2 {
         display: flex;
@@ -492,10 +492,10 @@ function i_button (option, protocol) {
         transform: scale(1);
     }
     :host(i-button[role="option"][aria-selected="true"]) > .icon g {
-        --fill: ${selected_fill ? selected_fill : 'var(--primary-selected-icon-fill)'};
+        --icon-fill: ${selected_icon_fill ? selected_icon_fill : 'var(--primary-selected-icon-fill)'};
     }
     :host(i-button[role="option"][aria-selected="true"]:hover) > .icon g {
-        --fill: ${selected_hover_fill ? selected_hover_fill : 'var(--primary-selected-icon-fill-hover)'};
+        --icon-fill: ${selected_hover_icon_fill ? selected_hover_icon_fill : 'var(--primary-selected-icon-fill-hover)'};
     }
 
     :host(i-button[role="option"][aria-selected="false"]) > .icon {
@@ -514,10 +514,10 @@ function i_button (option, protocol) {
     :host(i-button[role="option"][aria-current="true"]) > .icon g, :host(i-button[role="option"][aria-current="true"]:hover) > .icon g,
     :host(i-button[role="option"][aria-current="true"]) .option .icon g, :host(i-button[role="option"][aria-current="true"]:hover) .option .icon g 
     {
-        --fill: ${current_fill ? current_fill : 'var(--primary-current-icon-fill)'};
+        --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--primary-current-icon-fill)'};
     }
     :host(i-button[aria-current="true"]:hover) g {
-        --fill: ${fill_hover ? fill_hover : 'var(--primary-current-icon-fill)'};
+        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--primary-current-icon-fill)'};
     }
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
     :host(i-button[aria-checked="true"]:hover) {
@@ -531,13 +531,13 @@ function i_button (option, protocol) {
         --bg-color: ${current_hover_bg_color ? current_hover_bg_color : 'var(--primary-color)'};
     }
     :host(i-button[aria-expanded="true"]) > .icon g, :host(i-button[role="listbox"][aria-expanded="true"]) > .icon g {
-        --fill: ${current_fill ? current_fill : 'var(--primary-current-fill)'};
+        --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--primary-current-fill)'};
     }
     :host(i-button[aria-expanded="true"]:hover) > .icon g {
-        --fill: ${current_hover_fill ? current_hover_fill : 'var(--color-white)'};
+        --icon-fill: ${current_hover_icon_fill ? current_hover_icon_fill : 'var(--color-white)'};
     }
     :host(i-button[aria-checked="true"]) > .icon g {
-        --fill: ${current_fill ? current_fill : 'var(--color-white)' };
+        --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--color-white)' };
     }
     :host(i-button[disabled]), :host(i-button[disabled]:hover) {
         --size: ${disabled_size ? disabled_size : 'var(--primary-disabled-size)'};
@@ -552,7 +552,7 @@ function i_button (option, protocol) {
     :host(i-button[role="listbox"][disabled]:hover) .option .icon g, 
     :host(i-button[role="option"][disabled]) .option .icon g,
     :host(i-button[role="option"][disabled]:hover) .option .icon g {
-        --fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-fill)'};
+        --icon-fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-fill)'};
     }
     :host(i-button[role="menuitem"]) {
         --color: ${color ? color : 'var(--primary-color)'};
@@ -568,25 +568,25 @@ function i_button (option, protocol) {
     }
     :host(i-button[role="menuitem"][disabled]) g ,
     :host(i-button[role="menuitem"][disabled]:hover) g {
-        --fill: ${disabled_fill ? disabled_fill : 'var(--primary-disabled-fill)'};
+        --icon-fill: ${disabled_icon_fill ? disabled_icon_fill : 'var(--primary-disabled-fill)'};
     }
     :host(i-button[role="listbox"]) > .icon {
         --icon-size: ${selector_icon_size ? selector_icon_size : 'var(--primary-selector-icon-size)'};
     }
     :host(i-button[role="listbox"]) > .icon g {
-        --fill: ${selector_icon_fill ? selector_icon_fill : 'var(--primary-selector-icon-fill)'};
+        --icon-fill: ${selector_icon_fill ? selector_icon_fill : 'var(--primary-selector-icon-fill)'};
     }
     :host(i-button[role="listbox"]:hover) > .icon g {
-        --fill: ${selector_hover_icon_fill ? selector_hover_icon_fill : 'var(--primary-selector-hover-icon-fill)'};
+        --icon-fill: ${selector_hover_icon_fill ? selector_hover_icon_fill : 'var(--primary-selector-hover-icon-fill)'};
     }
     :host(i-button[role="option"]) > .icon {
         --icon-size: ${list_icon_size ? list_icon_size : 'var(--primary-list-icon-size)'};
     }
     :host(i-button[role="option"]) > .icon g  {
-        --fill: ${list_icon_fill ? list_icon_fill : 'var(--primary-list-icon-fill)'};
+        --icon-fill: ${list_icon_fill ? list_icon_fill : 'var(--primary-list-icon-fill)'};
     }
     :host(i-button[role="option"]:hover) .icon g  {
-        --fill: ${list_hover_icon_fill ? list_hover_icon_fill : 'var(--primary-list-hover-icon-fill)'};
+        --icon-fill: ${list_hover_icon_fill ? list_hover_icon_fill : 'var(--primary-list-hover-icon-fill)'};
     }
     /* define grid */
     :host(i-button) .text {

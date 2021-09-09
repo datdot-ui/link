@@ -198,8 +198,8 @@ function demo () {
             props: {
                     size: 'var(--size14)', 
                     current_color: 'var(--color-maya-blue)', 
-                    fill: 'var(--color-maya-blue)', 
-                    fill_hover:  'var(--color-maya-blue)', 
+                    icon_fill: 'var(--color-maya-blue)', 
+                    icon_fill_hover:  'var(--color-maya-blue)', 
                     icon_size: '24px'
             },
             grid: {
@@ -227,8 +227,8 @@ function demo () {
         theme: { 
             props: {
                     current_color:'var(--color-orange)', 
-                    fill: 'var(--color-orange)', 
-                    fill_hover: 'var(--color-orange)', 
+                    icon_fill: 'var(--color-orange)', 
+                    icon_fill_hover: 'var(--color-orange)', 
                     icon_size: '30px', 
                     // avatar_width: '100px',
             },
@@ -263,8 +263,8 @@ function demo () {
             props: {
                 color: 'var(--color-green)',
                 current_color: 'var(--color-green)',
-                fill: 'var(--color-green)',
-                fill_hover: 'var(--color-green)',
+                icon_fill: 'var(--color-green)',
+                icon_fill_hover: 'var(--color-green)',
                 icon_size: '24px', 
             }
         }
@@ -288,7 +288,7 @@ function demo () {
         theme: {
             style: ``,
             props: {
-                fill: 'var(--color-red)',
+                icon_fill: 'var(--color-red)',
                 bg_color_hover: 'var(--color-flame)'
             }
         }
@@ -301,9 +301,9 @@ function demo () {
         }, 
         theme: {
             props: {
-                fill: 'var(--color-green)',
                 bg_color_hover: 'var(--color-lincoln-green)',
-                fill_hover: 'var(--color-light-green)'
+                icon_fill: 'var(--color-green)',
+                icon_fill_hover: 'var(--color-light-green)'
         }
     }}, protocol('confirm'))
     const previous = button(
@@ -315,7 +315,7 @@ function demo () {
             props: {
                 bg_color_hover: 'var(--color-green-yellow-crayola)',
                 color_hover: 'var(--color-purple)',
-                fill_hover: 'var(--color-purple)'
+                icon_fill_hover: 'var(--color-purple)'
         }
     }}, protocol('previous'))
     const next = button(
@@ -330,8 +330,8 @@ function demo () {
         // body: bel`<div class="col2">${icon({name: 'arrow-right'})} Next</div>`, 
         theme: {
             // props: {
-            //     fill: 'var(--color-green)',
-            //     fill_hover: 'var(--color-bright-yellow-crayola)'
+            //     icon_fill: 'var(--color-green)',
+            //     icon_fill_hover: 'var(--color-bright-yellow-crayola)'
             // },
             grid: {
                 icon: {column: '2'}
@@ -455,9 +455,9 @@ function demo () {
                 avatar_width: '32px',
                 icon_size: '42px',
                 list_icon_size: '36px',
-                selected_fill: 'var(--color-flame)'
-                // fill: 'var(--color-flame)',
-                // fill_hover: 'var(--color-flame)'
+                selected_icon_fill: 'var(--color-flame)'
+                // icon_fill: 'var(--color-flame)',
+                // icon_fill_hover: 'var(--color-flame)'
             },
             grid: {
                 button: {
@@ -505,9 +505,9 @@ function demo () {
         theme: {
             props: {
                 color: 'var(--color-black)',
-                fill: 'var(--color-black)',
+                icon_fill: 'var(--color-black)',
                 color_hover: 'var(--color-grey88)',
-                fill_hover: 'var(--color-grey88)'
+                icon_fill_hover: 'var(--color-grey88)'
             }
         }
     }, protocol('link-datdot'))
