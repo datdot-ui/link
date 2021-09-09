@@ -518,7 +518,7 @@ function demo () {
         body: 'playproject.io',
         // icon: {name: 'datdot-black', classlist: 'col2-right'},
         cover: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
-        disabled: true,
+        disabled: false,
         link: {
             url: 'https://playproject.io/',
             target: '#frame'
@@ -567,26 +567,29 @@ function demo () {
     {
         name: 'item1',
         role: 'menuitem',
-        body: 'DatDot UI issues',
+        body: `Datdot-UI issues`,
         icons: {
             icon: {
                 name: 'datdot-white'
             }
         },
-        // cover: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
+        cover: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/600px-Octicons-mark-github.svg.png',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
             target: '_new'
         },
         theme: {
             props: {
-                avatar_width: '30px',
-                icon_size: '20px'
+                avatar_width: '24px',
+                // icon_size: '30px'
             },
             grid: {
-                text: {
-                    column: '1'
-                }
+                avatar: {
+                    column: '3'
+                },
+                // icon: {
+                //     column: '1'
+                // }
             }
             // grid: {
             //     link: {
@@ -607,7 +610,7 @@ function demo () {
     {
         name: 'item2',
         role: 'menuitem',
-        body: 'playproject.io',
+        body: 'Playproject.io',
         cover: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
         link: {
             url: 'https://github.com/playproject-io',
@@ -632,9 +635,14 @@ function demo () {
         },
         theme: {
             props: {
+                size: 'var(--size16)',
+                size_hover: 'var(--size28)',
                 color: 'var(--color-blue)',
-                fill: 'var(--color-blue)',
-                icon_size: '20px'
+                color_hover: 'var(--color-dodger-blue)',
+                // icon_size: 'var(--size20)',
+                // icon_size_hover: 'var(--size28)',
+                icon_fill: 'var(--color-blue)',
+                icon_fill_hover: 'var(--color-dodger-blue)'
             }
         }
     }, protocol('item3'))
@@ -883,8 +891,18 @@ const css = csjs`
     --primary-border-opacity: 1;
     --primary-radius: 8px;
     --primary-avatar-radius: 0px;
+    --primary-link-size: var(--size14);
+    --primary-link-size-hover: var(--primary-link-size);
     --primary-link-color: var(--color-heavy-blue);
     --primary-link-color-hover: var(--color-dodger-blue);
+    --primary-link-bg-color: transparent;
+    --primary-link-icon-size: var(--size30);
+    --primary-link-icon-fill: var(--primary-link-color);
+    --primary-link-icon-fill-hover: var(--primary-link-color-hover);
+    --primary-link-disabled-size: var(--primary-link-size);
+    --primary-link-disabled-color: var(--color-greyA2);
+    --primary-link-disabled-bg-color: transparent;
+    --primary-link-disabled-icon-fill: var(--color-greyA2);
     --primary-disabled-size: var(--primary-size);
     --primary-disabled-color: var(--color-greyA2);
     --primary-disabled-bg-color: var(--color-greyEB);
@@ -895,8 +913,9 @@ const css = csjs`
     --primary-current-bg-color: var(--color-black);
     --primary-selected-icon-fill: var(--primary-color);
     --primary-selected-icon-fill-hover: var(--primary-color-hover);
-    --primary-current-icon-fill: var(--primary-current-fill);
     --primary-icon-size: var(--size16);
+    --primary-icon-fill: var(--primary-color);
+    --primary-icon-fill-hover: var(--primary-color-hover);
     --primary-list-bg-color: var(--primary-bg-color);
     --primary-list-bg-color-hover: var(--primary-bg-color-hover);
     --primary-selector-icon-size: var(--size20);
@@ -909,6 +928,11 @@ const css = csjs`
     --primary-list-icon-fill-hover: var(--color-flame);
     --primary-list-avatar-width: 30px;
     --primary-list-avatar-height: auto;
+    --primary-menu-color: var(--primary-color);
+    --primary-menu-color-hover: var(--color-grey88);
+    --primary-menu-icon-size: 20px;
+    --primary-menu-icon-fill: var(--primary-color);
+    --primary-menu-icon-fill-hover: var(--color-grey88);
 }
 html {
     font-size: 62.5%;
@@ -977,6 +1001,21 @@ body {
     width: 100%;
     height: 480px;
 }
+/*
+.links {
+    max-width: 100%;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fill, minmax(auto, 20%));
+    grid-auto-flow: column;
+    justify-items: center;
+    align-items: center;
+    gap: 12px;
+}
+section .links:nth-child(2) {
+    grid-template-columns: fit-content(250px) auto;
+}
+*/
 .links {
     display: flex;
     flex-wrap: wrap;

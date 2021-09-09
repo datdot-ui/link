@@ -519,7 +519,7 @@ function demo () {
         body: 'playproject.io',
         // icon: {name: 'datdot-black', classlist: 'col2-right'},
         cover: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
-        disabled: true,
+        disabled: false,
         link: {
             url: 'https://playproject.io/',
             target: '#frame'
@@ -568,26 +568,29 @@ function demo () {
     {
         name: 'item1',
         role: 'menuitem',
-        body: 'DatDot UI issues',
+        body: `Datdot-UI issues`,
         icons: {
             icon: {
                 name: 'datdot-white'
             }
         },
-        // cover: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
+        cover: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/600px-Octicons-mark-github.svg.png',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
             target: '_new'
         },
         theme: {
             props: {
-                avatar_width: '30px',
-                icon_size: '20px'
+                avatar_width: '24px',
+                // icon_size: '30px'
             },
             grid: {
-                text: {
-                    column: '1'
-                }
+                avatar: {
+                    column: '3'
+                },
+                // icon: {
+                //     column: '1'
+                // }
             }
             // grid: {
             //     link: {
@@ -608,7 +611,7 @@ function demo () {
     {
         name: 'item2',
         role: 'menuitem',
-        body: 'playproject.io',
+        body: 'Playproject.io',
         cover: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
         link: {
             url: 'https://github.com/playproject-io',
@@ -633,9 +636,14 @@ function demo () {
         },
         theme: {
             props: {
+                size: 'var(--size16)',
+                size_hover: 'var(--size28)',
                 color: 'var(--color-blue)',
-                fill: 'var(--color-blue)',
-                icon_size: '20px'
+                color_hover: 'var(--color-dodger-blue)',
+                // icon_size: 'var(--size20)',
+                // icon_size_hover: 'var(--size28)',
+                icon_fill: 'var(--color-blue)',
+                icon_fill_hover: 'var(--color-dodger-blue)'
             }
         }
     }, protocol('item3'))
@@ -884,8 +892,18 @@ const css = csjs`
     --primary-border-opacity: 1;
     --primary-radius: 8px;
     --primary-avatar-radius: 0px;
+    --primary-link-size: var(--size14);
+    --primary-link-size-hover: var(--primary-link-size);
     --primary-link-color: var(--color-heavy-blue);
     --primary-link-color-hover: var(--color-dodger-blue);
+    --primary-link-bg-color: transparent;
+    --primary-link-icon-size: var(--size30);
+    --primary-link-icon-fill: var(--primary-link-color);
+    --primary-link-icon-fill-hover: var(--primary-link-color-hover);
+    --primary-link-disabled-size: var(--primary-link-size);
+    --primary-link-disabled-color: var(--color-greyA2);
+    --primary-link-disabled-bg-color: transparent;
+    --primary-link-disabled-icon-fill: var(--color-greyA2);
     --primary-disabled-size: var(--primary-size);
     --primary-disabled-color: var(--color-greyA2);
     --primary-disabled-bg-color: var(--color-greyEB);
@@ -896,8 +914,9 @@ const css = csjs`
     --primary-current-bg-color: var(--color-black);
     --primary-selected-icon-fill: var(--primary-color);
     --primary-selected-icon-fill-hover: var(--primary-color-hover);
-    --primary-current-icon-fill: var(--primary-current-fill);
     --primary-icon-size: var(--size16);
+    --primary-icon-fill: var(--primary-color);
+    --primary-icon-fill-hover: var(--primary-color-hover);
     --primary-list-bg-color: var(--primary-bg-color);
     --primary-list-bg-color-hover: var(--primary-bg-color-hover);
     --primary-selector-icon-size: var(--size20);
@@ -910,6 +929,11 @@ const css = csjs`
     --primary-list-icon-fill-hover: var(--color-flame);
     --primary-list-avatar-width: 30px;
     --primary-list-avatar-height: auto;
+    --primary-menu-color: var(--primary-color);
+    --primary-menu-color-hover: var(--color-grey88);
+    --primary-menu-icon-size: 20px;
+    --primary-menu-icon-fill: var(--primary-color);
+    --primary-menu-icon-fill-hover: var(--color-grey88);
 }
 html {
     font-size: 62.5%;
@@ -978,6 +1002,21 @@ body {
     width: 100%;
     height: 480px;
 }
+/*
+.links {
+    max-width: 100%;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(auto-fill, minmax(auto, 20%));
+    grid-auto-flow: column;
+    justify-items: center;
+    align-items: center;
+    gap: 12px;
+}
+section .links:nth-child(2) {
+    grid-template-columns: fit-content(250px) auto;
+}
+*/
 .links {
     display: flex;
     flex-wrap: wrap;
@@ -1026,7 +1065,7 @@ function img_btn ({name, body, icon = {}, cover, disabled, props = {}}, button, 
         size = 'var(--size24)', 
         size_hover = 'var(--size36)', 
         color = 'var(--color-amaranth-pink)', 
-        color_hover = 'var(--primary-hover-color)',
+        color_hover = 'var(--primary-color-hover)',
         bg_color = 'var(--primary-bg-color)',
         bg_color_hover = 'var(--color-greyD9)', 
         border_radius = '0',
@@ -2638,7 +2677,7 @@ function i_link (option, protocol) {
         border_width, border_style, border_opacity, border_color, border_color_hover, border_radius, 
         padding, margin, width, height, opacity,
         icon_fill, icon_fill_hover, disabled_icon_fill,
-        icon_size, 
+        icon_size, icon_size_hover,
         avatar_width, avatar_height, avatar_radius,
         shadow_color, offset_x, offset_y, blur, shadow_opacity,
         shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
@@ -2655,7 +2694,7 @@ function i_link (option, protocol) {
         --deco: ${deco ? deco : 'none'};
         --padding: ${padding ? padding : '0'};
         --margin: ${margin ? margin : '0'};
-        --icon-size: ${icon_size ? icon_size : 'var(--primary-icon-size)'};
+        --icon-size: ${icon_size ? icon_size : 'var(--primary-link-icon-size)'};
         display: inline-grid;
         font-size: var(--size);
         font-weight: var(--weight);
@@ -2680,20 +2719,33 @@ function i_link (option, protocol) {
         width: 100%;
         height: auto;
     }
-    :host(i-link) svg g {
+    :host(i-link) g {
         --icon-fill: ${icon_fill ? icon_fill : 'var(--primary-link-icon-fill)'};
         fill: hsl(var(--icon-fill));
         transition: fill 0.5s ease-in-out;
     }
-    :host(i-link:hover) svg g {
+    :host(i-link:hover) g {
         --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--primary-link-icon-fill-hover)'};
+    }
+    :host(i-link[role="menuitem"]) g {
+        --icon-fill: ${icon_fill ? icon_fill : 'var(--primary-menu-icon-fill)'};
+    }
+    :host(i-link[role="menuitem"]:hover) g {
+        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--primary-menu-icon-fill-hover)'};
     }
     :host(i-link) .text {
         ${make_grid(grid.text)}
     }
     :host(i-link) .icon {
         width: var(--icon-size);
+        max-width: 100%;
         ${make_grid(grid.icon)}
+    }
+    :host(i-link:hover) .icon {
+        --icon-size: ${icon_size_hover ? icon_size_hover : 'var(--primary-link-icon-size)'};
+    }
+    :host(i-link[role="menuitem"]) .icon {
+        --icon-size: ${icon_size ? icon_size : 'var(--primary-menu-icon-size)'};
     }
     :host(i-link) .avatar {
         --avatar-width: ${avatar_width ? avatar_width : '100%'};
@@ -2706,28 +2758,22 @@ function i_link (option, protocol) {
         ${make_grid(grid.avatar)}
     }
     :host(i-link[role="menuitem"]) {
-        --color: ${color ? color : 'var(--primary-color)'};
+        --color: ${color ? color : 'var(--primary-menu-color)'};
         background-color: transparent;
     }
     :host(i-link[role="menuitem"]:hover) {
-        --color: ${color_hover ? color_hover : 'var(--color-grey66)'};
+        --color: ${color_hover ? color_hover : 'var(--primary-menu-color-hover)'};
         text-decoration: none;
         background-color: transparent;
     }
-    :host(i-link[role="menuitem"]) svg g {
-        --icon-fill: ${icon_fill ? icon_fill : 'var(--color-primary-color)'};
-    }
-    :host(i-link[role="menuitem"]:hover) svg g {
-        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--color-grey66)'};
-    }
-    :host(i-link[disabled]), :host(i-link[disabled]:hover) {
-        --size: ${disabled_size ? disabled_size : 'var(--primary-disabled-size)'};
-        --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
+    :host(i-link[aria-disabled="true"]), :host(i-link[aria-disabled="true"]:hover) {
+        --size: ${disabled_size ? disabled_size : 'var(--primary-link-disabled-size)'};
+        --color: ${disabled_color ? disabled_color : 'var(--primary-link-disabled-color)'};
         text-decoration: none;
         cursor: not-allowed;
     }
     :host(i-link[disabled]) g, :host(i-link[disabled]:hover) g, :host(i-link[role][disabled]) g, :host(i-link[role][disabled]:hover) g {
-        --icon-fill: ${disabled_icon_fill ? disabled_icon_fill : 'var(--primary-disabled-icon-fill)'};
+        --icon-fill: ${disabled_icon_fill ? disabled_icon_fill : 'var(--primary-link-disabled-icon-fill)'};
     }
     :host(i-link[disabled]) .avatar {
         opacity: 0.6;
@@ -2751,6 +2797,8 @@ function i_button (option, protocol) {
     let is_disabled = disabled
     let is_selected = selected
     let is_expanded = expanded
+
+    document.body.addEventListener("touchstart",function(){ });
 
     function widget () {
         const send = protocol(get)
@@ -2899,7 +2947,7 @@ function i_button (option, protocol) {
     // set CSS variables
     const {props = {}, grid = {}} = theme
     const {size, size_hover, current_size, disabled_size,
-        icon_size, col_icon_size, selector_icon_size, list_icon_size,
+        icon_size, selector_icon_size, list_icon_size,
         weight, weight_hover, current_weight, current_hover_weight,
         color, color_hover, current_color, current_bg_color, disabled_color, disabled_bg_color,
         current_hover_color, current_hover_bg_color,
@@ -2907,7 +2955,7 @@ function i_button (option, protocol) {
         border_width, border_style, border_opacity, border_color, border_radius, 
         padding, margin, width, height, opacity, 
         avatar_width, avatar_height, avatar_radius,
-        icon_fill, icon_fill_hover,
+        icon_fill, icon_fill_hover, icon_size_hover,
         selected_icon_fill, selected_hover_icon_fill, current_icon_fill, current_hover_icon_fill, disabled_icon_fill,
         selector_icon_fill, selector_icon_fill_hover, selector_avatar_width, selector_avatar_height,
         list_icon_fill, list_icon_fill_hover, list_avatar_width, list_avatar_height,
@@ -2958,7 +3006,7 @@ function i_button (option, protocol) {
         cursor: pointer;
         -webkit-mask-image: -webkit-radial-gradient(white, black);
     }
-    :host(i-button:hover), :host(i-button[role]:hover) {
+    :host(i-button:hover) {
         --weight: ${weight_hover ? weight_hover : 'initial'};
         --color: ${color_hover ? color_hover : 'var(--primary-color-hover)'};
         --size: ${size_hover ? size_hover : 'var(--primary-size-hover)'};
@@ -2970,11 +3018,14 @@ function i_button (option, protocol) {
         --shadow-color: ${shadow_color_hover ? shadow_color_hover : 'var(--primary-color-hover)'};
         --shadow-opacity: ${shadow_opacity_hover ? shadow_opacity_hover : '0'};
     }
+    :host(i-button:hover:foucs:active) {
+        --bg-color: ${bg_color ? bg_color : 'var(--primary-bg-color)'};
+    }
     :host(i-button) g {
         fill: hsl(var(--icon-fill));
-        transition: fill 0.1s ease-in-out;
+        transition: fill 0.15s ease-in-out;
     }
-    :host(i-button:hover) g {
+    :host(i-button:hover) g, :host(i-button:hover) path {
         --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--primary-icon-fill-hover)'};
     }
     :host(i-button) .col2 {
