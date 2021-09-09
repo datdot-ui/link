@@ -895,7 +895,7 @@ const css = csjs`
     --primary-current-color: var(--color-white);
     --primary-current-bg-color: var(--color-black);
     --primary-selected-icon-fill: var(--primary-color);
-    --primary-selected-icon-fill-hover: var(--primary-color-hover);
+    --primary-selected-hover-icon-fill: var(--primary-color-hover);
     --primary-current-icon-fill: var(--primary-current-fill);
     --primary-icon-size: var(--size16);
     --primary-list-bg-color: var(--primary-bg-color);
@@ -3058,7 +3058,7 @@ function i_button (option, protocol) {
         --icon-fill: ${selected_icon_fill ? selected_icon_fill : 'var(--primary-selected-icon-fill)'};
     }
     :host(i-button[role="option"][aria-selected="true"]:hover) > .icon g {
-        --icon-fill: ${selected_hover_icon_fill ? selected_hover_icon_fill : 'var(--primary-selected-icon-fill-hover)'};
+        --icon-fill: ${selected_hover_icon_fill ? selected_hover_icon_fill : 'var(--primary-selected-hover-icon-fill)'};
     }
 
     :host(i-button[role="option"][aria-selected="false"]) > .icon {

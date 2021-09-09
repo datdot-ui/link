@@ -494,7 +494,7 @@ function i_button (option, protocol) {
         --icon-fill: ${selected_icon_fill ? selected_icon_fill : 'var(--primary-selected-icon-fill)'};
     }
     :host(i-button[role="option"][aria-selected="true"]:hover) > .icon g {
-        --icon-fill: ${selected_hover_icon_fill ? selected_hover_icon_fill : 'var(--primary-selected-icon-fill-hover)'};
+        --icon-fill: ${selected_hover_icon_fill ? selected_hover_icon_fill : 'var(--primary-selected-hover-icon-fill)'};
     }
 
     :host(i-button[role="option"][aria-selected="false"]) > .icon {

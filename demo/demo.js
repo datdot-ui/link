@@ -894,7 +894,7 @@ const css = csjs`
     --primary-current-color: var(--color-white);
     --primary-current-bg-color: var(--color-black);
     --primary-selected-icon-fill: var(--primary-color);
-    --primary-selected-icon-fill-hover: var(--primary-color-hover);
+    --primary-selected-hover-icon-fill: var(--primary-color-hover);
     --primary-current-icon-fill: var(--primary-current-fill);
     --primary-icon-size: var(--size16);
     --primary-list-bg-color: var(--primary-bg-color);
