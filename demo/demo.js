@@ -888,8 +888,8 @@ const css = csjs`
     --primary-disabled-size: var(--primary-size);
     --primary-disabled-color: var(--color-greyA2);
     --primary-disabled-bg-color: var(--color-greyEB);
-    --primary-disabled-fill: var(--color-greyA2);
-    --primary-current-fill: var(--primary-color-hover);
+    --primary-disabled-icon-fill: var(--color-greyA2);
+    --primary-current-icon-fill: var(--primary-color-hover);
     --primary-current-size: var(--primary-size);
     --primary-current-color: var(--color-white);
     --primary-current-bg-color: var(--color-black);

@@ -164,7 +164,7 @@ function i_link (option, protocol) {
         cursor: not-allowed;
     }
     :host(i-link[disabled]) g, :host(i-link[disabled]:hover) g, :host(i-link[role][disabled]) g, :host(i-link[role][disabled]:hover) g {
-        --icon-fill: ${disabled_icon_fill ? disabled_icon_fill : 'var(--primary-disabled-fill)'};
+        --icon-fill: ${disabled_icon_fill ? disabled_icon_fill : 'var(--primary-disabled-icon-fill)'};
     }
     :host(i-link[disabled]) .avatar {
         opacity: 0.6;
@@ -531,7 +531,7 @@ function i_button (option, protocol) {
         --bg-color: ${current_hover_bg_color ? current_hover_bg_color : 'var(--primary-color)'};
     }
     :host(i-button[aria-expanded="true"]) > .icon g, :host(i-button[role="listbox"][aria-expanded="true"]) > .icon g {
-        --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--primary-current-fill)'};
+        --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--primary-current-icon-fill)'};
     }
     :host(i-button[aria-expanded="true"]:hover) > .icon g {
         --icon-fill: ${current_hover_icon_fill ? current_hover_icon_fill : 'var(--color-white)'};
@@ -552,7 +552,7 @@ function i_button (option, protocol) {
     :host(i-button[role="listbox"][disabled]:hover) .option .icon g, 
     :host(i-button[role="option"][disabled]) .option .icon g,
     :host(i-button[role="option"][disabled]:hover) .option .icon g {
-        --icon-fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-fill)'};
+        --icon-fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-icon-fill)'};
     }
     :host(i-button[role="menuitem"]) {
         --color: ${color ? color : 'var(--primary-color)'};
@@ -568,7 +568,7 @@ function i_button (option, protocol) {
     }
     :host(i-button[role="menuitem"][disabled]) g ,
     :host(i-button[role="menuitem"][disabled]:hover) g {
-        --icon-fill: ${disabled_icon_fill ? disabled_icon_fill : 'var(--primary-disabled-fill)'};
+        --icon-fill: ${disabled_icon_fill ? disabled_icon_fill : 'var(--primary-disabled-icon-fill)'};
     }
     :host(i-button[role="listbox"]) > .icon {
         --icon-size: ${selector_icon_size ? selector_icon_size : 'var(--primary-selector-icon-size)'};
