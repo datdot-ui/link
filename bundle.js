@@ -982,6 +982,9 @@ const css = csjs`
     --current-color: var(--color-white);
     --current-bg-color: var(--color-black);
     --current-icon-fill: var(--color-white);
+    --current-list-size: var(--current-size);
+    --current-list-color: var(--current-color);
+    --current-list-bg-color: var(--current-bg-color);
     /* define icon settings ---------------------------------------------*/
     --primary-icon-size: var(--size16);
     --primary-icon-fill: var(--primary-color);
@@ -1022,11 +1025,8 @@ const css = csjs`
     /* role option settings ---------------------------------------------*/
     --list-bg-color: var(--primary-bg-color);
     --list-bg-color-hover: var(--primary-bg-color-hover);
-    --list-option-icon-size: var(--size20);
-    --list-option-icon-fill: var(--primary-icon-fill);
-    --list-option-icon-fill-hover: var(--primary-icon-fill-hover);
-    --list-option-avatar-width: 30px;
-    --list-option-avatar-height: auto;
+    --list-selected-icon-size: var(--size20);
+    --list-selected-icon-size-hover: var(--size40);
     --list-selected-icon-fill: var(--primary-icon-fill);
     --list-selected-icon-fill-hover: var(--primary-icon-fill-hover);
     /* role link settings ---------------------------------------------*/
@@ -3103,7 +3103,6 @@ function i_button (option, protocol) {
         // role === option ----------------------------------//
         list_selected_icon_size, list_selected_icon_size_hover,
         list_selected_icon_fill, list_selected_icon_fill_hover,
-        list_option_avatar_width, list_option_avatar_height,
         // role === listbox ----------------------------------//
         // collapse settings
         listbox_collapse_color, listbox_collapse_color_hover,
@@ -3220,6 +3219,9 @@ function i_button (option, protocol) {
     :host(i-button:hover) .avatar img {
         --scale: ${scale_hover ? scale_hover : '1.3'};
         transform: scale(var(--scale));
+    }
+    :host(i-button:hover) .icon {
+        --icon-size: ${icon_size_hover ? icon_size_hover : 'var(--primary-icon-size-hover)'};
     }
     :host(i-button) svg {
         width: 100%;
@@ -3422,6 +3424,9 @@ function i_button (option, protocol) {
     :host(i-button[role="option"]) > .icon {
         --icon-size: ${list_selected_icon_size ? list_selected_icon_size : 'var(--list-selected-icon-size)'};
     }
+    :host(i-button[role="option"]:hover) > .icon {
+        --icon-size: ${list_selected_icon_size_hover ? list_selected_icon_size_hover : 'var(--list-selected-icon-size-hover)'};
+    }
     :host(i-button[role="option"]) > .icon g, 
     :host(i-button[role="option"]) > .icon path {
         --icon-fill: ${list_selected_icon_fill ? list_selected_icon_fill : 'var(--list-selected-icon-fill)'};
@@ -3437,6 +3442,7 @@ function i_button (option, protocol) {
         --icon-size: ${icon_size ? icon_size : 'var(--primary-icon-size)'};
         display: block;
         width: var(--icon-size);
+        transition: width 0.15s ease-in-out;
         ${make_grid(grid.icon)}
     }
     :host(i-button) .listbox {

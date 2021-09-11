@@ -981,6 +981,9 @@ const css = csjs`
     --current-color: var(--color-white);
     --current-bg-color: var(--color-black);
     --current-icon-fill: var(--color-white);
+    --current-list-size: var(--current-size);
+    --current-list-color: var(--current-color);
+    --current-list-bg-color: var(--current-bg-color);
     /* define icon settings ---------------------------------------------*/
     --primary-icon-size: var(--size16);
     --primary-icon-fill: var(--primary-color);
@@ -1021,11 +1024,8 @@ const css = csjs`
     /* role option settings ---------------------------------------------*/
     --list-bg-color: var(--primary-bg-color);
     --list-bg-color-hover: var(--primary-bg-color-hover);
-    --list-option-icon-size: var(--size20);
-    --list-option-icon-fill: var(--primary-icon-fill);
-    --list-option-icon-fill-hover: var(--primary-icon-fill-hover);
-    --list-option-avatar-width: 30px;
-    --list-option-avatar-height: auto;
+    --list-selected-icon-size: var(--size20);
+    --list-selected-icon-size-hover: var(--size40);
     --list-selected-icon-fill: var(--primary-icon-fill);
     --list-selected-icon-fill-hover: var(--primary-icon-fill-hover);
     /* role link settings ---------------------------------------------*/
