@@ -455,7 +455,7 @@ function demo () {
         // cover: 'data:image/png;base64,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',
         // cover is only use string
         // cover: icon({name: 'star'}),
-        selected: false,
+        selected: true,
         // current: true,
         // disabled: true,
         theme : {
@@ -480,12 +480,15 @@ function demo () {
                 avatar_width: '1500px',
                 color_hover: 'var(--color-orange)',
                 icon_size: '45px',
+                // icon_fill: 'var(--color-flame)',
+                // icon_size_hover: '45px',
                 icon_fill_hover: 'var(--color-orange)',
+                current_icon_fill: 'var(--color-light-green)',
+                current_icon_size: '45px',
                 list_selected_icon_size: '24px',
                 list_selected_icon_fill: 'var(--color-flame)',
                 list_selected_icon_fill_hover: 'var(--color-verdigris)',
-                // icon_fill: 'var(--color-flame)',
-                // icon_fill_hover: 'var(--color-flame)'
+                current_list_selected_icon_size: '24px',
                 // scale_hover: 1.5,
             },
             grid: {
@@ -975,62 +978,72 @@ const css = csjs`
     --primary-disabled-bg-color: var(--color-greyEB);
     --primary-disabled-icon-size: var(--primary-icon-size);
     --primary-disabled-icon-fill: var(--color-greyA2);
+    --primary-listbox-option-icon-size: 20px;
+    --primary-listbox-option-avatar-width: 40px;
+    --primary-listbox-option-avatar-height: auto;
     --primary-option-avatar-width: 30px;
     --primary-option-avatar-height: auto;
+    --primary-list-avatar-width: 30px;
+    --primary-list-avatar-height: auto;
     /* define icon settings ---------------------------------------------*/
     --primary-icon-size: var(--size16);
     --primary-icon-size-hover: var(--size16);
     --primary-icon-fill: var(--primary-color);
     --primary-icon-fill-hover: var(--primary-color-hover);
     /* define current ---------------------------------------------*/
-    --current-size: var(--size14);
+    --current-size: var(--primary-size);
     --current-weight: var(--primary-weight);
     --current-color: var(--color-white);
     --current-bg-color: var(--color-black);
     --current-icon-size: var(--primary-icon-size);
     --current-icon-fill: var(--color-white);
     --current-list-selected-icon-fill: var(--color-white);
+    --current-list-selected-icon-fill-hover: var(--color-white);
     --current-list-size: var(--current-size);
     --current-list-color: var(--current-color);
     --current-list-bg-color: var(--current-bg-color);
+    --current-list-avatar-width: var(--primary-list-avatar-width);
+    --current-list-avatar-height: var(--primary-list-avatar-height);
     /* role listbox settings ---------------------------------------------*/
     /*-- collapse --*/
-    --listbox-collapse-size: var(--size20);
-    --listbox-collapse-size-hover: var(--size36);
-    --listbox-collapse-weight: var(--primary-weight);
-    --listbox-collapse-weight-hover: var(--primary-weight);
-    --listbox-collapse-color: var(--color-blue);
-    --listbox-collapse-color-hover: var(--color-orange);
     --listbox-collapse-icon-size: var(--size20);
     --listbox-collapse-icon-size-hover: var(--size20);
     --listbox-collapse-icon-fill: var(--primary-icon-fill);
     --listbox-collapse-icon-fill-hover: var(--primary-icon-fill-hover);
+    --listbox-collapse-option-size: var(--size20);
+    --listbox-collapse-option-size-hover: var(--size24);
+    --listbox-collapse-option-weight: var(--primary-weight);
+    --listbox-collapse-option-weight-hover: var(--primary-weight);
+    --listbox-collapse-option-color: var(--color-blue);
+    --listbox-collapse-option-color-hover: var(--color-orange);
+    --listbox-collapse-option-avatar-width: var(--primary-listbox-option-avatar-width);
+    --listbox-collapse-option-avatar-height: var(--primary-listbox-option-avatar-height);
+    --listbox-collapse-option-icon-size: var(--primary-listbox-option-icon-size);
+    --listbox-collapse-option-icon-size-hover: var(--primary-listbox-option-icon-size);
     --listbox-collapse-option-icon-fill: var(--color-blue);
     --listbox-collapse-option-icon-fill-hover: var(--color-yellow);
-    --listbox-collapse-option-avatar-width: var(--primary-option-avatar-width);
-    --listbox-collapse-option-avatar-height: var(--primary-option-avatar-height);
-    --listbox-collpase-option-icon-fill: var(--primary-icon-fill);
-    --listbox-collpase-option-icon-fill-hover: var(--primary-icon-fill-hover);
     /*-- expanded ---*/
-    --listbox-expanded-size: var(--size20);
-    --listbox-expanded-size-hover: var(--size36);
-    --listbox-expanded-weight: var(--primary-weight);
-    --listbox-expanded-weight-hover: var(--primary-weight);
-    --listbox-expanded-color: var(--color-blue);
-    --listbox-expanded-color-hover: var(--color-orange);
     --listbox-expanded-icon-size: var(--size20);
     --listbox-expanded-icon-size-hover: var(--size20);
     --listbox-expanded-icon-fill: var(--color-light-green);
     --listbox-expanded-icon-fill-hover: var(--color-yellow);
+    --listbox-expanded-option-size: var(--size20);
+    --listbox-expanded-option-size-hover: var(--size36);
+    --listbox-expanded-option-weight: var(--primary-weight);
+    --listbox-expanded-option-weight-hover: var(--primary-weight);
+    --listbox-expanded-option-color: var(--current-color);
+    --listbox-expanded-option-color-hover: var(--listbox-expanded-color);
+    --listbox-expanded-option-avatar-width: var(--primary-listbox-option-avatar-width);
+    --listbox-expanded-option-avatar-height: var(--primary-listbox-option-avatar-height);
+    --listbox-expanded-option-icon-size: var(--primary-listbox-option-icon-size);
+    --listbox-expanded-option-icon-size-hover: var(--primary-listbox-option-icon-size);
     --listbox-expanded-option-icon-fill: var(--color-light-green);
     --listbox-expanded-option-icon-fill-hover: var(--color-orange);
-    --listbox-expanded-option-avatar-width: var(--primary-option-avatar-width);
-    --listbox-expanded-option-avatar-height: var(--primary-option-avatar-height);
     /* role option settings ---------------------------------------------*/
     --list-bg-color: var(--primary-bg-color);
     --list-bg-color-hover: var(--primary-bg-color-hover);
     --list-selected-icon-size: var(--size20);
-    --list-selected-icon-size-hover: var(--size40);
+    --list-selected-icon-size-hover: var(--size24);
     --list-selected-icon-fill: var(--primary-icon-fill);
     --list-selected-icon-fill-hover: var(--primary-icon-fill-hover);
     /* role link settings ---------------------------------------------*/
@@ -3102,6 +3115,7 @@ function i_button (option, protocol) {
         current_bg_color,
         current_icon_size,
         current_icon_fill,
+        current_list_selected_icon_size,
         current_list_selected_icon_fill,
         current_avatar_width, 
         current_avatar_height,
@@ -3112,19 +3126,19 @@ function i_button (option, protocol) {
         list_selected_icon_fill, list_selected_icon_fill_hover,
         // role === listbox ----------------------------------//
         // collapse settings
-        listbox_collapse_color, listbox_collapse_color_hover,
-        listbox_collapse_size, listbox_collapse_size_hover,
-        listbox_collapse_weight, listbox_collapse_weight_hover,
-        listbox_collapse_icon_size, listbox_collapse_icon_size_hover,
-        listbox_collapse_icon_fill, listbox_collapse_icon_fill_hover, 
-        listbox_collapse_avatar_width, listbox_collapse_avatar_height,
+        listbox_collapse_icon_size, listbox_collapse_icon_fill, listbox_collapse_icon_fill_hover, 
+        listbox_collapse_option_color, listbox_collapse_option_color_hover,
+        listbox_collapse_option_size, listbox_collapse_option_size_hover,
+        listbox_collapse_option_weight, listbox_collapse_option_weight_hover,
+        listbox_collapse_option_icon_size, listbox_collapse_option_icon_size_hover,
+        listbox_collapse_option_avatar_width, listbox_collapse_option_avatar_height,
         // expanded settings
-        listbox_expanded_color, listbox_expanded_color_hover,
-        listbox_expanded_size, listbox_expanded_size_hover,
-        listbox_expanded_weight, listbox_expanded_weight_hover,
-        listbox_expanded_icon_size, listbox_expanded_icon_size_hover,
-        listbox_expanded_icon_fill, listbox_expanded_icon_fill_hover,
+        listbox_expanded_option_color, listbox_expanded_option_color_hover,
+        listbox_expanded_option_size, listbox_expanded_option_size_hover,
+        listbox_expanded_option_weight, listbox_expanded_option_weight_hover,
+        listbox_expanded_icon_size, listbox_expanded_icon_fill, listbox_expanded_icon_fill_hover,
         listbox_expanded_option_avatar_width, listbox_expanded_option_avatar_height,
+        listbox_expanded_option_icon_size, listbox_expanded_option_icon_size_hover,
         listbox_expanded_option_icon_fill, listbox_expanded_option_icon_fill_hover
     } = props
 
@@ -3242,23 +3256,28 @@ function i_button (option, protocol) {
         --size: ${size_hover ? size_hover : 'var(--primary-size-hover)'};
     }
     :host(i-button[role="listbox"]) {
-        --color: ${listbox_collapse_color ? listbox_collapse_color : 'var(--listbox-collapse-color)'};
-        --size: ${listbox_collapse_size ? listbox_collapse_size : 'var(--listbox-collapse-size)'};
-        --weight: ${listbox_collapse_weight ? listbox_collapse_weight : 'var(--listbox-collapse-weight)'};
+        --color: ${listbox_collapse_option_color ? listbox_collapse_option_color : 'var(--listbox-collapse-option-color)'};
+        --size: ${listbox_collapse_option_size ? listbox_collapse_option_size : 'var(--listbox-collapse-option-size)'};
+        --weight: ${listbox_collapse_option_weight ? listbox_collapse_option_weight : 'var(--listbox-collapse-option-weight)'};
     }
     :host(i-button[role="listbox"]:hover) {
-        --color: ${listbox_collapse_color_hover ? listbox_collapse_color_hover : 'var(--listbox-collapse-color-hover)'};
-        --size: ${listbox_collapse_size_hover ? listbox_collapse_size_hover : 'var(--listbox-collapse-size-hover)'};
-        --weight: ${listbox_collapse_weight_hover ? listbox_collapse_weight_hover : 'var(--listbox-collapse-weight-hover)'};
+        --color: ${listbox_collapse_option_color_hover ? listbox_collapse_option_color_hover : 'var(--listbox-collapse-option-color-hover)'};
+        --size: ${listbox_collapse_option_size_hover ? listbox_collapse_option_size_hover : 'var(--listbox-collapse-option-size-hover)'};
+        --weight: ${listbox_collapse_option_weight_hover ? listbox_collapse_option_weight_hover : 'var(--listbox-collapse-option-weight-hover)'};
     }
     :host(i-button[role="listbox"]) > .icon {
-        --icon-size: ${listbox_collapse_icon_size ? listbox_collapse_icon_size : 'var(--listbox-collapse-icon-size)'};
         ${grid.icon ? make_grid(grid.icon) : make_grid({column: '2'})}
     }
     :host(i-button[role="listbox"]) .text {}
     :host(i-button[role="listbox"]) .avatar {
-        --avatar-width: ${listbox_collapse_avatar_width ? listbox_collapse_avatar_width : 'var(--listbox-collapse-option-avatar-width)'};
-        --avatar-height: ${listbox_collapse_avatar_height ? listbox_collapse_avatar_height : 'var(--listbox-collapse-option-avatar-height)'};
+        --avatar-width: ${listbox_collapse_option_avatar_width ? listbox_collapse_option_avatar_width : 'var(--listbox-collapse-option-avatar-width)'};
+        --avatar-height: ${listbox_collapse_option_avatar_height ? listbox_collapse_option_avatar_height : 'var(--listbox-collapse-option-avatar-height)'}
+    }
+    :host(i-button[role="listbox"][aria-expanded="true"]),
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) {
+        --size: ${listbox_expanded_option_size ? listbox_expanded_option_size : 'var(--listbox-expanded-option-size)' };
+        --color: ${listbox_expanded_option_color ? listbox_expanded_option_color : 'var(--listbox-expanded-option-color)' };
+        --weight: ${listbox_expanded_option_weight ? listbox_expanded_option_weight : 'var(--listbox-expanded-option-weight)' };
     }
     :host(i-button[role="listbox"][aria-expanded="true"]) .avatar {
         --avatar-width: ${listbox_expanded_option_avatar_width ? listbox_expanded_option_avatar_width : 'var(--listbox-expanded-option-avatar-width)'};
@@ -3286,25 +3305,11 @@ function i_button (option, protocol) {
     :host(i-button[role="option"][aria-disabled="true"]) .icon, 
     :host(i-button[role="option"][aria-disabled="true"]:hover) .icon,
     :host(i-button[role="listbox"][aria-disabled="true"]) .icon, 
-    :host(i-button[role="listbox"][aria-disabled="true"]:hover) .icon
-    {
+    :host(i-button[role="listbox"][aria-disabled="true"]:hover) .icon {
         --icon-size: ${disabled_icon_size ? disabled_icon_size : 'var(--primary-disabled-icon-size)'};
     }
     :host(i-button[disabled]:hover) img {
         transform: scale(1);
-    }
-    :host(i-button[role="option"][aria-selected="true"]) > .icon g {
-        --icon-fill: ${list_selected_icon_fill ? list_selected_icon_fill : 'var(--list-selected-icon-fill)'};
-    }
-    :host(i-button[role="option"][aria-selected="true"]:hover) > .icon g {
-        --icon-fill: ${list_selected_icon_fill_hover ? list_selected_icon_fill_hover : 'var(--list-selected-icon-fill-hover)'};
-    }
-    :host(i-button[role="option"][aria-selected="false"]) > .icon {
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-    }
-    :host(i-button[role="option"][aria-selected="true"]) > .icon {
-        opacity: 1;
     }
     :host(i-button[aria-current="true"]), :host(i-button[aria-current="true"]:hover) {
         --size: ${current_size ? current_size : 'var(--current-size)'};
@@ -3312,23 +3317,14 @@ function i_button (option, protocol) {
         --color: ${current_color ? current_color : 'var(--current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
     }
-    :host(i-button[role="option"][aria-current="true"]) > .icon, 
-    :host(i-button[role="option"][aria-current="true"]:hover) > .icon,
-    {
-        --icon-fill: ${current_icon_size ? current_icon_size : 'var(--current-icon-size)'};
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon, 
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon {
+        --icon-size: ${current_icon_size ? current_icon_size : 'var(--current-icon-size)'};
     }
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) > .icon g, 
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) > .icon path, 
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) > .icon g,
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) > .icon path,
-    {
-        --icon-fill: ${current_list_selected_icon_fill ? current_list_selected_icon_fill : 'var(--current-list-selected-icon-fill)'};
-    }
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option .icon g, 
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option .icon path,
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option .icon g,
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option .icon path
-    {
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon g, 
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon path,
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon g,
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon path {
         --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--current-icon-fill)'};
     }
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
@@ -3338,48 +3334,50 @@ function i_button (option, protocol) {
         --color: ${current_color ? current_color : 'var(--current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
     }
-    :host(i-button[aria-expanded="true"]) > .icon g, :host(i-button[role="listbox"][aria-expanded="true"]) > .icon g,
-    :host(i-button[aria-expanded="true"]) > .icon path, :host(i-button[role="listbox"][aria-expanded="true"]) > .icon path 
-    {
+    :host(i-button[role="listbox"]) > .icon,
+    :host(i-button[role="listbox"]:hover) > .icon {
+        --icon-size: ${listbox_collapse_icon_size ? listbox_collapse_icon_size : 'var(--listbox-collapse-icon-size)'};
+    }
+    :host(i-button[role="listbox"]) .option > .icon {
+        --icon-size: ${listbox_collapse_option_icon_size ? listbox_collapse_option_icon_size : 'var(--listbox-collapse-option-icon-size)'};
+    }
+    :host(i-button[role="listbox"]:hover) .option > .icon {
+        --icon-size: ${listbox_collapse_option_icon_size_hover ? listbox_collapse_option_icon_size_hover : 'var(--listbox-collapse-option-icon-size-hover)'};
+    }
+    :host(i-button[role="listbox"]) > .icon g,
+    :host(i-button[role="listbox"]) > .icon path {
+        --icon-fill: ${listbox_collapse_icon_fill ? listbox_collapse_icon_fill : 'var(--listbox-collpase-icon-fill)'};
+    }
+    :host(i-button[role="listbox"]:hover) > .icon g,
+    :host(i-button[role="listbox"]:hover) > .icon path {
+        --icon-fill: ${listbox_collapse_icon_fill_hover ? listbox_collapse_icon_fill_hover : 'var(--listbox-collpase-icon-fill-hover)'};
+    }
+    :host(i-button[role="listbox"][aria-expanded="true"]) > .icon,
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon {
+        --icon-size: ${listbox_expanded_icon_size ? listbox_expanded_icon_size : 'var(--listbox-expanded-icon-size)'};
+    }
+    :host(i-button[role="listbox"][aria-expanded="true"]) > .icon g,
+    :host(i-button[role="listbox"][aria-expanded="true"]) > .icon path,
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon g,
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon path {
         --icon-fill: ${listbox_expanded_icon_fill ? listbox_expanded_icon_fill : 'var(--listbox-expanded-icon-fill)'};
     }
-    :host(i-button[aria-expanded="false"]) .option .icon g, 
-    :host(i-button[aria-expanded="false"]) .option .icon path, 
-    :host(i-button[role="listbox"]) .option .icon g, 
-    :host(i-button[role="listbox"]) .option .icon path, 
-    :host(i-button[role="listbox"][aria-expanded="false"]) .option .icon g,
-    :host(i-button[role="listbox"][aria-expanded="false"]) .option .icon path
-    {
-        --icon-fill: ${listbox_collapse_icon_fill ? listbox_collapse_icon_fill : 'var(--listbox-collpase-option-icon-fill)'};
+    :host(i-button[role="listbox"][aria-expanded="true"]) .option > .icon {
+        --icon-fill: ${listbox_expanded_option_icon_size ? listbox_expanded_option_icon_size : 'var(--listbox-expanded-option-icon-size)'};
     }
-    :host(i-button[aria-expanded="false"]:hover) .option .icon g, 
-    :host(i-button[aria-expanded="false"]:hover) .option .icon path, 
-    :host(i-button[role="listbox"]:hover) .option .icon g, 
-    :host(i-button[role="listbox"]:hover) .option .icon path, 
-    :host(i-button[role="listbox"][aria-expanded="false"]:hover) .option .icon g,
-    :host(i-button[role="listbox"][aria-expanded="false"]:hover) .option .icon path 
-    {
-        --icon-fill: ${listbox_collapse_icon_fill_hover ? listbox_collapse_icon_fill_hover : 'var(--listbox-collpase-option-icon-fill-hover)'};
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option > .icon {
+        --icon-fill: ${listbox_expanded_option_icon_size_hover ? listbox_expanded_option_icon_size_hover : 'var(--listbox-expanded-option-icon-size-hover)'};
     }
-    :host(i-button[aria-expanded="true"]) .option .icon g, 
-    :host(i-button[aria-expanded="true"]) .option .icon path, 
-    :host(i-button[role="listbox"][aria-expanded="true"]) .option .icon g,
-    :host(i-button[role="listbox"][aria-expanded="true"]) .option .icon path
-    {
+    :host(i-button[role="listbox"][aria-expanded="true"]) .option > .icon g,
+    :host(i-button[role="listbox"][aria-expanded="true"]) .option > .icon path {
         --icon-fill: ${listbox_expanded_option_icon_fill ? listbox_expanded_option_icon_fill : 'var(--listbox-expanded-option-icon-fill)'};
     }
-    :host(i-button[aria-expanded="true"]:hover) .option .icon g, 
-    :host(i-button[aria-expanded="true"]:hover) .option .icon path,
-    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option .icon g,
-    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option .icon path
-    {
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option > .icon g,
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option > .icon path {
         --icon-fill: ${listbox_expanded_option_icon_fill_hover ? listbox_expanded_option_icon_fill_hover : 'var(--listbox-expanded-option-icon-fill-hover)'};
     }
-    :host(i-button[aria-expanded="true"]:hover) > .icon g, 
-    :host(i-button[aria-expanded="true"]:hover) > .icon path,
     :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon g,
-    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon path
-    {
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon path {
         --icon-fill: ${listbox_expanded_icon_fill_hover ? listbox_expanded_icon_fill_hover : 'var(--listbox-expanded-icon-fill-hover)'};
     }
     :host(i-button[aria-checked="true"]) > .icon g, :host(i-button[aria-checked="true"]) > .icon path {
@@ -3397,17 +3395,16 @@ function i_button (option, protocol) {
     :host(i-button[disabled]:hover) path, 
     :host(i-button[role="option"][disabled]) > .icon g, 
     :host(i-button[role="option"][disabled]) > .icon path, 
-    :host(i-button[role="option"][disabled]) .option .icon g,
-    :host(i-button[role="option"][disabled]) .option .icon path,
-    :host(i-button[role="listbox"][disabled]) .option .icon g, 
-    :host(i-button[role="listbox"][disabled]) .option .icon path, 
+    :host(i-button[role="option"][disabled]) .option > .icon g,
+    :host(i-button[role="option"][disabled]) .option > .icon path,
+    :host(i-button[role="listbox"][disabled]) .option > .icon g, 
+    :host(i-button[role="listbox"][disabled]) .option > .icon path, 
     :host(i-button[role="option"][disabled]:hover) > .icon g,
     :host(i-button[role="option"][disabled]:hover) > .icon path,
-    :host(i-button[role="listbox"][disabled]:hover) .option .icon g, 
-    :host(i-button[role="listbox"][disabled]:hover) .option .icon path, 
-    :host(i-button[role="option"][disabled]:hover) .option .icon g,
-    :host(i-button[role="option"][disabled]:hover) .option .icon path 
-    {
+    :host(i-button[role="listbox"][disabled]:hover) .option > .icon g, 
+    :host(i-button[role="listbox"][disabled]:hover) .option > .icon path, 
+    :host(i-button[role="option"][disabled]:hover) .option > .icon g,
+    :host(i-button[role="option"][disabled]:hover) .option > .icon path {
         --icon-fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-icon-fill)'};
     }
     :host(i-button[role="menuitem"]) {
@@ -3425,20 +3422,8 @@ function i_button (option, protocol) {
     :host(i-button[role="menuitem"][disabled]) g ,
     :host(i-button[role="menuitem"][disabled]) path,
     :host(i-button[role="menuitem"][disabled]:hover) g,
-    :host(i-button[role="menuitem"][disabled]:hover) path
-    {
+    :host(i-button[role="menuitem"][disabled]:hover) path {
         --icon-fill: ${disabled_icon_fill ? disabled_icon_fill : 'var(--primary-disabled-icon-fill)'};
-    }
-    :host(i-button[role="listbox"]) > .icon {
-        --icon-size: ${listbox_collapse_icon_size ? listbox_collapse_icon_size : 'var(--listbox-collapse-icon-size)'};
-    }
-    :host(i-button[role="listbox"]) > .icon g, 
-    :host(i-button[role="listbox"]) > .icon path {
-        --icon-fill: ${listbox_collapse_icon_fill ? listbox_collapse_icon_fill : 'var(--listbox-collapse-icon-fill)'};
-    }
-    :host(i-button[role="listbox"]:hover) > .icon g, 
-    :host(i-button[role="listbox"]:hover) > .icon path {
-        --icon-fill: ${listbox_collapse_icon_fill_hover ? listbox_collapse_icon_fill_hover : 'var(--listbox-collapse-icon-fill-hover)'};
     }
     :host(i-button[role="option"]) > .icon {
         --icon-size: ${list_selected_icon_size ? list_selected_icon_size : 'var(--list-selected-icon-size)'};
@@ -3450,8 +3435,26 @@ function i_button (option, protocol) {
     :host(i-button[role="option"]) > .icon path {
         --icon-fill: ${list_selected_icon_fill ? list_selected_icon_fill : 'var(--list-selected-icon-fill)'};
     }
-    :host(i-button[role="option"]:hover) > .icon g, :host(i-button[role="option"]:hover) > .icon path {
+    :host(i-button[role="option"]:hover) > .icon g, 
+    :host(i-button[role="option"]:hover) > .icon path {
         --icon-fill: ${list_selected_icon_fill_hover ? list_selected_icon_fill_hover : 'var(--list-selected-icon-fill-hover)'};
+    }
+    :host(i-button[role="option"][aria-current="true"]) > .icon, 
+    :host(i-button[role="option"][aria-current="true"]:hover) > .icon {
+        --icon-size: ${current_list_selected_icon_size ? current_list_selected_icon_size : 'var(--current-list-selected-icon-size)'};
+    }
+    :host(i-button[role="option"][aria-current="true"]) > .icon g, 
+    :host(i-button[role="option"][aria-current="true"]) > .icon path,
+    :host(i-button[role="option"][aria-current="true"]:hover) > .icon g, 
+    :host(i-button[role="option"][aria-current="true"]:hover) > .icon path {
+        --icon-fill: ${current_list_selected_icon_fill ? current_list_selected_icon_fill : 'var(--current-list-selected-icon-fill)'};
+    }
+    :host(i-button[role="option"][aria-selected="false"]) > .icon {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+    :host(i-button[role="option"][aria-selected="true"]) > .icon {
+        opacity: 1;
     }
     /* define grid */
     :host(i-button) .text {

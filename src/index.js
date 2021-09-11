@@ -378,6 +378,7 @@ function i_button (option, protocol) {
         current_bg_color,
         current_icon_size,
         current_icon_fill,
+        current_list_selected_icon_size,
         current_list_selected_icon_fill,
         current_avatar_width, 
         current_avatar_height,
@@ -388,19 +389,19 @@ function i_button (option, protocol) {
         list_selected_icon_fill, list_selected_icon_fill_hover,
         // role === listbox ----------------------------------//
         // collapse settings
-        listbox_collapse_color, listbox_collapse_color_hover,
-        listbox_collapse_size, listbox_collapse_size_hover,
-        listbox_collapse_weight, listbox_collapse_weight_hover,
-        listbox_collapse_icon_size, listbox_collapse_icon_size_hover,
-        listbox_collapse_icon_fill, listbox_collapse_icon_fill_hover, 
-        listbox_collapse_avatar_width, listbox_collapse_avatar_height,
+        listbox_collapse_icon_size, listbox_collapse_icon_fill, listbox_collapse_icon_fill_hover, 
+        listbox_collapse_option_color, listbox_collapse_option_color_hover,
+        listbox_collapse_option_size, listbox_collapse_option_size_hover,
+        listbox_collapse_option_weight, listbox_collapse_option_weight_hover,
+        listbox_collapse_option_icon_size, listbox_collapse_option_icon_size_hover,
+        listbox_collapse_option_avatar_width, listbox_collapse_option_avatar_height,
         // expanded settings
-        listbox_expanded_color, listbox_expanded_color_hover,
-        listbox_expanded_size, listbox_expanded_size_hover,
-        listbox_expanded_weight, listbox_expanded_weight_hover,
-        listbox_expanded_icon_size, listbox_expanded_icon_size_hover,
-        listbox_expanded_icon_fill, listbox_expanded_icon_fill_hover,
+        listbox_expanded_option_color, listbox_expanded_option_color_hover,
+        listbox_expanded_option_size, listbox_expanded_option_size_hover,
+        listbox_expanded_option_weight, listbox_expanded_option_weight_hover,
+        listbox_expanded_icon_size, listbox_expanded_icon_fill, listbox_expanded_icon_fill_hover,
         listbox_expanded_option_avatar_width, listbox_expanded_option_avatar_height,
+        listbox_expanded_option_icon_size, listbox_expanded_option_icon_size_hover,
         listbox_expanded_option_icon_fill, listbox_expanded_option_icon_fill_hover
     } = props
 
@@ -518,23 +519,28 @@ function i_button (option, protocol) {
         --size: ${size_hover ? size_hover : 'var(--primary-size-hover)'};
     }
     :host(i-button[role="listbox"]) {
-        --color: ${listbox_collapse_color ? listbox_collapse_color : 'var(--listbox-collapse-color)'};
-        --size: ${listbox_collapse_size ? listbox_collapse_size : 'var(--listbox-collapse-size)'};
-        --weight: ${listbox_collapse_weight ? listbox_collapse_weight : 'var(--listbox-collapse-weight)'};
+        --color: ${listbox_collapse_option_color ? listbox_collapse_option_color : 'var(--listbox-collapse-option-color)'};
+        --size: ${listbox_collapse_option_size ? listbox_collapse_option_size : 'var(--listbox-collapse-option-size)'};
+        --weight: ${listbox_collapse_option_weight ? listbox_collapse_option_weight : 'var(--listbox-collapse-option-weight)'};
     }
     :host(i-button[role="listbox"]:hover) {
-        --color: ${listbox_collapse_color_hover ? listbox_collapse_color_hover : 'var(--listbox-collapse-color-hover)'};
-        --size: ${listbox_collapse_size_hover ? listbox_collapse_size_hover : 'var(--listbox-collapse-size-hover)'};
-        --weight: ${listbox_collapse_weight_hover ? listbox_collapse_weight_hover : 'var(--listbox-collapse-weight-hover)'};
+        --color: ${listbox_collapse_option_color_hover ? listbox_collapse_option_color_hover : 'var(--listbox-collapse-option-color-hover)'};
+        --size: ${listbox_collapse_option_size_hover ? listbox_collapse_option_size_hover : 'var(--listbox-collapse-option-size-hover)'};
+        --weight: ${listbox_collapse_option_weight_hover ? listbox_collapse_option_weight_hover : 'var(--listbox-collapse-option-weight-hover)'};
     }
     :host(i-button[role="listbox"]) > .icon {
-        --icon-size: ${listbox_collapse_icon_size ? listbox_collapse_icon_size : 'var(--listbox-collapse-icon-size)'};
         ${grid.icon ? make_grid(grid.icon) : make_grid({column: '2'})}
     }
     :host(i-button[role="listbox"]) .text {}
     :host(i-button[role="listbox"]) .avatar {
-        --avatar-width: ${listbox_collapse_avatar_width ? listbox_collapse_avatar_width : 'var(--listbox-collapse-option-avatar-width)'};
-        --avatar-height: ${listbox_collapse_avatar_height ? listbox_collapse_avatar_height : 'var(--listbox-collapse-option-avatar-height)'};
+        --avatar-width: ${listbox_collapse_option_avatar_width ? listbox_collapse_option_avatar_width : 'var(--listbox-collapse-option-avatar-width)'};
+        --avatar-height: ${listbox_collapse_option_avatar_height ? listbox_collapse_option_avatar_height : 'var(--listbox-collapse-option-avatar-height)'}
+    }
+    :host(i-button[role="listbox"][aria-expanded="true"]),
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) {
+        --size: ${listbox_expanded_option_size ? listbox_expanded_option_size : 'var(--listbox-expanded-option-size)' };
+        --color: ${listbox_expanded_option_color ? listbox_expanded_option_color : 'var(--listbox-expanded-option-color)' };
+        --weight: ${listbox_expanded_option_weight ? listbox_expanded_option_weight : 'var(--listbox-expanded-option-weight)' };
     }
     :host(i-button[role="listbox"][aria-expanded="true"]) .avatar {
         --avatar-width: ${listbox_expanded_option_avatar_width ? listbox_expanded_option_avatar_width : 'var(--listbox-expanded-option-avatar-width)'};
@@ -562,25 +568,11 @@ function i_button (option, protocol) {
     :host(i-button[role="option"][aria-disabled="true"]) .icon, 
     :host(i-button[role="option"][aria-disabled="true"]:hover) .icon,
     :host(i-button[role="listbox"][aria-disabled="true"]) .icon, 
-    :host(i-button[role="listbox"][aria-disabled="true"]:hover) .icon
-    {
+    :host(i-button[role="listbox"][aria-disabled="true"]:hover) .icon {
         --icon-size: ${disabled_icon_size ? disabled_icon_size : 'var(--primary-disabled-icon-size)'};
     }
     :host(i-button[disabled]:hover) img {
         transform: scale(1);
-    }
-    :host(i-button[role="option"][aria-selected="true"]) > .icon g {
-        --icon-fill: ${list_selected_icon_fill ? list_selected_icon_fill : 'var(--list-selected-icon-fill)'};
-    }
-    :host(i-button[role="option"][aria-selected="true"]:hover) > .icon g {
-        --icon-fill: ${list_selected_icon_fill_hover ? list_selected_icon_fill_hover : 'var(--list-selected-icon-fill-hover)'};
-    }
-    :host(i-button[role="option"][aria-selected="false"]) > .icon {
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-    }
-    :host(i-button[role="option"][aria-selected="true"]) > .icon {
-        opacity: 1;
     }
     :host(i-button[aria-current="true"]), :host(i-button[aria-current="true"]:hover) {
         --size: ${current_size ? current_size : 'var(--current-size)'};
@@ -588,23 +580,14 @@ function i_button (option, protocol) {
         --color: ${current_color ? current_color : 'var(--current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
     }
-    :host(i-button[role="option"][aria-current="true"]) > .icon, 
-    :host(i-button[role="option"][aria-current="true"]:hover) > .icon,
-    {
-        --icon-fill: ${current_icon_size ? current_icon_size : 'var(--current-icon-size)'};
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon, 
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon {
+        --icon-size: ${current_icon_size ? current_icon_size : 'var(--current-icon-size)'};
     }
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) > .icon g, 
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) > .icon path, 
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) > .icon g,
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) > .icon path,
-    {
-        --icon-fill: ${current_list_selected_icon_fill ? current_list_selected_icon_fill : 'var(--current-list-selected-icon-fill)'};
-    }
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option .icon g, 
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option .icon path,
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option .icon g,
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option .icon path
-    {
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon g, 
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon path,
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon g,
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon path {
         --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--current-icon-fill)'};
     }
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
@@ -614,48 +597,50 @@ function i_button (option, protocol) {
         --color: ${current_color ? current_color : 'var(--current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
     }
-    :host(i-button[aria-expanded="true"]) > .icon g, :host(i-button[role="listbox"][aria-expanded="true"]) > .icon g,
-    :host(i-button[aria-expanded="true"]) > .icon path, :host(i-button[role="listbox"][aria-expanded="true"]) > .icon path 
-    {
+    :host(i-button[role="listbox"]) > .icon,
+    :host(i-button[role="listbox"]:hover) > .icon {
+        --icon-size: ${listbox_collapse_icon_size ? listbox_collapse_icon_size : 'var(--listbox-collapse-icon-size)'};
+    }
+    :host(i-button[role="listbox"]) .option > .icon {
+        --icon-size: ${listbox_collapse_option_icon_size ? listbox_collapse_option_icon_size : 'var(--listbox-collapse-option-icon-size)'};
+    }
+    :host(i-button[role="listbox"]:hover) .option > .icon {
+        --icon-size: ${listbox_collapse_option_icon_size_hover ? listbox_collapse_option_icon_size_hover : 'var(--listbox-collapse-option-icon-size-hover)'};
+    }
+    :host(i-button[role="listbox"]) > .icon g,
+    :host(i-button[role="listbox"]) > .icon path {
+        --icon-fill: ${listbox_collapse_icon_fill ? listbox_collapse_icon_fill : 'var(--listbox-collpase-icon-fill)'};
+    }
+    :host(i-button[role="listbox"]:hover) > .icon g,
+    :host(i-button[role="listbox"]:hover) > .icon path {
+        --icon-fill: ${listbox_collapse_icon_fill_hover ? listbox_collapse_icon_fill_hover : 'var(--listbox-collpase-icon-fill-hover)'};
+    }
+    :host(i-button[role="listbox"][aria-expanded="true"]) > .icon,
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon {
+        --icon-size: ${listbox_expanded_icon_size ? listbox_expanded_icon_size : 'var(--listbox-expanded-icon-size)'};
+    }
+    :host(i-button[role="listbox"][aria-expanded="true"]) > .icon g,
+    :host(i-button[role="listbox"][aria-expanded="true"]) > .icon path,
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon g,
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon path {
         --icon-fill: ${listbox_expanded_icon_fill ? listbox_expanded_icon_fill : 'var(--listbox-expanded-icon-fill)'};
     }
-    :host(i-button[aria-expanded="false"]) .option .icon g, 
-    :host(i-button[aria-expanded="false"]) .option .icon path, 
-    :host(i-button[role="listbox"]) .option .icon g, 
-    :host(i-button[role="listbox"]) .option .icon path, 
-    :host(i-button[role="listbox"][aria-expanded="false"]) .option .icon g,
-    :host(i-button[role="listbox"][aria-expanded="false"]) .option .icon path
-    {
-        --icon-fill: ${listbox_collapse_icon_fill ? listbox_collapse_icon_fill : 'var(--listbox-collpase-option-icon-fill)'};
+    :host(i-button[role="listbox"][aria-expanded="true"]) .option > .icon {
+        --icon-fill: ${listbox_expanded_option_icon_size ? listbox_expanded_option_icon_size : 'var(--listbox-expanded-option-icon-size)'};
     }
-    :host(i-button[aria-expanded="false"]:hover) .option .icon g, 
-    :host(i-button[aria-expanded="false"]:hover) .option .icon path, 
-    :host(i-button[role="listbox"]:hover) .option .icon g, 
-    :host(i-button[role="listbox"]:hover) .option .icon path, 
-    :host(i-button[role="listbox"][aria-expanded="false"]:hover) .option .icon g,
-    :host(i-button[role="listbox"][aria-expanded="false"]:hover) .option .icon path 
-    {
-        --icon-fill: ${listbox_collapse_icon_fill_hover ? listbox_collapse_icon_fill_hover : 'var(--listbox-collpase-option-icon-fill-hover)'};
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option > .icon {
+        --icon-fill: ${listbox_expanded_option_icon_size_hover ? listbox_expanded_option_icon_size_hover : 'var(--listbox-expanded-option-icon-size-hover)'};
     }
-    :host(i-button[aria-expanded="true"]) .option .icon g, 
-    :host(i-button[aria-expanded="true"]) .option .icon path, 
-    :host(i-button[role="listbox"][aria-expanded="true"]) .option .icon g,
-    :host(i-button[role="listbox"][aria-expanded="true"]) .option .icon path
-    {
+    :host(i-button[role="listbox"][aria-expanded="true"]) .option > .icon g,
+    :host(i-button[role="listbox"][aria-expanded="true"]) .option > .icon path {
         --icon-fill: ${listbox_expanded_option_icon_fill ? listbox_expanded_option_icon_fill : 'var(--listbox-expanded-option-icon-fill)'};
     }
-    :host(i-button[aria-expanded="true"]:hover) .option .icon g, 
-    :host(i-button[aria-expanded="true"]:hover) .option .icon path,
-    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option .icon g,
-    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option .icon path
-    {
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option > .icon g,
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option > .icon path {
         --icon-fill: ${listbox_expanded_option_icon_fill_hover ? listbox_expanded_option_icon_fill_hover : 'var(--listbox-expanded-option-icon-fill-hover)'};
     }
-    :host(i-button[aria-expanded="true"]:hover) > .icon g, 
-    :host(i-button[aria-expanded="true"]:hover) > .icon path,
     :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon g,
-    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon path
-    {
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon path {
         --icon-fill: ${listbox_expanded_icon_fill_hover ? listbox_expanded_icon_fill_hover : 'var(--listbox-expanded-icon-fill-hover)'};
     }
     :host(i-button[aria-checked="true"]) > .icon g, :host(i-button[aria-checked="true"]) > .icon path {
@@ -673,17 +658,16 @@ function i_button (option, protocol) {
     :host(i-button[disabled]:hover) path, 
     :host(i-button[role="option"][disabled]) > .icon g, 
     :host(i-button[role="option"][disabled]) > .icon path, 
-    :host(i-button[role="option"][disabled]) .option .icon g,
-    :host(i-button[role="option"][disabled]) .option .icon path,
-    :host(i-button[role="listbox"][disabled]) .option .icon g, 
-    :host(i-button[role="listbox"][disabled]) .option .icon path, 
+    :host(i-button[role="option"][disabled]) .option > .icon g,
+    :host(i-button[role="option"][disabled]) .option > .icon path,
+    :host(i-button[role="listbox"][disabled]) .option > .icon g, 
+    :host(i-button[role="listbox"][disabled]) .option > .icon path, 
     :host(i-button[role="option"][disabled]:hover) > .icon g,
     :host(i-button[role="option"][disabled]:hover) > .icon path,
-    :host(i-button[role="listbox"][disabled]:hover) .option .icon g, 
-    :host(i-button[role="listbox"][disabled]:hover) .option .icon path, 
-    :host(i-button[role="option"][disabled]:hover) .option .icon g,
-    :host(i-button[role="option"][disabled]:hover) .option .icon path 
-    {
+    :host(i-button[role="listbox"][disabled]:hover) .option > .icon g, 
+    :host(i-button[role="listbox"][disabled]:hover) .option > .icon path, 
+    :host(i-button[role="option"][disabled]:hover) .option > .icon g,
+    :host(i-button[role="option"][disabled]:hover) .option > .icon path {
         --icon-fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-icon-fill)'};
     }
     :host(i-button[role="menuitem"]) {
@@ -701,20 +685,8 @@ function i_button (option, protocol) {
     :host(i-button[role="menuitem"][disabled]) g ,
     :host(i-button[role="menuitem"][disabled]) path,
     :host(i-button[role="menuitem"][disabled]:hover) g,
-    :host(i-button[role="menuitem"][disabled]:hover) path
-    {
+    :host(i-button[role="menuitem"][disabled]:hover) path {
         --icon-fill: ${disabled_icon_fill ? disabled_icon_fill : 'var(--primary-disabled-icon-fill)'};
-    }
-    :host(i-button[role="listbox"]) > .icon {
-        --icon-size: ${listbox_collapse_icon_size ? listbox_collapse_icon_size : 'var(--listbox-collapse-icon-size)'};
-    }
-    :host(i-button[role="listbox"]) > .icon g, 
-    :host(i-button[role="listbox"]) > .icon path {
-        --icon-fill: ${listbox_collapse_icon_fill ? listbox_collapse_icon_fill : 'var(--listbox-collapse-icon-fill)'};
-    }
-    :host(i-button[role="listbox"]:hover) > .icon g, 
-    :host(i-button[role="listbox"]:hover) > .icon path {
-        --icon-fill: ${listbox_collapse_icon_fill_hover ? listbox_collapse_icon_fill_hover : 'var(--listbox-collapse-icon-fill-hover)'};
     }
     :host(i-button[role="option"]) > .icon {
         --icon-size: ${list_selected_icon_size ? list_selected_icon_size : 'var(--list-selected-icon-size)'};
@@ -726,8 +698,26 @@ function i_button (option, protocol) {
     :host(i-button[role="option"]) > .icon path {
         --icon-fill: ${list_selected_icon_fill ? list_selected_icon_fill : 'var(--list-selected-icon-fill)'};
     }
-    :host(i-button[role="option"]:hover) > .icon g, :host(i-button[role="option"]:hover) > .icon path {
+    :host(i-button[role="option"]:hover) > .icon g, 
+    :host(i-button[role="option"]:hover) > .icon path {
         --icon-fill: ${list_selected_icon_fill_hover ? list_selected_icon_fill_hover : 'var(--list-selected-icon-fill-hover)'};
+    }
+    :host(i-button[role="option"][aria-current="true"]) > .icon, 
+    :host(i-button[role="option"][aria-current="true"]:hover) > .icon {
+        --icon-size: ${current_list_selected_icon_size ? current_list_selected_icon_size : 'var(--current-list-selected-icon-size)'};
+    }
+    :host(i-button[role="option"][aria-current="true"]) > .icon g, 
+    :host(i-button[role="option"][aria-current="true"]) > .icon path,
+    :host(i-button[role="option"][aria-current="true"]:hover) > .icon g, 
+    :host(i-button[role="option"][aria-current="true"]:hover) > .icon path {
+        --icon-fill: ${current_list_selected_icon_fill ? current_list_selected_icon_fill : 'var(--current-list-selected-icon-fill)'};
+    }
+    :host(i-button[role="option"][aria-selected="false"]) > .icon {
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+    :host(i-button[role="option"][aria-selected="true"]) > .icon {
+        opacity: 1;
     }
     /* define grid */
     :host(i-button) .text {
