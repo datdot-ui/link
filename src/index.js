@@ -554,7 +554,14 @@ function i_button (option, protocol) {
         --bg-color: ${disabled_bg_color ? disabled_bg_color : 'var(--primary-disabled-bg-color)'};
         --opacity: ${opacity ? opacity : '0'}
     }
-    :host(i-button[disabled]) .icon, :host(i-button[role="option"]:hover) .icon {
+    
+    :host(i-button[aria-disabled="true"]) .icon, 
+    :host(i-button[aria-disabled="true"]:hover) .icon,
+    :host(i-button[role="option"][aria-disabled="true"]) .icon, 
+    :host(i-button[role="option"][aria-disabled="true"]:hover) .icon,
+    :host(i-button[role="listbox"][aria-disabled="true"]) .icon, 
+    :host(i-button[role="listbox"][aria-disabled="true"]:hover) .icon
+    {
         --icon-size: ${disabled_icon_size ? disabled_icon_size : 'var(--primary-disabled-icon-size)'};
     }
     :host(i-button[disabled]:hover) img {
