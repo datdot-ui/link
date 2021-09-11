@@ -976,20 +976,22 @@ const css = csjs`
     --primary-disabled-icon-fill: var(--color-greyA2);
     --primary-option-avatar-width: 30px;
     --primary-option-avatar-height: auto;
-    /* define current ---------------------------------------------*/
-    --current-size: var(--size14);
-    --current-weight: var(--primary-weight);
-    --current-color: var(--color-white);
-    --current-bg-color: var(--color-black);
-    --current-icon-fill: var(--color-white);
-    --current-list-size: var(--current-size);
-    --current-list-color: var(--current-color);
-    --current-list-bg-color: var(--current-bg-color);
     /* define icon settings ---------------------------------------------*/
     --primary-icon-size: var(--size16);
     --primary-icon-size-hover: var(--size16);
     --primary-icon-fill: var(--primary-color);
     --primary-icon-fill-hover: var(--primary-color-hover);
+    /* define current ---------------------------------------------*/
+    --current-size: var(--size14);
+    --current-weight: var(--primary-weight);
+    --current-color: var(--color-white);
+    --current-bg-color: var(--color-black);
+    --current-icon-size: var(--primary-icon-size);
+    --current-icon-fill: var(--color-white);
+    --current-list-selected-icon-fill: var(--color-white);
+    --current-list-size: var(--current-size);
+    --current-list-color: var(--current-color);
+    --current-list-bg-color: var(--current-bg-color);
     /* role listbox settings ---------------------------------------------*/
     /*-- collapse --*/
     --listbox-collapse-size: var(--size20);

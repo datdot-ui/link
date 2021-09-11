@@ -977,20 +977,22 @@ const css = csjs`
     --primary-disabled-icon-fill: var(--color-greyA2);
     --primary-option-avatar-width: 30px;
     --primary-option-avatar-height: auto;
-    /* define current ---------------------------------------------*/
-    --current-size: var(--size14);
-    --current-weight: var(--primary-weight);
-    --current-color: var(--color-white);
-    --current-bg-color: var(--color-black);
-    --current-icon-fill: var(--color-white);
-    --current-list-size: var(--current-size);
-    --current-list-color: var(--current-color);
-    --current-list-bg-color: var(--current-bg-color);
     /* define icon settings ---------------------------------------------*/
     --primary-icon-size: var(--size16);
     --primary-icon-size-hover: var(--size16);
     --primary-icon-fill: var(--primary-color);
     --primary-icon-fill-hover: var(--primary-color-hover);
+    /* define current ---------------------------------------------*/
+    --current-size: var(--size14);
+    --current-weight: var(--primary-weight);
+    --current-color: var(--color-white);
+    --current-bg-color: var(--color-black);
+    --current-icon-size: var(--primary-icon-size);
+    --current-icon-fill: var(--color-white);
+    --current-list-selected-icon-fill: var(--color-white);
+    --current-list-size: var(--current-size);
+    --current-list-color: var(--current-color);
+    --current-list-bg-color: var(--current-bg-color);
     /* role listbox settings ---------------------------------------------*/
     /*-- collapse --*/
     --listbox-collapse-size: var(--size20);
@@ -3098,7 +3100,9 @@ function i_button (option, protocol) {
         current_weight, 
         current_color, 
         current_bg_color,
-        current_icon_fill, 
+        current_icon_size,
+        current_icon_fill,
+        current_list_selected_icon_fill,
         current_avatar_width, 
         current_avatar_height,
         // disabled -----------------------------------------//
@@ -3308,19 +3312,24 @@ function i_button (option, protocol) {
         --color: ${current_color ? current_color : 'var(--current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
     }
-    :host(i-button[role="option"][aria-current="true"]) > .icon g, 
-    :host(i-button[role="option"][aria-current="true"]) > .icon path, 
-    :host(i-button[role="option"][aria-current="true"]) .option .icon g, 
-    :host(i-button[role="option"][aria-current="true"]) .option .icon path, 
-    :host(i-button[role="option"][aria-current="true"]:hover) > .icon g,
-    :host(i-button[role="option"][aria-current="true"]:hover) > .icon path,
-    :host(i-button[role="option"][aria-current="true"]:hover) .option .icon g,
-    :host(i-button[role="option"][aria-current="true"]:hover) .option .icon path
+    :host(i-button[role="option"][aria-current="true"]) > .icon, 
+    :host(i-button[role="option"][aria-current="true"]:hover) > .icon,
+    {
+        --icon-fill: ${current_icon_size ? current_icon_size : 'var(--current-icon-size)'};
+    }
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) > .icon g, 
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) > .icon path, 
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) > .icon g,
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) > .icon path,
+    {
+        --icon-fill: ${current_list_selected_icon_fill ? current_list_selected_icon_fill : 'var(--current-list-selected-icon-fill)'};
+    }
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option .icon g, 
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option .icon path,
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option .icon g,
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option .icon path
     {
         --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--current-icon-fill)'};
-    }
-    :host(i-button[aria-current="true"]:hover) g, :host(i-button[aria-current="true"]:hover) path {
-        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--current-icon-fill)'};
     }
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
     :host(i-button[aria-checked="true"]:hover), :host(i-button[aria-expanded="true"]:hover) {
