@@ -171,6 +171,7 @@ function i_link (option, protocol) {
         text-decoration: none;
         cursor: not-allowed;
     }
+    
     :host(i-link[disabled]) g,
     :host(i-link[disabled]) path,
     :host(i-link[disabled]:hover) g,
@@ -379,7 +380,7 @@ function i_button (option, protocol) {
         current_avatar_width, 
         current_avatar_height,
         // disabled -----------------------------------------//
-        disabled_size, disabled_weight, disabled_color, disabled_bg_color, disabled_icon_fill,
+        disabled_size, disabled_weight, disabled_color, disabled_bg_color, disabled_icon_fill, disabled_icon_size,
         // role === option ----------------------------------//
         list_selected_icon_size, list_selected_icon_size_hover,
         list_selected_icon_fill, list_selected_icon_fill_hover,
@@ -552,6 +553,9 @@ function i_button (option, protocol) {
         --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
         --bg-color: ${disabled_bg_color ? disabled_bg_color : 'var(--primary-disabled-bg-color)'};
         --opacity: ${opacity ? opacity : '0'}
+    }
+    :host(i-button[disabled]) .icon, :host(i-button[role="option"]:hover) .icon {
+        --icon-size: ${disabled_icon_size ? disabled_icon_size : 'var(--primary-disabled-icon-size)'};
     }
     :host(i-button[disabled]:hover) img {
         transform: scale(1);

@@ -972,6 +972,7 @@ const css = csjs`
     --primary-disabled-size: var(--primary-size);
     --primary-disabled-color: var(--color-greyA2);
     --primary-disabled-bg-color: var(--color-greyEB);
+    --primary-disabled-icon-size: var(--primary-icon-size);
     --primary-disabled-icon-fill: var(--color-greyA2);
     --primary-option-avatar-width: 30px;
     --primary-option-avatar-height: auto;
