@@ -987,6 +987,7 @@ const css = csjs`
     --current-list-bg-color: var(--current-bg-color);
     /* define icon settings ---------------------------------------------*/
     --primary-icon-size: var(--size16);
+    --primary-icon-size-hover: var(--size16);
     --primary-icon-fill: var(--primary-color);
     --primary-icon-fill-hover: var(--primary-color-hover);
     /* role listbox settings ---------------------------------------------*/
@@ -3220,9 +3221,6 @@ function i_button (option, protocol) {
         --scale: ${scale_hover ? scale_hover : '1.3'};
         transform: scale(var(--scale));
     }
-    :host(i-button:hover) .icon {
-        --icon-size: ${icon_size_hover ? icon_size_hover : 'var(--primary-icon-size-hover)'};
-    }
     :host(i-button) svg {
         width: 100%;
         height: auto;
@@ -3442,8 +3440,11 @@ function i_button (option, protocol) {
         --icon-size: ${icon_size ? icon_size : 'var(--primary-icon-size)'};
         display: block;
         width: var(--icon-size);
-        transition: width 0.15s ease-in-out;
+        transition: width 0.25s ease-in-out;
         ${make_grid(grid.icon)}
+    }
+    :host(i-button:hover) .icon {
+        --icon-size: ${icon_size_hover ? icon_size_hover : 'var(--primary-icon-size-hover)'};
     }
     :host(i-button) .listbox {
         display: grid;

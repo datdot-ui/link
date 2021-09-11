@@ -986,6 +986,7 @@ const css = csjs`
     --current-list-bg-color: var(--current-bg-color);
     /* define icon settings ---------------------------------------------*/
     --primary-icon-size: var(--size16);
+    --primary-icon-size-hover: var(--size16);
     --primary-icon-fill: var(--primary-color);
     --primary-icon-fill-hover: var(--primary-color-hover);
     /* role listbox settings ---------------------------------------------*/
