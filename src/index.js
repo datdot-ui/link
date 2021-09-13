@@ -68,17 +68,33 @@ function i_link (option, protocol) {
     const custom_style = theme ? theme.style : ''
     // set CSS variables
     const {props = {}, grid = {}} = theme
-    const {size, size_hover, disabled_size, weight, 
-        color, color_hover, disabled_color,
-        deco, deco_hover,
-        bg_color, bg_color_hover,
-        border_width, border_style, border_opacity, border_color, border_color_hover, border_radius, 
+    const {
+        // default        
         padding, margin, width, height, opacity,
+        // size
+        size, size_hover, disabled_size,
+        // weight
+        weight, weight_hover, disabled_weight,
+        // color
+        color, color_hover, disabled_color,
+        // background-color    
+        bg_color, bg_color_hover, disabled_bg_color,
+        // deco
+        deco, deco_hover, disabled_deco,
+        // border
+        border_width, border_style, border_opacity, 
+        border_color, border_color_hover, border_radius,
+        // shadowbox
+        shadow_color, shadow_color_hover,
+        offset_x, offset_y, offset_x_hover, offset_y_hover, 
+        blur, blur_hover, shadow_opacity, shadow_opacity_hover,
+        // icon
+        icon_size, icon_size_hover, disabled_icon_size,
         icon_fill, icon_fill_hover, disabled_icon_fill,
-        icon_size, icon_size_hover,
-        avatar_width, avatar_height, avatar_radius,
-        shadow_color, offset_x, offset_y, blur, shadow_opacity,
-        shadow_color_hover, offset_x_hover, offset_y_hover, blur_hover, shadow_opacity_hover
+        // avatar
+        avatar_width, avatar_height, avatar_radius, 
+        avatar_width_hover, avatar_height_hover,
+        scale, scale_hover
     } = props
 
     const grid_link = grid.link ? grid.link : {auto: {auto_flow: 'column'}, align: 'items-center', gap: '4px'}
@@ -113,23 +129,29 @@ function i_link (option, protocol) {
         --opacity: ${opacity ? opacity : '0'};
         text-decoration: var(--deco);
     }
-    :host(i-link) svg, :host(i-link) img {
+    :host(i-link) img {
+        --scale: ${scale ? scale : '1'};
+        width: 100%;
+        height: 100%;
+        transform: scale(var(--scale));
+        transition: transform 0.3s linear;
+        object-fit: cover;
+        border-radius: var(--avatar-radius);
+    }
+    :host(i-link:hover) img {
+        --scale: ${scale_hover ? scale_hover : '1.2'};
+    }
+    :host(i-link) svg {
         width: 100%;
         height: auto;
     }
-    :host(i-link) g, :host(i-link) path {
+    :host(i-link) g {
         --icon-fill: ${icon_fill ? icon_fill : 'var(--link-icon-fill)'};
         fill: hsl(var(--icon-fill));
         transition: fill 0.05s ease-in-out;
     }
     :host(i-link:hover) g, :host(i-link:hover) path{
         --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--link-icon-fill-hover)'};
-    }
-    :host(i-link[role="menuitem"]) g, :host(i-link[role="menuitem"]) path {
-        --icon-fill: ${icon_fill ? icon_fill : 'var(--menu-icon-fill)'};
-    }
-    :host(i-link[role="menuitem"]:hover) g, :host(i-link[role="menuitem"]:hover) path {
-        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--menu-icon-fill-hover)'};
     }
     :host(i-link) .text {
         ${make_grid(grid.text)}
@@ -142,28 +164,45 @@ function i_link (option, protocol) {
     :host(i-link:hover) .icon {
         --icon-size: ${icon_size_hover ? icon_size_hover : 'var(--link-icon-size)'};
     }
-    :host(i-link[role="menuitem"]) .icon {
-        --icon-size: ${icon_size ? icon_size : 'var(--menu-icon-size)'};
-    }
     :host(i-link) .avatar {
-        --avatar-width: ${avatar_width ? avatar_width : '100%'};
-        --avatar-height: ${avatar_height ? avatar_height : 'auto'};
-        --avatar-radius: ${avatar_radius ? avatar_radius : 'var(--primary-avatar-radius)'};
+        --avatar-width: ${avatar_width ? avatar_width : 'var(--link-avatar-width)'};
+        --avatar-height: ${avatar_height ? avatar_height : 'var(--link-avatar-height)'};
+        --avatar-radius: ${avatar_radius ? avatar_radius : 'var(--link-avatar-radius)'};
         display: block;
         width: var(--avatar-width);
         height: var(--avatar-height);
         border-radius: var(--avatar-radius);
+        -webkit-mask-image: -webkit-radial-gradient(center, white, black);
         max-width: 100%;
+        max-height: 100%;
         ${make_grid(grid.avatar)}
+        transition: width 0.2s, height 0.2s linear;
+    }
+    :host(i-link:hover) .avatar {
+        --avatar-width: ${avatar_width_hover ? avatar_width_hover : 'var(--link-avatar-width-hover)'};
+        --avatar-height: ${avatar_height_hover ? avatar_height_hover : 'var(--link-avatar-height-hover)'};
     }
     :host(i-link[role="menuitem"]) {
+        --size: ${size ? size : 'var(--menu-size)'};
         --color: ${color ? color : 'var(--menu-color)'};
+        --weight: ${weight ? weight : 'var(--menu-weight)'};
         background-color: transparent;
     }
     :host(i-link[role="menuitem"]:hover) {
+        --size: ${size ? size : 'var(--menu-size-hover)'};
         --color: ${color_hover ? color_hover : 'var(--menu-color-hover)'};
+        --weight: ${weight ? weight : 'var(--menu-weight-hover)'};
         text-decoration: none;
         background-color: transparent;
+    }
+    :host(i-link[role="menuitem"]) .icon {
+        --icon-size: ${icon_size ? icon_size : 'var(--menu-icon-size)'};
+    }
+    :host(i-link[role="menuitem"]) g {
+        --icon-fill: ${icon_fill ? icon_fill : 'var(--menu-icon-fill)'};
+    }
+    :host(i-link[role="menuitem"]:hover) g {
+        --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--menu-icon-fill-hover)'};
     }
     :host(i-link[aria-disabled="true"]), :host(i-link[aria-disabled="true"]:hover) {
         --size: ${disabled_size ? disabled_size : 'var(--link-disabled-size)'};
@@ -171,7 +210,6 @@ function i_link (option, protocol) {
         text-decoration: none;
         cursor: not-allowed;
     }
-    
     :host(i-link[disabled]) g,
     :host(i-link[disabled]) path,
     :host(i-link[disabled]:hover) g,
@@ -195,7 +233,7 @@ function i_link (option, protocol) {
 }
 
 function i_button (option, protocol) {
-    const {page = "*", flow = 'ui-button', name, role = 'button', body = '', icons = {}, cover, classlist = null, mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme = {}} = option
+    const {page = "*", flow = 'ui-button', name, role = 'button', controls, body = '', icons = {}, cover, classlist = null, mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme = {}} = option
     const {icon, select = {}, list = {}} = icons
     const make_icon = icon ? main_icon(icon) : undefined
     if (role === 'listbox') var make_select_icon = select_icon(select)
@@ -214,7 +252,7 @@ function i_button (option, protocol) {
         const data = role === 'tab' ?  {selected: is_current ? 'true' : is_selected, current: is_current} : role === 'switch' ? {checked: is_checked} : role === 'listbox' ? {expanded: is_expanded} : disabled ? {disabled} : role === 'option' ? {selected: is_selected, current: is_current} : null
         const message = make({to: 'demo.js', type: 'ready', data})
         send(message)
-        const el = make_element({name: 'i-button', role, classlist })
+        const el = make_element({name: 'i-button', classlist, role })
         const shadow = el.attachShadow({mode: 'open'})
         const text = make_element({name: 'span', classlist: 'text'})
         const avatar = make_element({name: 'span', classlist: 'avatar'})
@@ -227,11 +265,11 @@ function i_button (option, protocol) {
         if (typeof cover === 'object') send(make({type: 'error', data: `cover[${typeof cover}] must to be a string`}))
         if (typeof body === 'object' && body.localName !== 'div') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))
         if (!is_disabled) el.onclick = handle_click
+        el.setAttribute('aria-label', name)
         text.append(body)
         style_sheet(shadow, style)
         append_items()
         init_attr()
-         
         return el
 
         function init_attr () {
@@ -239,10 +277,13 @@ function i_button (option, protocol) {
             if (state) set_attr({aria: 'aria-live', prop: 'assertive'})
             if (role === 'tab') {
                 set_attr({aria: 'selected', prop: is_selected})
-                el.dataset.name = name
+                set_attr({aria: 'controls', prop: controls})
+                el.setAttribute('tabindex', is_current ? 0 : -1)
             }
             if (role === 'switch') set_attr({aria: 'checked', prop: is_checked})
-            if (role === 'listbox') set_attr({aria: 'haspopup', prop: role})
+            if (role === 'listbox') {
+                set_attr({aria: 'haspopup', prop: role})
+            }
 
             if (disabled) {
                 set_attr({aria: 'disabled', prop: is_disabled})
@@ -296,7 +337,7 @@ function i_button (option, protocol) {
             is_current = is_checked
             set_attr({aria: 'selected', prop: is_checked})
             set_attr({aria: 'current', prop: is_current})
-            el.dataset.current = is_current
+            el.setAttribute('tabindex', is_current ? 0 : -1)
         }
         function list_selected_event (state) {
             const content = {body: option.cloneNode(true)}
@@ -356,20 +397,30 @@ function i_button (option, protocol) {
     const {props = {}, grid = {}} = theme
     const {
         // default -----------------------------------------//
+        padding, margin, width, height, opacity, 
+        // size
         size, size_hover, 
-        color, color_hover,
+        // weight
         weight, weight_hover, 
-        bg_color, bg_color_hover, 
+        // color
+        color, color_hover,
+        // background-color
+        bg_color, bg_color_hover,
+        // border
         border_color, border_color_hover,
         border_width, border_style, border_opacity, border_radius, 
-        padding, margin, width, height, opacity, 
-        avatar_width, avatar_height, avatar_radius,
+        // icon
         icon_fill, icon_fill_hover, icon_size, icon_size_hover,
+        // avatar
+        avatar_width, avatar_height, avatar_radius,
+        avatar_width_hover, avatar_height_hover,
+        // shadow
         shadow_color, shadow_color_hover, 
         offset_x, offset_x_hover,
         offset_y, offset_y_hover, 
         blur, blur_hover,
         shadow_opacity, shadow_opacity_hover,
+        // scale
         scale, scale_hover,
         // current -----------------------------------------//
         current_size, 
@@ -383,7 +434,8 @@ function i_button (option, protocol) {
         current_avatar_width, 
         current_avatar_height,
         // disabled -----------------------------------------//
-        disabled_size, disabled_weight, disabled_color, disabled_bg_color, disabled_icon_fill, disabled_icon_size,
+        disabled_size, disabled_weight, disabled_color,
+        disabled_bg_color, disabled_icon_fill, disabled_icon_size,
         // role === option ----------------------------------//
         list_selected_icon_size, list_selected_icon_size_hover,
         list_selected_icon_fill, list_selected_icon_fill_hover,
@@ -430,6 +482,9 @@ function i_button (option, protocol) {
         --shadow-color: ${shadow_color ? shadow_color : 'var(--primary-color)'};
         --shadow-opacity: ${shadow_opacity ? shadow_opacity : '0'};
         --box-shadow: var(--offset_x) var(--offset-y) var(--blur) hsla( var(--shadow-color), var(--shadow-opacity) );
+        --avatar-width: ${avatar_width ? avatar_width : 'var(--primary-avatar-width)'};
+        --avatar-height: ${avatar_height ? avatar_height : 'var(--primary-avatar-height)'};
+        --avatar-radius: ${avatar_radius ? avatar_radius : 'var(--primary-avatar-radius)'};
         display: inline-grid;
         ${grid.button ? make_grid(grid.button) : make_grid({auto: {auto_flow: 'column'}, gap: '5px', justify: 'content-center', align: 'items-center'})}
         ${width && 'width: var(--width);'};
@@ -462,12 +517,12 @@ function i_button (option, protocol) {
     :host(i-button:hover:foucs:active) {
         --bg-color: ${bg_color ? bg_color : 'var(--primary-bg-color)'};
     }
-    :host(i-button) g, :host(i-button) path {
+    :host(i-button) g {
         --icon-fill: ${icon_fill ? icon_fill : 'var(--primary-icon-fill)'};
         fill: hsl(var(--icon-fill));
         transition: fill 0.05s ease-in-out;
     }
-    :host(i-button:hover) g, :host(i-button:hover) path {
+    :host(i-button:hover) g {
         --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--primary-icon-fill-hover)'};
     }
     :host(i-button) .col2 {
@@ -478,16 +533,10 @@ function i_button (option, protocol) {
         align-items: center;
     }
     :host(i-button) .avatar {
-        --avatar-width: ${avatar_width ? avatar_width : '100%'};
-        --avatar-height: ${avatar_height ? avatar_height : 'auto'};
-        --avatar-radius: ${avatar_radius ? avatar_radius : 'var(--primary-avatar-radius)'};
-        position: relative;
         display: block;
         width: var(--avatar-width);
         height: var(--avatar-height);
         max-width: 100%;
-        max-height: 100%;
-        text-align: center;
         border-radius: var(--avatar-radius);
         -webkit-mask-image: -webkit-radial-gradient(white, black);
         overflow: hidden;
@@ -497,11 +546,14 @@ function i_button (option, protocol) {
     :host(i-button) img {
         --scale: ${scale ? scale : '1'};
         width: 100%;
+        height: 100%;
         transform: scale(var(--scale));
         transition: transform 0.3s, scale 0.3s linear;
+        object-fit: cover;
+        border-radius: var(--avatar-radius);
     }
-    :host(i-button:hover) .avatar img {
-        --scale: ${scale_hover ? scale_hover : '1.3'};
+    :host(i-button:hover) img {
+        --scale: ${scale_hover ? scale_hover : '1.2'};
         transform: scale(var(--scale));
     }
     :host(i-button) svg {
@@ -584,10 +636,8 @@ function i_button (option, protocol) {
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon {
         --icon-size: ${current_icon_size ? current_icon_size : 'var(--current-icon-size)'};
     }
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon g, 
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon path,
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon g,
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon path {
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon g,
+    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon g {
         --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--current-icon-fill)'};
     }
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
@@ -607,22 +657,18 @@ function i_button (option, protocol) {
     :host(i-button[role="listbox"]:hover) .option > .icon {
         --icon-size: ${listbox_collapse_option_icon_size_hover ? listbox_collapse_option_icon_size_hover : 'var(--listbox-collapse-option-icon-size-hover)'};
     }
-    :host(i-button[role="listbox"]) > .icon g,
-    :host(i-button[role="listbox"]) > .icon path {
+    :host(i-button[role="listbox"]) > .icon g {
         --icon-fill: ${listbox_collapse_icon_fill ? listbox_collapse_icon_fill : 'var(--listbox-collpase-icon-fill)'};
     }
-    :host(i-button[role="listbox"]:hover) > .icon g,
-    :host(i-button[role="listbox"]:hover) > .icon path {
+    :host(i-button[role="listbox"]:hover) > .icon g {
         --icon-fill: ${listbox_collapse_icon_fill_hover ? listbox_collapse_icon_fill_hover : 'var(--listbox-collpase-icon-fill-hover)'};
     }
     :host(i-button[role="listbox"][aria-expanded="true"]) > .icon,
     :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon {
         --icon-size: ${listbox_expanded_icon_size ? listbox_expanded_icon_size : 'var(--listbox-expanded-icon-size)'};
     }
-    :host(i-button[role="listbox"][aria-expanded="true"]) > .icon g,
-    :host(i-button[role="listbox"][aria-expanded="true"]) > .icon path,
-    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon g,
-    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon path {
+    :host(i-button[role="listbox"][aria-expanded="true"]) > .icon g
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon g {
         --icon-fill: ${listbox_expanded_icon_fill ? listbox_expanded_icon_fill : 'var(--listbox-expanded-icon-fill)'};
     }
     :host(i-button[role="listbox"][aria-expanded="true"]) .option > .icon {
@@ -631,19 +677,16 @@ function i_button (option, protocol) {
     :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option > .icon {
         --icon-fill: ${listbox_expanded_option_icon_size_hover ? listbox_expanded_option_icon_size_hover : 'var(--listbox-expanded-option-icon-size-hover)'};
     }
-    :host(i-button[role="listbox"][aria-expanded="true"]) .option > .icon g,
-    :host(i-button[role="listbox"][aria-expanded="true"]) .option > .icon path {
+    :host(i-button[role="listbox"][aria-expanded="true"]) .option > .icon g {
         --icon-fill: ${listbox_expanded_option_icon_fill ? listbox_expanded_option_icon_fill : 'var(--listbox-expanded-option-icon-fill)'};
     }
-    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option > .icon g,
-    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option > .icon path {
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) .option > .icon g {
         --icon-fill: ${listbox_expanded_option_icon_fill_hover ? listbox_expanded_option_icon_fill_hover : 'var(--listbox-expanded-option-icon-fill-hover)'};
     }
-    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon g,
-    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon path {
+    :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon g {
         --icon-fill: ${listbox_expanded_icon_fill_hover ? listbox_expanded_icon_fill_hover : 'var(--listbox-expanded-icon-fill-hover)'};
     }
-    :host(i-button[aria-checked="true"]) > .icon g, :host(i-button[aria-checked="true"]) > .icon path {
+    :host(i-button[aria-checked="true"]) > .icon g {
         --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--color-white)' };
     }
     :host(i-button[disabled]), :host(i-button[disabled]:hover) {
@@ -653,39 +696,43 @@ function i_button (option, protocol) {
         cursor: not-allowed;
     }
     :host(i-button[disabled]) g, 
-    :host(i-button[disabled]) path,
     :host(i-button[disabled]:hover) g, 
-    :host(i-button[disabled]:hover) path, 
     :host(i-button[role="option"][disabled]) > .icon g, 
-    :host(i-button[role="option"][disabled]) > .icon path, 
     :host(i-button[role="option"][disabled]) .option > .icon g,
-    :host(i-button[role="option"][disabled]) .option > .icon path,
     :host(i-button[role="listbox"][disabled]) .option > .icon g, 
-    :host(i-button[role="listbox"][disabled]) .option > .icon path, 
     :host(i-button[role="option"][disabled]:hover) > .icon g,
-    :host(i-button[role="option"][disabled]:hover) > .icon path,
     :host(i-button[role="listbox"][disabled]:hover) .option > .icon g, 
-    :host(i-button[role="listbox"][disabled]:hover) .option > .icon path, 
-    :host(i-button[role="option"][disabled]:hover) .option > .icon g,
-    :host(i-button[role="option"][disabled]:hover) .option > .icon path {
+    :host(i-button[role="option"][disabled]:hover) .option > .icon g {
         --icon-fill: ${disabled_color ? disabled_color : 'var(--primary-disabled-icon-fill)'};
     }
     :host(i-button[role="menuitem"]) {
-        --color: ${color ? color : 'var(--primary-color)'};
-        --border-radius: ${border_radius ? border_radius : '0'};
+        --size: ${size ? size : 'var(--menu-size)'};
+        --weight: ${weight ? weight : 'var(--menu-weight)'};
+        --color: ${color ? color : 'var(--menu-color)'};
+        --border-radius: 0;
         background-color: transparent;
     }
     :host(i-button[role="menuitem"]:hover) {
-        --color: ${color_hover ? color_hover : 'var(--primary-color-hover)'};
-        background-color: transparent;
+        --size: ${size_hover ? size_hover : 'var(--menu-size-hover)'};
+        --weight: ${weight_hover ? weight_hover : 'var(--menu-weight-hover)'};
+        --color: ${color_hover ? color_hover : 'var(--menu-color-hover)'};
+    }
+    :host(i-button[role="menuitem"]) .avatar {
+        --avatar-width: ${avatar_width ? avatar_width : 'var(--menu-avatar-width)'};
+        --avatar-height: ${avatar_height ? avatar_height : 'var(--menu-avatar-height)'};
+        --avatar-radius: ${avatar_radius ? avatar_radius : 'var(--menu-avatar-radius)'};
+    }
+    :host(i-button[role="menuitem"]:hover) .avatar {
+        --avatar-width: ${avatar_width_hover ? avatar_width_hover : 'var(--menu-avatar-width-hover)'};
+        --avatar-height: ${avatar_height_hover ? avatar_height_hover : 'var(--menu-avatar-height-hover)'};
     }
     :host(i-button[role="menuitem"][disabled]), :host(i-button[role="menuitem"][disabled]):hover {
-        --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
+        --size: ${disabled_size ? disabled_size : 'var(--menu-disabled-size)'};
+        --color: ${disabled_color ? disabled_color : 'var(--menu-disabled-color)'};
+        --weight: ${disabled_weight ? disabled_weight : 'var(--menu-disabled-weight)'};
     }
     :host(i-button[role="menuitem"][disabled]) g ,
-    :host(i-button[role="menuitem"][disabled]) path,
-    :host(i-button[role="menuitem"][disabled]:hover) g,
-    :host(i-button[role="menuitem"][disabled]:hover) path {
+    :host(i-button[role="menuitem"][disabled]:hover) g {
         --icon-fill: ${disabled_icon_fill ? disabled_icon_fill : 'var(--primary-disabled-icon-fill)'};
     }
     :host(i-button[role="option"]) > .icon {
@@ -694,12 +741,10 @@ function i_button (option, protocol) {
     :host(i-button[role="option"]:hover) > .icon {
         --icon-size: ${list_selected_icon_size_hover ? list_selected_icon_size_hover : 'var(--list-selected-icon-size-hover)'};
     }
-    :host(i-button[role="option"]) > .icon g, 
-    :host(i-button[role="option"]) > .icon path {
+    :host(i-button[role="option"]) > .icon g {
         --icon-fill: ${list_selected_icon_fill ? list_selected_icon_fill : 'var(--list-selected-icon-fill)'};
     }
-    :host(i-button[role="option"]:hover) > .icon g, 
-    :host(i-button[role="option"]:hover) > .icon path {
+    :host(i-button[role="option"]:hover) > .icon g {
         --icon-fill: ${list_selected_icon_fill_hover ? list_selected_icon_fill_hover : 'var(--list-selected-icon-fill-hover)'};
     }
     :host(i-button[role="option"][aria-current="true"]) > .icon, 
@@ -707,9 +752,7 @@ function i_button (option, protocol) {
         --icon-size: ${current_list_selected_icon_size ? current_list_selected_icon_size : 'var(--current-list-selected-icon-size)'};
     }
     :host(i-button[role="option"][aria-current="true"]) > .icon g, 
-    :host(i-button[role="option"][aria-current="true"]) > .icon path,
-    :host(i-button[role="option"][aria-current="true"]:hover) > .icon g, 
-    :host(i-button[role="option"][aria-current="true"]:hover) > .icon path {
+    :host(i-button[role="option"][aria-current="true"]:hover) > .icon g { 
         --icon-fill: ${current_list_selected_icon_fill ? current_list_selected_icon_fill : 'var(--current-list-selected-icon-fill)'};
     }
     :host(i-button[role="option"][aria-selected="false"]) > .icon {
