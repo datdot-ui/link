@@ -393,8 +393,8 @@ function demo () {
             theme : {
                 props: {
                     // listbox_avatar_width: '100px'
-                    listbox_collapse_icon_fill: 'var(--color-orange)',
-                    listbox_collapse_icon_fill_hover: 'var(--color-light-green)',
+                    // listbox_collapse_icon_fill: 'var(--color-orange)',
+                    // listbox_collapse_icon_fill_hover: 'var(--color-light-green)',
                     // icon_fill: 'var(--color-persian-rose)',
                     // icon_fill_hover: 'var(--color-amaranth-pink)',
                     // icon_size: '32px'
@@ -3547,9 +3547,9 @@ function i_button (option, protocol) {
     :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon {
         --icon-size: ${listbox_expanded_icon_size ? listbox_expanded_icon_size : 'var(--listbox-expanded-icon-size)'};
     }
-    :host(i-button[role="listbox"][aria-expanded="true"]) > .icon g
+    :host(i-button[role="listbox"][aria-expanded="true"]) > .icon g,
     :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon g {
-        --icon-fill: ${listbox_expanded_icon_fill ? listbox_expanded_icon_fill : 'var(--listbox-expanded-icon-fill)'};
+        --icon-fill: ${listbox_expanded_icon_fill ? listbox_expanded_icon_fill : 'var(--listbox-expanded-icon-fill)'}
     }
     :host(i-button[role="listbox"][aria-expanded="true"]) .option > .icon {
         --icon-fill: ${listbox_expanded_option_icon_size ? listbox_expanded_option_icon_size : 'var(--listbox-expanded-option-icon-size)'};
