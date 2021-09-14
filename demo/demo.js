@@ -386,8 +386,10 @@ function demo () {
             role: 'listbox',
             body: 'Single select',
             icons: {
+                icon: {name: 'star'},
                 select: {name: 'arrow-down'},
             },
+            // cover: 'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
             expanded: false,
             theme : {
                 props: {

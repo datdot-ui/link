@@ -387,8 +387,10 @@ function demo () {
             role: 'listbox',
             body: 'Single select',
             icons: {
+                icon: {name: 'star'},
                 select: {name: 'arrow-down'},
             },
+            // cover: 'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
             expanded: false,
             theme : {
                 props: {
@@ -3164,7 +3166,6 @@ function i_button (option, protocol) {
             if (role === 'listbox') {
                 set_attr({aria: 'haspopup', prop: role})
             }
-
             if (disabled) {
                 set_attr({aria: 'disabled', prop: is_disabled})
                 el.setAttribute('disabled', is_disabled)
@@ -3189,15 +3190,28 @@ function i_button (option, protocol) {
         // make element to append into shadowDOM
         function append_items() {
             const items = [make_icon, add_cover, add_text]
-            const target = role === 'listbox' ? listbox : role === 'option' ?  option : shadow
-            // listbox or dropdown button
-            if (role === 'listbox') shadow.append(make_select_icon, target)
+            
+            if (!role.match(/listbox/)) {
+                const target = role === 'listbox' ? listbox : role === 'option' ?  option : shadow
+                items.forEach( item => {
+                    if (item === undefined) return
+                    target.append(item)
+                })
+            }
             // list of listbox or dropdown menu
-            if (role === 'option') shadow.append(make_list_icon, target)
-            items.forEach( item => {
-                if (item === undefined) return
-                target.append(item)
-            })
+            if (role.match(/option/)) shadow.append(make_list_icon, option)
+
+            // listbox or dropdown button
+            if (role.match(/listbox/)) {
+                if (make_icon || add_cover) {
+                    if (make_icon) option.append(make_icon)
+                    if (add_cover) option.append(add_cover)
+                    option.append(add_text)
+                    listbox.append(option)
+                }
+                if (make_icon == undefined && add_cover == undefined) listbox.append(add_text)
+                shadow.append(make_select_icon, listbox)
+            }
         }
 
         // toggle
