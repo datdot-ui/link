@@ -485,7 +485,7 @@ function demo () {
             props: {
                 opacity: '1',
                 current_bg_color: 'var(--color-blue)',
-                // avatar_width: '120px',
+                avatar_width: '1200px',
                 // avatar_height: '120px',
                 // avatar_radius: '50%',
                 color_hover: 'var(--color-light-orange)',
@@ -573,11 +573,12 @@ function demo () {
         name: 'link-datdot',
         role: 'link',
         body: 'datdot.org',
-        icons: {
-            icon: {
-                name: 'plan-list'
-            }
-        },
+        // cover: 'https://cdn.pixabay.com/photo/2018/01/17/20/22/analytics-3088958_960_720.jpg',
+        // icons: {
+        //     icon: {
+        //         name: 'plan-list'
+        //     }
+        // },
         // classlist: 'icon-col-2',
         link: {
             url: 'http://datdot.org',
@@ -588,7 +589,8 @@ function demo () {
                 color: 'var(--color-black)',
                 icon_fill: 'var(--color-black)',
                 color_hover: 'var(--color-grey88)',
-                icon_fill_hover: 'var(--color-grey88)'
+                icon_fill_hover: 'var(--color-grey88)',
+                // avatar_radius: '50%'
             }
         }
     }, protocol('link-datdot'))

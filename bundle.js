@@ -486,7 +486,7 @@ function demo () {
             props: {
                 opacity: '1',
                 current_bg_color: 'var(--color-blue)',
-                // avatar_width: '120px',
+                avatar_width: '1200px',
                 // avatar_height: '120px',
                 // avatar_radius: '50%',
                 color_hover: 'var(--color-light-orange)',
@@ -574,11 +574,12 @@ function demo () {
         name: 'link-datdot',
         role: 'link',
         body: 'datdot.org',
-        icons: {
-            icon: {
-                name: 'plan-list'
-            }
-        },
+        // cover: 'https://cdn.pixabay.com/photo/2018/01/17/20/22/analytics-3088958_960_720.jpg',
+        // icons: {
+        //     icon: {
+        //         name: 'plan-list'
+        //     }
+        // },
         // classlist: 'icon-col-2',
         link: {
             url: 'http://datdot.org',
@@ -589,7 +590,8 @@ function demo () {
                 color: 'var(--color-black)',
                 icon_fill: 'var(--color-black)',
                 color_hover: 'var(--color-grey88)',
-                icon_fill_hover: 'var(--color-grey88)'
+                icon_fill_hover: 'var(--color-grey88)',
+                // avatar_radius: '50%'
             }
         }
     }, protocol('link-datdot'))
@@ -3536,10 +3538,10 @@ function i_button (option, protocol) {
         --icon-size: ${listbox_collapse_option_icon_size_hover ? listbox_collapse_option_icon_size_hover : 'var(--listbox-collapse-option-icon-size-hover)'};
     }
     :host(i-button[role="listbox"]) > .icon g {
-        --icon-fill: ${listbox_collapse_icon_fill ? listbox_collapse_icon_fill : 'var(--listbox-collpase-icon-fill)'};
+        --icon-fill: ${listbox_collapse_icon_fill ? listbox_collapse_icon_fill : 'var(--listbox-collapse-icon-fill)'};
     }
     :host(i-button[role="listbox"]:hover) > .icon g {
-        --icon-fill: ${listbox_collapse_icon_fill_hover ? listbox_collapse_icon_fill_hover : 'var(--listbox-collpase-icon-fill-hover)'};
+        --icon-fill: ${listbox_collapse_icon_fill_hover ? listbox_collapse_icon_fill_hover : 'var(--listbox-collapse-icon-fill-hover)'};
     }
     :host(i-button[role="listbox"][aria-expanded="true"]) > .icon,
     :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon {

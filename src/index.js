@@ -658,10 +658,10 @@ function i_button (option, protocol) {
         --icon-size: ${listbox_collapse_option_icon_size_hover ? listbox_collapse_option_icon_size_hover : 'var(--listbox-collapse-option-icon-size-hover)'};
     }
     :host(i-button[role="listbox"]) > .icon g {
-        --icon-fill: ${listbox_collapse_icon_fill ? listbox_collapse_icon_fill : 'var(--listbox-collpase-icon-fill)'};
+        --icon-fill: ${listbox_collapse_icon_fill ? listbox_collapse_icon_fill : 'var(--listbox-collapse-icon-fill)'};
     }
     :host(i-button[role="listbox"]:hover) > .icon g {
-        --icon-fill: ${listbox_collapse_icon_fill_hover ? listbox_collapse_icon_fill_hover : 'var(--listbox-collpase-icon-fill-hover)'};
+        --icon-fill: ${listbox_collapse_icon_fill_hover ? listbox_collapse_icon_fill_hover : 'var(--listbox-collapse-icon-fill-hover)'};
     }
     :host(i-button[role="listbox"][aria-expanded="true"]) > .icon,
     :host(i-button[role="listbox"][aria-expanded="true"]:hover) > .icon {
