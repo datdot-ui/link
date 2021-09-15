@@ -263,7 +263,7 @@ function i_button (option, protocol) {
         const add_text = body && typeof body === 'string' ? text : body
         if (typeof cover === 'string') avatar.append(img({src: cover, alt: name}))
         if (typeof cover === 'object') send(make({type: 'error', data: `cover[${typeof cover}] must to be a string`}))
-        if (typeof body === 'object' && body.localName !== 'div') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))
+        if (typeof body === 'object') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))
         if (!is_disabled) el.onclick = handle_click
         el.setAttribute('aria-label', name)
         text.append(body)
@@ -536,13 +536,6 @@ function i_button (option, protocol) {
     }
     :host(i-button:hover) g {
         --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--primary-icon-fill-hover)'};
-    }
-    :host(i-button) .col2 {
-        display: flex;
-        flex-direction: row;
-        column-gap: 8px;
-        justify-content: center;
-        align-items: center;
     }
     :host(i-button) .avatar {
         display: block;

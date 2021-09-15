@@ -25,7 +25,7 @@ function demo () {
     const primary = button(
     {
         name: 'primary', 
-        body: 'Primary',
+        body: '<div>Hello</div>',
         theme:
         { 
             style: ` `, 
@@ -195,9 +195,6 @@ function demo () {
     </nav>`
 
     // Tab & icon
-    const icon_notice = {name: 'notice'}
-    const icon_warning = {name: 'warning'}
-    const icon_search = {name: 'search'}
     const tab4 = button(
     {
         page: 'JOBS', 
@@ -206,9 +203,8 @@ function demo () {
         controls: 'panel4',
         body: 'Notice',
         icons: {
-            icon: icon_notice
+            icon: {name: 'notice'}
         },
-        // body: bel`<div class="col2">Tab4 ${icon(icon_notice)}</div>`, 
         current: true, 
         theme: { 
             props: {
@@ -238,8 +234,10 @@ function demo () {
         name: 'warning', 
         role: 'tab', 
         controls: 'panel5',
-        body: bel`<div class="col2">Warning ${icon(icon_warning)}</div>`, 
-        // icon: icon_warning,
+        body: 'Warning', 
+        icons: {
+            icon: {name: 'warning'},
+        },
         cover: 'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
         theme: { 
             props: {
@@ -253,18 +251,18 @@ function demo () {
             grid: {
                 button: {
                     row: 'auto',
-                    // columns: 'minmax(50px, auto) auto',
                     auto: {
                         auto_flow: 'column',
-                        // auto_rows: 'auto',
-                        // auto_columns: '1fr auto'
                     },
                     justify: 'content-center',
+                    align: 'items-center',
                     gap: '15px'
                 },
                 avatar: {
-                    // row: '2',
-                    // column: '2'
+                    column: '1'
+                },
+                icon: {
+                    column: '3'
                 }
             }
         }
@@ -275,9 +273,9 @@ function demo () {
         name: 'search',
         role: 'tab',
         controls: 'panel6',
-        body: bel`<div class="col2"><span class="text">Search</span> ${icon({name: 'option'})}</div>`, 
+        body: 'Search', 
         icons: {
-            icon: icon_search
+            icon: {name: 'search'}
         }, 
         disabled: true,
         theme: { 
@@ -330,7 +328,10 @@ function demo () {
     const previous = button(
     {
         name: 'previous', 
-        body: bel`<div class="col2">${icon(icon_previous)}<span class="text">Previous</span></div>`, 
+        body: 'Previous', 
+        icons: {
+            icon: icon_previous
+        },
         theme: {
             style: ``,
             props: {
@@ -3145,7 +3146,7 @@ function i_button (option, protocol) {
         const add_text = body && typeof body === 'string' ? text : body
         if (typeof cover === 'string') avatar.append(img({src: cover, alt: name}))
         if (typeof cover === 'object') send(make({type: 'error', data: `cover[${typeof cover}] must to be a string`}))
-        if (typeof body === 'object' && body.localName !== 'div') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))
+        if (typeof body === 'object') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))
         if (!is_disabled) el.onclick = handle_click
         el.setAttribute('aria-label', name)
         text.append(body)
@@ -3418,13 +3419,6 @@ function i_button (option, protocol) {
     }
     :host(i-button:hover) g {
         --icon-fill: ${icon_fill_hover ? icon_fill_hover : 'var(--primary-icon-fill-hover)'};
-    }
-    :host(i-button) .col2 {
-        display: flex;
-        flex-direction: row;
-        column-gap: 8px;
-        justify-content: center;
-        align-items: center;
     }
     :host(i-button) .avatar {
         display: block;
