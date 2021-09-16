@@ -375,8 +375,8 @@ function demo () {
         expanded: false,
         theme : {
             props: {
-                listbox_collapse_icon_fill: 'var(--color-blue)',
-                listbox_collapse_icon_fill_hover: 'var(--color-flame)',
+                listbox_collapsed_icon_fill: 'var(--color-blue)',
+                listbox_collapsed_icon_fill_hover: 'var(--color-flame)',
                 listbox_expanded_icon_fill: 'var(--color-purple)',
                 listbox_expanded_icon_fill_hover: 'var(--color-amaranth-pink)',
             }
@@ -397,8 +397,8 @@ function demo () {
             theme : {
                 props: {
                     // listbox_avatar_width: '100px'
-                    // listbox_collapse_icon_fill: 'var(--color-orange)',
-                    // listbox_collapse_icon_fill_hover: 'var(--color-light-green)',
+                    // listbox_collapsed_icon_fill: 'var(--color-orange)',
+                    // listbox_collapsed_icon_fill_hover: 'var(--color-light-green)',
                     // icon_fill: 'var(--color-persian-rose)',
                     // icon_fill_hover: 'var(--color-amaranth-pink)',
                     // icon_size: '32px'
@@ -912,7 +912,7 @@ function demo () {
 
     function handle_dropdown_menu_event (make, from, data) {
         const state = data.expanded
-        const type = state ? 'expanded' : 'collapse'
+        const type = state ? 'expanded' : 'collapsed'
         recipients[from]( make({type, data: state}) )
         recipients['logs']( make({type}) )
     }
@@ -1101,23 +1101,23 @@ const css = csjs`
     --current-list-avatar-width: var(--primary-list-avatar-width);
     --current-list-avatar-height: var(--primary-list-avatar-height);
     /* role listbox settings ---------------------------------------------*/
-    /*-- collapse --*/
-    --listbox-collapse-icon-size: var(--size20);
-    --listbox-collapse-icon-size-hover: var(--size20);
-    --listbox-collapse-icon-fill: var(--primary-icon-fill);
-    --listbox-collapse-icon-fill-hover: var(--primary-icon-fill-hover);
-    --listbox-collapse-listbox-size: var(--primary-size);
-    --listbox-collapse-listbox-size-hover: var(--primary-size-hover);
-    --listbox-collapse-listbox-weight: var(--primary-weight);
-    --listbox-collapse-listbox-weight-hover: var(--primary-weight);
-    --listbox-collapse-listbox-color: var(--primary-color);
-    --listbox-collapse-listbox-color-hover: var(--primary-color-hover);
-    --listbox-collapse-listbox-avatar-width: var(--primary-listbox-option-avatar-width);
-    --listbox-collapse-listbox-avatar-height: var(--primary-listbox-option-avatar-height);
-    --listbox-collapse-listbox-icon-size: var(--primary-listbox-option-icon-size);
-    --listbox-collapse-listbox-icon-size-hover: var(--primary-listbox-option-icon-size);
-    --listbox-collapse-listbox-icon-fill: var(--color-blue);
-    --listbox-collapse-listbox-icon-fill-hover: var(--color-yellow);
+    /*-- collapsed --*/
+    --listbox-collapsed-icon-size: var(--size20);
+    --listbox-collapsed-icon-size-hover: var(--size20);
+    --listbox-collapsed-icon-fill: var(--primary-icon-fill);
+    --listbox-collapsed-icon-fill-hover: var(--primary-icon-fill-hover);
+    --listbox-collapsed-listbox-size: var(--primary-size);
+    --listbox-collapsed-listbox-size-hover: var(--primary-size-hover);
+    --listbox-collapsed-listbox-weight: var(--primary-weight);
+    --listbox-collapsed-listbox-weight-hover: var(--primary-weight);
+    --listbox-collapsed-listbox-color: var(--primary-color);
+    --listbox-collapsed-listbox-color-hover: var(--primary-color-hover);
+    --listbox-collapsed-listbox-avatar-width: var(--primary-listbox-option-avatar-width);
+    --listbox-collapsed-listbox-avatar-height: var(--primary-listbox-option-avatar-height);
+    --listbox-collapsed-listbox-icon-size: var(--primary-listbox-option-icon-size);
+    --listbox-collapsed-listbox-icon-size-hover: var(--primary-listbox-option-icon-size);
+    --listbox-collapsed-listbox-icon-fill: var(--color-blue);
+    --listbox-collapsed-listbox-icon-fill-hover: var(--color-yellow);
     /*-- expanded ---*/
     --listbox-expanded-icon-size: var(--size20);
     --listbox-expanded-icon-size-hover: var(--size20);

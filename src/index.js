@@ -417,7 +417,7 @@ function i_button (option, protocol) {
             // toggle
             if (type.match(/switched/)) return switched_event(data)
             // dropdown
-            if (type.match(/expanded|collapse/)) return expanded_event(!data)
+            if (type.match(/expanded|collapsed/)) return expanded_event(!data)
             // tab, checkbox
             if (type.match(/checked|unchecked/)) return checked_event(data)
             // option
@@ -475,15 +475,15 @@ function i_button (option, protocol) {
         list_selected_icon_size, list_selected_icon_size_hover,
         list_selected_icon_fill, list_selected_icon_fill_hover,
         // role === listbox ----------------------------------//
-        // collapse settings
-        listbox_collapse_icon_size, listbox_collapse_icon_size_hover,
-        listbox_collapse_icon_fill, listbox_collapse_icon_fill_hover, 
-        listbox_collapse_listbox_color, listbox_collapse_listbox_color_hover,
-        listbox_collapse_listbox_size, listbox_collapse_listbox_size_hover,
-        listbox_collapse_listbox_weight, listbox_collapse_listbox_weight_hover,
-        listbox_collapse_listbox_icon_size, listbox_collapse_listbox_icon_size_hover,
-        listbox_collapse_listbox_icon_fill, listbox_collapse_listbox_icon_fill_hover,
-        listbox_collapse_listbox_avatar_width, listbox_collapse_listbox_avatar_height,
+        // collapsed settings
+        listbox_collapsed_icon_size, listbox_collapsed_icon_size_hover,
+        listbox_collapsed_icon_fill, listbox_collapsed_icon_fill_hover, 
+        listbox_collapsed_listbox_color, listbox_collapsed_listbox_color_hover,
+        listbox_collapsed_listbox_size, listbox_collapsed_listbox_size_hover,
+        listbox_collapsed_listbox_weight, listbox_collapsed_listbox_weight_hover,
+        listbox_collapsed_listbox_icon_size, listbox_collapsed_listbox_icon_size_hover,
+        listbox_collapsed_listbox_icon_fill, listbox_collapsed_listbox_icon_fill_hover,
+        listbox_collapsed_listbox_avatar_width, listbox_collapsed_listbox_avatar_height,
         // expanded settings
         listbox_expanded_listbox_color,
         listbox_expanded_listbox_size, 
@@ -604,22 +604,22 @@ function i_button (option, protocol) {
         --size: ${size_hover ? size_hover : 'var(--primary-size-hover)'};
     }
     :host(i-button[role="listbox"]) {
-        --color: ${listbox_collapse_listbox_color ? listbox_collapse_listbox_color : 'var(--listbox-collapse-listbox-color)'};
-        --size: ${listbox_collapse_listbox_size ? listbox_collapse_listbox_size : 'var(--listbox-collapse-listbox-size)'};
-        --weight: ${listbox_collapse_listbox_weight ? listbox_collapse_listbox_weight : 'var(--listbox-collapse-listbox-weight)'};
+        --color: ${listbox_collapsed_listbox_color ? listbox_collapsed_listbox_color : 'var(--listbox-collapsed-listbox-color)'};
+        --size: ${listbox_collapsed_listbox_size ? listbox_collapsed_listbox_size : 'var(--listbox-collapsed-listbox-size)'};
+        --weight: ${listbox_collapsed_listbox_weight ? listbox_collapsed_listbox_weight : 'var(--listbox-collapsed-listbox-weight)'};
     }
     :host(i-button[role="listbox"]:hover) {
-        --color: ${listbox_collapse_listbox_color_hover ? listbox_collapse_listbox_color_hover : 'var(--listbox-collapse-listbox-color-hover)'};
-        --size: ${listbox_collapse_listbox_size_hover ? listbox_collapse_listbox_size_hover : 'var(--listbox-collapse-listbox-size-hover)'};
-        --weight: ${listbox_collapse_listbox_weight_hover ? listbox_collapse_listbox_weight_hover : 'var(--listbox-collapse-listbox-weight-hover)'};
+        --color: ${listbox_collapsed_listbox_color_hover ? listbox_collapsed_listbox_color_hover : 'var(--listbox-collapsed-listbox-color-hover)'};
+        --size: ${listbox_collapsed_listbox_size_hover ? listbox_collapsed_listbox_size_hover : 'var(--listbox-collapsed-listbox-size-hover)'};
+        --weight: ${listbox_collapsed_listbox_weight_hover ? listbox_collapsed_listbox_weight_hover : 'var(--listbox-collapsed-listbox-weight-hover)'};
     }
     :host(i-button[role="listbox"]) > .icon {
         ${grid.icon ? make_grid(grid.icon) : make_grid({column: '2'})}
     }
     :host(i-button[role="listbox"]) .text {}
     :host(i-button[role="listbox"]) .avatar {
-        --avatar-width: ${listbox_collapse_listbox_avatar_width ? listbox_collapse_listbox_avatar_width : 'var(--listbox-collapse-listbox-avatar-width)'};
-        --avatar-height: ${listbox_collapse_listbox_avatar_height ? listbox_collapse_listbox_avatar_height : 'var(--listbox-collapse-listbox-avatar-height)'}
+        --avatar-width: ${listbox_collapsed_listbox_avatar_width ? listbox_collapsed_listbox_avatar_width : 'var(--listbox-collapsed-listbox-avatar-width)'};
+        --avatar-height: ${listbox_collapsed_listbox_avatar_height ? listbox_collapsed_listbox_avatar_height : 'var(--listbox-collapsed-listbox-avatar-height)'}
     }
     :host(i-button[role="listbox"][aria-expanded="true"]),
     :host(i-button[role="listbox"][aria-expanded="true"]:hover) {
@@ -679,30 +679,30 @@ function i_button (option, protocol) {
         --color: ${current_color ? current_color : 'var(--current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
     }
-    /* listbox collapse */
+    /* listbox collapsed */
     :host(i-button[role="listbox"]) > .icon {
-        --icon-size: ${listbox_collapse_icon_size ? listbox_collapse_icon_size : 'var(--listbox-collapse-icon-size)'};
+        --icon-size: ${listbox_collapsed_icon_size ? listbox_collapsed_icon_size : 'var(--listbox-collapsed-icon-size)'};
     }
     :host(i-button[role="listbox"]:hover) > .icon {
-        --icon-size: ${listbox_collapse_icon_size_hover ? listbox_collapse_icon_size_hover : 'var(--listbox-collapse-icon-size-hover)'};
+        --icon-size: ${listbox_collapsed_icon_size_hover ? listbox_collapsed_icon_size_hover : 'var(--listbox-collapsed-icon-size-hover)'};
     }
     :host(i-button[role="listbox"]) .listbox > .icon {
-        --icon-size: ${listbox_collapse_listbox_icon_size ? listbox_collapse_listbox_icon_size : 'var(--listbox-collapse-listbox-icon-size)'};
+        --icon-size: ${listbox_collapsed_listbox_icon_size ? listbox_collapsed_listbox_icon_size : 'var(--listbox-collapsed-listbox-icon-size)'};
     }
     :host(i-button[role="listbox"]:hover) .listbox > .icon {
-        --icon-size: ${listbox_collapse_listbox_icon_size_hover ? listbox_collapse_listbox_icon_size_hover : 'var(--listbox-collapse-listbox-icon-size-hover)'};
+        --icon-size: ${listbox_collapsed_listbox_icon_size_hover ? listbox_collapsed_listbox_icon_size_hover : 'var(--listbox-collapsed-listbox-icon-size-hover)'};
     }
     :host(i-button[role="listbox"]) > .icon g {
-        --icon-fill: ${listbox_collapse_icon_fill ? listbox_collapse_icon_fill : 'var(--listbox-collapse-icon-fill)'};
+        --icon-fill: ${listbox_collapsed_icon_fill ? listbox_collapsed_icon_fill : 'var(--listbox-collapsed-icon-fill)'};
     }
     :host(i-button[role="listbox"]:hover) > .icon g {
-        --icon-fill: ${listbox_collapse_icon_fill_hover ? listbox_collapse_icon_fill_hover : 'var(--listbox-collapse-icon-fill-hover)'};
+        --icon-fill: ${listbox_collapsed_icon_fill_hover ? listbox_collapsed_icon_fill_hover : 'var(--listbox-collapsed-icon-fill-hover)'};
     }
     :host(i-button[role="listbox"]) .listbox > .icon g {
-        --icon-fill: ${listbox_collapse_listbox_icon_fill ? listbox_collapse_listbox_icon_fill : 'var(--listbox-collaps-listbox-icon-fill)'};
+        --icon-fill: ${listbox_collapsed_listbox_icon_fill ? listbox_collapsed_listbox_icon_fill : 'var(--listbox-collaps-listbox-icon-fill)'};
     }
     :host(i-button[role="listbox"]:hover) .listbox > .icon g {
-        --icon-fill: ${listbox_collapse_listbox_icon_fill_hover ? listbox_collapse_listbox_icon_fill_hover : 'var(--listbox-collapse-listbox-icon-fill-hover)'};
+        --icon-fill: ${listbox_collapsed_listbox_icon_fill_hover ? listbox_collapsed_listbox_icon_fill_hover : 'var(--listbox-collapsed-listbox-icon-fill-hover)'};
     }
     /* listbox expanded */
     :host(i-button[role="listbox"][aria-expanded="true"]) > .icon,
