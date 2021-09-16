@@ -45,7 +45,6 @@ function demo () {
         name: 'thumb-cover', 
         body: 'Cover',
         cover: 'https://cdn.pixabay.com/photo/2021/08/14/04/15/mountains-6544522_960_720.jpg',
-        classlist: 'avatar-row-1 text-row-2',
         theme:
         { 
             props: {
@@ -140,7 +139,10 @@ function demo () {
     {
         name: 'toggle', 
         role: 'switch', 
-        body: 'Toggle', 
+        body: 'Toggle',
+        // icons: {
+        //     icon: {name: 'edit'},
+        // },
         // cover: 'https://cdn.pixabay.com/photo/2016/02/27/06/43/cherry-blossom-tree-1225186_960_720.jpg',
         // checked: false, 
         theme : {
@@ -390,7 +392,7 @@ function demo () {
                 icon: {name: 'star'},
                 select: {name: 'arrow-down'},
             },
-            // cover: 'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
+            cover: 'https://cdn.pixabay.com/photo/2021/08/25/20/42/field-6574455_960_720.jpg',
             expanded: false,
             theme : {
                 props: {
@@ -401,34 +403,6 @@ function demo () {
                     // icon_fill_hover: 'var(--color-amaranth-pink)',
                     // icon_size: '32px'
                 },
-                grid: {
-                    button: {
-                        areas: ["listbox icon"],
-                        auto: {
-                            auto_flow: 'column'
-                        },
-                        align: 'items-center',
-                        gap: '5px'
-                    },
-                    listbox: {
-                        area: 'listbox'
-                    },
-                    option: {
-                        areas: ['avatar icon text'],
-                        // area: 'option'
-                        align: 'items-center',
-                        gap: '5px'
-                    },
-                    avatar: {
-                        area: 'avatar'
-                    },
-                    text: {
-                        area: 'text'
-                    },
-                    icon: {
-                        area: 'icon'
-                    }
-                }
             }
         }, protocol('single-selector'))
 
@@ -925,11 +899,15 @@ function demo () {
     function handle_toggle_event (make, from, data) {
         const state = !data
         const message = make({type: 'switched', data: state})
-        const body = state ? 'Toggle on' : 'Toggle off'
+        let body = state ? 'Toggle on' : 'Toggle off'
+        if (from === 'thumb-blossom') body = state ? 'Blossom open' : 'Blossom close'
+        const cover = state ? 'https://cdn.pixabay.com/photo/2019/05/11/02/33/cherry-blossom-4194997_960_720.jpg' : 'https://cdn.pixabay.com/photo/2016/02/19/11/07/japanese-cherry-blossoms-1209577_960_720.jpg'
+        const icon = state ? {name: 'star'} : {name: 'edit'}
+        const content =  {text: body, cover: from === 'thumb-blossom' ? cover : undefined, icon}
         recipients[from](message)
-        recipients[from](make({type: 'changed', data: body}))
+        recipients[from](make({type: 'changed', data: content}))
         recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state}}) )
-        recipients['logs']( make({to: 'self', type: 'changed', data: body}) )
+        recipients['logs']( make({to: 'self', type: 'changed', data: content}) )
     }
 
     function handle_dropdown_menu_event (make, from, data) {
@@ -940,11 +918,11 @@ function demo () {
     }
 
     function handle_select_event (from, data) {
+        const {selected, content} = data
         const make = message_maker(from)
-        const state = data.selected
-        const type = state ? 'selected' : 'unselected'
-        recipients[from]({type, data: state})
-        recipients['logs']( make({to: `options`, type, data: {selected: state ? from : ''} }) )
+        const type = selected ? 'selected' : 'unselected'
+        recipients[from]({type, data: selected})
+        recipients['logs']( make({to: `options`, type, data: {content} }) )
     }
     function handle_changed_event (type, data) {
         recipients['single-selector']({type, data})
@@ -960,6 +938,7 @@ function demo () {
                 const role = head[0].split(' / ')[1]
                 const from = head[0].split(' / ')[0]
                 if (type === 'click') return handle_tab_icon_event(from, data)
+                
                 recipients['logs'](msg)
             }
         }
@@ -1127,35 +1106,29 @@ const css = csjs`
     --listbox-collapse-icon-size-hover: var(--size20);
     --listbox-collapse-icon-fill: var(--primary-icon-fill);
     --listbox-collapse-icon-fill-hover: var(--primary-icon-fill-hover);
-    --listbox-collapse-option-size: var(--primary-size);
-    --listbox-collapse-option-size-hover: var(--primary-size-hover);
-    --listbox-collapse-option-weight: var(--primary-weight);
-    --listbox-collapse-option-weight-hover: var(--primary-weight);
-    --listbox-collapse-option-color: var(--primary-color);
-    --listbox-collapse-option-color-hover: var(--primary-color-hover);
-    --listbox-collapse-option-avatar-width: var(--primary-listbox-option-avatar-width);
-    --listbox-collapse-option-avatar-height: var(--primary-listbox-option-avatar-height);
-    --listbox-collapse-option-icon-size: var(--primary-listbox-option-icon-size);
-    --listbox-collapse-option-icon-size-hover: var(--primary-listbox-option-icon-size);
-    --listbox-collapse-option-icon-fill: var(--color-blue);
-    --listbox-collapse-option-icon-fill-hover: var(--color-yellow);
+    --listbox-collapse-listbox-size: var(--primary-size);
+    --listbox-collapse-listbox-size-hover: var(--primary-size-hover);
+    --listbox-collapse-listbox-weight: var(--primary-weight);
+    --listbox-collapse-listbox-weight-hover: var(--primary-weight);
+    --listbox-collapse-listbox-color: var(--primary-color);
+    --listbox-collapse-listbox-color-hover: var(--primary-color-hover);
+    --listbox-collapse-listbox-avatar-width: var(--primary-listbox-option-avatar-width);
+    --listbox-collapse-listbox-avatar-height: var(--primary-listbox-option-avatar-height);
+    --listbox-collapse-listbox-icon-size: var(--primary-listbox-option-icon-size);
+    --listbox-collapse-listbox-icon-size-hover: var(--primary-listbox-option-icon-size);
+    --listbox-collapse-listbox-icon-fill: var(--color-blue);
+    --listbox-collapse-listbox-icon-fill-hover: var(--color-yellow);
     /*-- expanded ---*/
     --listbox-expanded-icon-size: var(--size20);
     --listbox-expanded-icon-size-hover: var(--size20);
     --listbox-expanded-icon-fill: var(--color-light-green);
-    --listbox-expanded-icon-fill-hover: var(--color-yellow);
-    --listbox-expanded-option-size: var(--size20);
-    --listbox-expanded-option-size-hover: var(--size36);
-    --listbox-expanded-option-weight: var(--primary-weight);
-    --listbox-expanded-option-weight-hover: var(--primary-weight);
-    --listbox-expanded-option-color: var(--current-color);
-    --listbox-expanded-option-color-hover: var(--listbox-expanded-color);
-    --listbox-expanded-option-avatar-width: var(--primary-listbox-option-avatar-width);
-    --listbox-expanded-option-avatar-height: var(--primary-listbox-option-avatar-height);
-    --listbox-expanded-option-icon-size: var(--primary-listbox-option-icon-size);
-    --listbox-expanded-option-icon-size-hover: var(--primary-listbox-option-icon-size);
-    --listbox-expanded-option-icon-fill: var(--color-light-green);
-    --listbox-expanded-option-icon-fill-hover: var(--color-orange);
+    --listbox-expanded-listbox-size: var(--size20);
+    --listbox-expanded-listbox-weight: var(--primary-weight);
+    --listbox-expanded-listbox-color: var(--current-color);
+    --listbox-expanded-listbox-avatar-width: var(--primary-listbox-option-avatar-width);
+    --listbox-expanded-listbox-avatar-height: var(--primary-listbox-option-avatar-height);
+    --listbox-expanded-listbox-icon-size: var(--primary-listbox-option-icon-size);
+    --listbox-expanded-listbox-icon-fill: var(--color-light-green);
     /* role option settings ---------------------------------------------*/
     --list-bg-color: var(--primary-bg-color);
     --list-bg-color-hover: var(--primary-bg-color-hover);
