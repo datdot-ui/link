@@ -260,7 +260,7 @@ function i_button (option, protocol) {
         const option = make_element({name: 'span', classlist: 'option'})
         // check icon, img and body if has value
         const add_cover = typeof cover === 'string' ? avatar : undefined
-        const add_text = body && typeof body === 'string' ? text : body
+        const add_text = body && typeof body === 'string' ? text : 'undefined'
         if (typeof cover === 'string') avatar.append(make_img({src: cover, alt: name}))
         if (typeof cover === 'object') send(make({type: 'error', data: `cover[${typeof cover}] must to be a string`}))
         if (typeof body === 'object') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))

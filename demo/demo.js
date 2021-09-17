@@ -24,7 +24,7 @@ function demo () {
     const primary = button(
     {
         name: 'primary', 
-        body: '<div>Hello</div>',
+        body: `<div>Hello</div>`,
         theme:
         { 
             style: ` `, 

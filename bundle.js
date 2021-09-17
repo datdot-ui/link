@@ -25,7 +25,7 @@ function demo () {
     const primary = button(
     {
         name: 'primary', 
-        body: '<div>Hello</div>',
+        body: `<div>Hello</div>`,
         theme:
         { 
             style: ` `, 
@@ -2132,8 +2132,27 @@ function terminal ({to = 'terminal', mode = 'compact', expanded = false}, protoc
 
     function get (msg) {
         const {head, refs, type, data, meta} = msg
+        const from = head[0].split('/')[0].trim()
+        make_logs (msg)
+        if (type === 'layout-mode') return handle_change_layout(data)
+    }
+
+    function handle_change_layout (data) {
+        const {mode, expanded} = data
+        const { childNodes } = log_list
+        if (mode) log_list.setAttribute('aria-label', mode)
+        if (expanded !== void 0) {
+            is_expanded = expanded
+            childNodes.forEach( list => {
+                list.setAttribute('aria-expanded', expanded)
+            })
+        }
+    }
+
+    function make_logs (msg) {
+        const {head, refs, type, data, meta} = msg
         // make an object for type, count, color
-        const init = t => ({type: t, count: 0, color: type.match(/ready|click|triggered|opened|closed|checked|unchecked|selected|unselected|expanded|unexpanded|error|warning|toggled|changed/) ? null : int2hsla(str2hashint(t)) })
+        const init = t => ({type: t, count: 0, color: type.match(/ready|click|triggered|opened|closed|checked|unchecked|selected|unselected|expanded|collapsed|error|warning|toggled|changed/) ? null : int2hsla(str2hashint(t)) })
         // to check type is existing then do count++, else return new type
         const add = t => ((types[t] || (types[t] = init(t))).count++, types[t])
         add(type)
@@ -2154,9 +2173,7 @@ function terminal ({to = 'terminal', mode = 'compact', expanded = false}, protoc
                 <span class="arrow">=＞</span>
                 ${to}
             </div>`
-            const log = bel`<div class="log">${header}</div>`
-            if (mode === 'compact') log.append(data_info, refs_info)
-            if (mode === 'comfortable') log.append(info)
+            const log = bel`<div class="log">${header}${data_info}${refs_info}</div>`
             const file = bel`
             <div class="file">
                 <span>${meta.stack[0]}</span>
@@ -2171,6 +2188,7 @@ function terminal ({to = 'terminal', mode = 'compact', expanded = false}, protoc
             return false
         }
     }
+
     function generate_type_color (type, el) {
         for (let t in types) { 
             if (t === type && types[t].color) {
@@ -2189,8 +2207,10 @@ const style = `
 :host(i-terminal) {
     --bg-color: var(--color-dark);
     --opacity: 1;
-    font-size: var(--size12);
-    color: #fff;
+    --size: var(--size12);
+    --color: var(--color-white);
+    font-size: var(--size);
+    color: hsl(var(--color));
     background-color: hsla( var(--bg-color), var(--opacity));
     height: 100%;
     overflow: hidden auto;
@@ -2231,23 +2251,29 @@ log-list .list:last-child {
     --bg-color: var(--color-viridian-green);
     --opacity: .3;
 }
-[aria-label="compact"] [aria-expanded="false"] .log {
+[aria-label="compact"] .list[aria-expanded="false"] .log {
     white-space: nowrap;
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-[aria-label="compact"] [aria-expanded="false"] .data {
-    display: line-block;
+[aria-label="compact"] .list[aria-expanded="true"] .log {
+    padding-left: 8px;
+    oveflow: auto;
+}
+[aria-label="compact"] .list[aria-expanded="true"] .log .head {
+    margin-left: -8px;
+}
+[aria-label="compact"] .list[aria-expanded="true"] .data {
+    display: inlne-block;
+}
+[aria-label="compact"] .refs {
+    padding-left: 8px;
 }
 .log {
     line-height: 1.8;
     word-break: break-all;
     white-space: pre-wrap;
-}
-.log span {
-    --size: var(--size12);
-    font-size: var(--size);
 }
 .head {
     display: inline-block;
@@ -2297,14 +2323,10 @@ log-list .list:last-child {
     --color: 0, 0%, 70%;
     color: var(--color);
 }
-.data {
-    padding-left: 8px;
-}
 .refs {
     --color: var(--color-white);
     display: inline-block;
     color: var(--color);
-    padding-left: 8px;
 }
 [aria-type="click"] {
     --color: var(--color-dark);
@@ -2361,9 +2383,9 @@ log-list .list:last-child {
     --bg-color: var(--color-electric-violet);
     --opacity: 1;
 }
-[aria-type="unexpanded"] {
-    --bg-color: var(--color-electric-violet);
-    --opacity: .6;
+[aria-type="collapsed"] {
+    --bg-color: var(--color-heliotrope);
+    --opacity: 1;
 }
 log-list .list:last-child .type {}
 log-list .list:last-child .arrow {
@@ -2382,26 +2404,25 @@ log-list .list:last-child [aria-type="ready"] {
 log-list .list:last-child .function {
     --color: var(--color-white);
 }
-[aria-label="comfortable"] .info {
-    padding: 8px;
+[aria-label="comfortable"] .list[aria-expanded="false"] .log {
+    
 }
-[aria-label="comfortable"] [aria-expanded="false"] .info {
+[aria-label="comfortable"] .data {
+    display: block;
+    padding: 8px 8px 0px 8px;
+}
+[aria-label="comfortable"] .list[aria-expanded="false"] .data {
     white-space: nowrap;
     max-width: 100%;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis; 
 }
-[aria-label="comfortable"] .data {
-    padding: 0 8px 0 0;
+[aria-label="comfortable"] .list[aria-expanded="false"] .refs {
+    display: none;
 }
-[aria-label="comfortable"] .refs {
-    padding-left: 0;
-}
-[aria-label="comfortable"] [aria-expanded="true"] .refs {
-    padding-top: 6px;
-}
-[aria-label="comfortable"] [aria-expanded="true"] .refs span:nth-child(1) {
-    padding-right: 5px;
+[aria-label="comfortable"] .list[aria-expanded="true"] .refs {
+    display: block;
+    padding-left: 8px;
 }
 `
 },{"bel":5,"generator-color":26,"message-maker":27,"support-style-sheet":28}],26:[function(require,module,exports){
@@ -3117,7 +3138,7 @@ function i_button (option, protocol) {
         const option = make_element({name: 'span', classlist: 'option'})
         // check icon, img and body if has value
         const add_cover = typeof cover === 'string' ? avatar : undefined
-        const add_text = body && typeof body === 'string' ? text : body
+        const add_text = body && typeof body === 'string' ? text : 'undefined'
         if (typeof cover === 'string') avatar.append(make_img({src: cover, alt: name}))
         if (typeof cover === 'object') send(make({type: 'error', data: `cover[${typeof cover}] must to be a string`}))
         if (typeof body === 'object') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))
