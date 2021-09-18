@@ -1104,6 +1104,8 @@ const css = csjs`
     --current-list-avatar-height: var(--primary-list-avatar-height);
     /* role listbox settings ---------------------------------------------*/
     /*-- collapsed --*/
+    --listbox-collapsed-bg-color: var(--primary-bg-color);
+    --listbox-collapsed-bg-color-hover: var(--primary-bg-color-hover);
     --listbox-collapsed-icon-size: var(--size20);
     --listbox-collapsed-icon-size-hover: var(--size20);
     --listbox-collapsed-icon-fill: var(--primary-icon-fill);
@@ -1121,6 +1123,7 @@ const css = csjs`
     --listbox-collapsed-listbox-icon-fill: var(--color-blue);
     --listbox-collapsed-listbox-icon-fill-hover: var(--color-yellow);
     /*-- expanded ---*/
+    --listbox-expanded-bg-color: var(--current-bg-color);
     --listbox-expanded-icon-size: var(--size20);
     --listbox-expanded-icon-size-hover: var(--size20);
     --listbox-expanded-icon-fill: var(--color-light-green);
@@ -3354,6 +3357,7 @@ function i_button (option, protocol) {
         list_selected_icon_fill, list_selected_icon_fill_hover,
         // role === listbox ----------------------------------//
         // collapsed settings
+        listbox_collapsed_bg_color, listbox_collapsed_bg_color_hover,
         listbox_collapsed_icon_size, listbox_collapsed_icon_size_hover,
         listbox_collapsed_icon_fill, listbox_collapsed_icon_fill_hover, 
         listbox_collapsed_listbox_color, listbox_collapsed_listbox_color_hover,
@@ -3363,11 +3367,12 @@ function i_button (option, protocol) {
         listbox_collapsed_listbox_icon_fill, listbox_collapsed_listbox_icon_fill_hover,
         listbox_collapsed_listbox_avatar_width, listbox_collapsed_listbox_avatar_height,
         // expanded settings
+        listbox_expanded_bg_color,
+        listbox_expanded_icon_size, 
+        listbox_expanded_icon_fill,
         listbox_expanded_listbox_color,
         listbox_expanded_listbox_size, 
         listbox_expanded_listbox_weight,
-        listbox_expanded_icon_size, 
-        listbox_expanded_icon_fill,
         listbox_expanded_listbox_avatar_width, 
         listbox_expanded_listbox_avatar_height,
         listbox_expanded_listbox_icon_size, 
@@ -3485,11 +3490,13 @@ function i_button (option, protocol) {
         --color: ${listbox_collapsed_listbox_color ? listbox_collapsed_listbox_color : 'var(--listbox-collapsed-listbox-color)'};
         --size: ${listbox_collapsed_listbox_size ? listbox_collapsed_listbox_size : 'var(--listbox-collapsed-listbox-size)'};
         --weight: ${listbox_collapsed_listbox_weight ? listbox_collapsed_listbox_weight : 'var(--listbox-collapsed-listbox-weight)'};
+        --bg-color: ${listbox_collapsed_bg_color ? listbox_collapsed_bg_color : 'var(--listbox-collapsed-bg-color)'};
     }
     :host(i-button[role="listbox"]:hover) {
         --color: ${listbox_collapsed_listbox_color_hover ? listbox_collapsed_listbox_color_hover : 'var(--listbox-collapsed-listbox-color-hover)'};
         --size: ${listbox_collapsed_listbox_size_hover ? listbox_collapsed_listbox_size_hover : 'var(--listbox-collapsed-listbox-size-hover)'};
         --weight: ${listbox_collapsed_listbox_weight_hover ? listbox_collapsed_listbox_weight_hover : 'var(--listbox-collapsed-listbox-weight-hover)'};
+        --bg-color: ${listbox_collapsed_bg_color_hover ? listbox_collapsed_bg_color_hover : 'var(--listbox-collapsed-bg-color-hover)'};
     }
     :host(i-button[role="listbox"]) > .icon {
         ${grid.icon ? make_grid(grid.icon) : make_grid({column: '2'})}
@@ -3501,9 +3508,10 @@ function i_button (option, protocol) {
     }
     :host(i-button[role="listbox"][aria-expanded="true"]),
     :host(i-button[role="listbox"][aria-expanded="true"]:hover) {
-        --size: ${listbox_expanded_listbox_size ? listbox_expanded_listbox_size : 'var(--listbox-expanded-listbox-size)' };
-        --color: ${listbox_expanded_listbox_color ? listbox_expanded_listbox_color : 'var(--listbox-expanded-listbox-color)' };
-        --weight: ${listbox_expanded_listbox_weight ? listbox_expanded_listbox_weight : 'var(--listbox-expanded-listbox-weight)' };
+        --size: ${listbox_expanded_listbox_size ? listbox_expanded_listbox_size : 'var(--listbox-expanded-listbox-size)'};
+        --color: ${listbox_expanded_listbox_color ? listbox_expanded_listbox_color : 'var(--listbox-expanded-listbox-color)'};
+        --weight: ${listbox_expanded_listbox_weight ? listbox_expanded_listbox_weight : 'var(--listbox-expanded-listbox-weight)'};
+        --bg-color: ${listbox_expanded_bg_color ? listbox_listbox_bg_color : 'var(--listbox-expanded-bg-color)'}
     }
     :host(i-button[role="listbox"][aria-expanded="true"]) .avatar {
         --avatar-width: ${listbox_expanded_listbox_avatar_width ? listbox_expanded_listbox_avatar_width : 'var(--listbox-expanded-listbox-avatar-width)'};
