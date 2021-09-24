@@ -245,7 +245,7 @@ function i_button (option, protocol) {
     let is_expanded = expanded
 
     document.body.addEventListener("touchstart",function(){ });
-
+    
     function widget () {
         const send = protocol(get)
         const make = message_maker(`${name} / ${role} / ${flow} / ${page}`)
@@ -260,7 +260,7 @@ function i_button (option, protocol) {
         const option = make_element({name: 'span', classlist: 'option'})
         // check icon, img and body if has value
         const add_cover = typeof cover === 'string' ? avatar : undefined
-        const add_text = body && typeof body === 'string' ? text : 'undefined'
+        const add_text = body ? typeof body === 'object' ? 'undefined' : text : undefined
         if (typeof cover === 'string') avatar.append(make_img({src: cover, alt: name}))
         if (typeof cover === 'object') send(make({type: 'error', data: `cover[${typeof cover}] must to be a string`}))
         if (typeof body === 'object') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))

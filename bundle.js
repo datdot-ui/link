@@ -25,7 +25,7 @@ function demo () {
     const primary = button(
     {
         name: 'primary', 
-        body: `<div>Hello</div>`,
+        body: bel`<div>Hello</div>`,
         theme:
         { 
             style: ` `, 
@@ -304,7 +304,9 @@ function demo () {
     const cancel = button(
     {
         name: 'cancel', 
-        body: icon(icon_cancel),
+        icons: {
+            icon: icon_cancel
+        },
         // cover: icon(icon_cancel),
         theme: {
             style: ``,
@@ -403,6 +405,7 @@ function demo () {
                     // icon_fill: 'var(--color-persian-rose)',
                     // icon_fill_hover: 'var(--color-amaranth-pink)',
                     // icon_size: '32px'
+                    border_width: '1px'
                 },
             }
         }, protocol('single-selector'))
@@ -1106,8 +1109,8 @@ const css = csjs`
     /*-- collapsed --*/
     --listbox-collapsed-bg-color: var(--primary-bg-color);
     --listbox-collapsed-bg-color-hover: var(--primary-bg-color-hover);
-    --listbox-collapsed-icon-size: var(--size20);
-    --listbox-collapsed-icon-size-hover: var(--size20);
+    --listbox-collapsed-icon-size: var(--size14);
+    --listbox-collapsed-icon-size-hover: var(--size14);
     --listbox-collapsed-icon-fill: var(--primary-icon-fill);
     --listbox-collapsed-icon-fill-hover: var(--primary-icon-fill-hover);
     --listbox-collapsed-listbox-size: var(--primary-size);
@@ -1124,8 +1127,7 @@ const css = csjs`
     --listbox-collapsed-listbox-icon-fill-hover: var(--color-yellow);
     /*-- expanded ---*/
     --listbox-expanded-bg-color: var(--current-bg-color);
-    --listbox-expanded-icon-size: var(--size20);
-    --listbox-expanded-icon-size-hover: var(--size20);
+    --listbox-expanded-icon-size: var(--size14);
     --listbox-expanded-icon-fill: var(--color-light-green);
     --listbox-expanded-listbox-size: var(--size20);
     --listbox-expanded-listbox-weight: var(--primary-weight);
@@ -3126,7 +3128,7 @@ function i_button (option, protocol) {
     let is_expanded = expanded
 
     document.body.addEventListener("touchstart",function(){ });
-
+    
     function widget () {
         const send = protocol(get)
         const make = message_maker(`${name} / ${role} / ${flow} / ${page}`)
@@ -3141,7 +3143,7 @@ function i_button (option, protocol) {
         const option = make_element({name: 'span', classlist: 'option'})
         // check icon, img and body if has value
         const add_cover = typeof cover === 'string' ? avatar : undefined
-        const add_text = body && typeof body === 'string' ? text : 'undefined'
+        const add_text = body ? typeof body === 'object' ? 'undefined' : text : undefined
         if (typeof cover === 'string') avatar.append(make_img({src: cover, alt: name}))
         if (typeof cover === 'object') send(make({type: 'error', data: `cover[${typeof cover}] must to be a string`}))
         if (typeof body === 'object') send(make({type: 'error', data: {body: `content is an ${typeof body}`, content: body }}))
