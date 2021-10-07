@@ -280,7 +280,10 @@ function i_button (option, protocol) {
                 set_attr({aria: 'controls', prop: controls})
                 el.setAttribute('tabindex', is_current ? 0 : -1)
             }
-            if (role === 'switch') set_attr({aria: 'checked', prop: is_checked})
+            if (role === 'switch') {
+                set_attr({aria: 'checked', prop: is_checked})
+                if (current) set_attr({aria: 'current', prop: is_current})
+            }
             if (role === 'listbox') {
                 set_attr({aria: 'haspopup', prop: role})
             }
@@ -321,9 +324,13 @@ function i_button (option, protocol) {
 
         // toggle
         function switched_event (data) {
-            is_checked = data
+            const {checked, current} = data
+            is_checked = checked
+            is_current = current
+            console.log(data);
             if (!is_checked) return el.removeAttribute('aria-checked')
             set_attr({aria: 'checked', prop: is_checked})
+            if (current) set_attr({aria: 'current', prop: is_current})
         }
         // dropdown menu
         function expanded_event (data) {

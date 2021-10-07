@@ -122,7 +122,7 @@ function demo () {
     {
         name: 'disable', 
         body: 'Disable', 
-        disabled: true, 
+        disabled: true,
         theme: {
             // style: `
             // :host(i-button) button[disabled] {
@@ -146,6 +146,7 @@ function demo () {
         // },
         // cover: 'https://cdn.pixabay.com/photo/2016/02/27/06/43/cherry-blossom-tree-1225186_960_720.jpg',
         // checked: false, 
+        current: true,
         theme : {
             style: ``,
             props: {
@@ -901,8 +902,9 @@ function demo () {
     }
 
     function handle_toggle_event (make, from, data) {
-        const state = !data
-        const message = make({type: 'switched', data: state})
+        const state = !data.checked
+        const is_current = !data.current
+        const message = make({type: 'switched', data: {checked: state, current: data.current}})
         let body = state ? 'Toggle on' : 'Toggle off'
         if (from === 'thumb-blossom') body = state ? 'Blossom open' : 'Blossom close'
         const cover = state ? 'https://cdn.pixabay.com/photo/2019/05/11/02/33/cherry-blossom-4194997_960_720.jpg' : 'https://cdn.pixabay.com/photo/2016/02/19/11/07/japanese-cherry-blossoms-1209577_960_720.jpg'
@@ -910,7 +912,7 @@ function demo () {
         const content =  {text: body, cover: from === 'thumb-blossom' ? cover : undefined, icon}
         recipients[from](message)
         recipients[from](make({type: 'changed', data: content}))
-        recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state}}) )
+        recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state, current: data.current}}) )
         recipients['logs']( make({to: 'self', type: 'changed', data: content}) )
     }
 
@@ -3163,7 +3165,10 @@ function i_button (option, protocol) {
                 set_attr({aria: 'controls', prop: controls})
                 el.setAttribute('tabindex', is_current ? 0 : -1)
             }
-            if (role === 'switch') set_attr({aria: 'checked', prop: is_checked})
+            if (role === 'switch') {
+                set_attr({aria: 'checked', prop: is_checked})
+                if (current) set_attr({aria: 'current', prop: is_current})
+            }
             if (role === 'listbox') {
                 set_attr({aria: 'haspopup', prop: role})
             }
@@ -3204,9 +3209,13 @@ function i_button (option, protocol) {
 
         // toggle
         function switched_event (data) {
-            is_checked = data
+            const {checked, current} = data
+            is_checked = checked
+            is_current = current
+            console.log(data);
             if (!is_checked) return el.removeAttribute('aria-checked')
             set_attr({aria: 'checked', prop: is_checked})
+            if (current) set_attr({aria: 'current', prop: is_current})
         }
         // dropdown menu
         function expanded_event (data) {
