@@ -2902,7 +2902,7 @@ function i_link (option, protocol) {
         const make = message_maker(`${name} / ${role} / ${flow} / ${page}`)
         const message = make({to: 'demo.js', type: 'ready'})
         const el = make_element({name: 'i-link', role})
-        const shadow = el.attachShadow({mode: 'open'})
+        const shadow = el.attachShadow({mode: 'closed'})
         const text = make_element({name: 'span', classlist: 'text'})
         const avatar = make_element({name: 'span', classlist: 'avatar'})
         text.append(body)
