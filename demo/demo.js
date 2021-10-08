@@ -862,12 +862,17 @@ function demo () {
         recipients['logs']( make({type: 'triggered'}) )
     }
 
-    function handle_tab_event (make, from, {checked, current}) {
+    function handle_tab_event (make, from, {selected, current}) {
         const {childNodes} = demo_tab
         const result = [...childNodes].filter( child => child.getAttribute('aria-label') !== from)
-        const current_message = make({type: 'checked', data: {selected: !checked, current}})
+        const current_message = make({type: 'tab-selected', data: {selected, current}})
         recipients[from](current_message)
         recipients['logs'](current_message)
+
+        result.forEach( tab => {
+            const name = tab.getAttribute('aria-label')
+            recipients[name](make({type: 'tab-selected', data: {selected: !selected, current: !current}}))
+        })
         // tabs.map( tab => {
         //     const state = from === tab.getAttribute('aria-label') ? !data : data
         //     const current = from === tab.getAttribute('aria-label') ? from : tab.getAttribute('aria-label')

@@ -863,12 +863,17 @@ function demo () {
         recipients['logs']( make({type: 'triggered'}) )
     }
 
-    function handle_tab_event (make, from, {checked, current}) {
+    function handle_tab_event (make, from, {selected, current}) {
         const {childNodes} = demo_tab
         const result = [...childNodes].filter( child => child.getAttribute('aria-label') !== from)
-        const current_message = make({type: 'checked', data: {selected: !checked, current}})
+        const current_message = make({type: 'tab-selected', data: {selected, current}})
         recipients[from](current_message)
         recipients['logs'](current_message)
+
+        result.forEach( tab => {
+            const name = tab.getAttribute('aria-label')
+            recipients[name](make({type: 'tab-selected', data: {selected: !selected, current: !current}}))
+        })
         // tabs.map( tab => {
         //     const state = from === tab.getAttribute('aria-label') ? !data : data
         //     const current = from === tab.getAttribute('aria-label') ? from : tab.getAttribute('aria-label')
@@ -3224,7 +3229,6 @@ function i_button (opt, protocol) {
 
         // toggle
         function switched_event (data) {
-            console.log(data);
             const {checked, current} = data
             is_checked = checked
             is_current = current
@@ -3237,11 +3241,12 @@ function i_button (opt, protocol) {
             is_expanded = !data
             set_attr({aria: 'expanded', prop: is_expanded})
         }
-        // tab checked
-        function checked_event ({checked, current}) {
-            is_checked = checked
-            is_current = current
-            set_attr({aria: 'selected', prop: is_checked})
+        // tab selected
+        function tab_selected_event (data) {
+            is_selected = data.selected
+            is_current = data.current
+            console.log(data);
+            set_attr({aria: 'selected', prop: is_selected})
             set_attr({aria: 'current', prop: is_current})
             el.setAttribute('tabindex', is_current ? 0 : -1)
         }
@@ -3307,7 +3312,7 @@ function i_button (opt, protocol) {
         function handle_click () {
             if (is_current) return
             const type = 'click'
-            if (role === 'tab') return send( make({type, data: {checked: is_checked, current: !current}}) )
+            if (role === 'tab') return send( make({type, data: {selected: true, current: true}}) )
             if (role === 'switch') return send( make({type, data: {checked: is_checked, current: !current}}) )
             if (role === 'listbox') {
                 is_expanded = !is_expanded
@@ -3327,7 +3332,7 @@ function i_button (opt, protocol) {
             // dropdown
             if (type.match(/expanded|collapsed/)) return expanded_event(!data)
             // tab, checkbox
-            if (type.match(/checked|unchecked/)) return checked_event(data)
+            if (type.match(/tab-selected/)) return tab_selected_event(data)
             // option
             if (type.match(/selected|unselected/)) return list_selected_event(data)
             if (type.match(/changed/)) return changed_event(data)
