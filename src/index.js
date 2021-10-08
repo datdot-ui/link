@@ -411,11 +411,13 @@ function i_button (opt, protocol) {
                 is_selected = !is_selected
                 return send( make({type, data: {selected: is_selected, content: is_selected ? {text: body, cover, icon} : '' }}) )
             }
-            send( make({type}) )
+            if (role === 'button') return send( make({type, data: {current: is_current}}) )
         }
         // protocol get msg
         function get (msg) {
             const { head, refs, type, data } = msg
+            // button
+            if (type.match(/current/)) return console.log(data);
             // toggle
             if (type.match(/switched/)) return switched_event(data)
             // dropdown

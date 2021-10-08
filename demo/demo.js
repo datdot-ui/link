@@ -849,12 +849,17 @@ function demo () {
         const id = head[2]
         const role = head[0].split(' / ')[1]
         const from = head[0].split(' / ')[0]
-        const make = message_maker(`${from} / ${role} / Demo`)
-        if (role.match(/button|menuitem/)) return recipients['logs']( make({type: 'triggered'}) )
+        const make = message_maker(`${from} / ${role} / demo`)
+        if (role.match(/button|menuitem/)) return handle_triggered(make, {from, data})
         if (role === 'tab') return handle_tab_event(from, data)
         if (role === 'switch') return handle_toggle_event(make, from, data)
         if (role === 'listbox') return handle_dropdown_menu_event(make, from, data)
         if (role === 'option') return handle_select_event(from, data)
+    }
+
+    function handle_triggered (make, {from, data}) {
+        if (data.current) recipients[from](make({type: 'current', data}));
+        recipients['logs']( make({type: 'triggered'}) )
     }
 
     function handle_tab_event (from, data) {
