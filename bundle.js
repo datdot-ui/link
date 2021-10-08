@@ -3212,7 +3212,6 @@ function i_button (option, protocol) {
             const {checked, current} = data
             is_checked = checked
             is_current = current
-            console.log(data);
             if (!is_checked) return el.removeAttribute('aria-checked')
             set_attr({aria: 'checked', prop: is_checked})
             if (current) set_attr({aria: 'current', prop: is_current})
