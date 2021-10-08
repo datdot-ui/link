@@ -287,7 +287,6 @@ function i_button (opt, protocol) {
                 el.setAttribute('disabled', is_disabled)
             } 
             if (is_checked) set_attr({aria: 'checked', prop: is_checked})
-            if (is_current) set_attr({aria: 'current', prop: is_current})
             if (role.match(/option/)) {
                 is_selected = is_current
                 set_attr({aria: 'selected', prop: is_selected})
@@ -295,6 +294,8 @@ function i_button (opt, protocol) {
             if (is_expanded) {
                 set_attr({aria: 'selected', prop: is_expanded})
             }
+            // make current status
+            set_attr({aria: 'current', prop: is_current})
         }
 
         function set_attr ({aria, prop}) {
@@ -317,6 +318,7 @@ function i_button (opt, protocol) {
 
         // toggle
         function switched_event (data) {
+            console.log(data);
             const {checked, current} = data
             is_checked = checked
             is_current = current
@@ -330,9 +332,9 @@ function i_button (opt, protocol) {
             set_attr({aria: 'expanded', prop: is_expanded})
         }
         // tab checked
-        function checked_event (data) {
-            is_checked = data
-            is_current = is_checked
+        function checked_event ({checked, current}) {
+            is_checked = checked
+            is_current = current
             set_attr({aria: 'selected', prop: is_checked})
             set_attr({aria: 'current', prop: is_current})
             el.setAttribute('tabindex', is_current ? 0 : -1)
@@ -395,12 +397,10 @@ function i_button (opt, protocol) {
             } 
         }
 
-
         // button click
         function handle_click () {
             if (is_current) return
             const type = 'click'
-            is_current = 'current' in opt ? !current : undefined
             if (role === 'tab') return send( make({type, data: {checked: is_checked, current: !current}}) )
             if (role === 'switch') return send( make({type, data: {checked: is_checked, current: !current}}) )
             if (role === 'listbox') {
@@ -416,8 +416,6 @@ function i_button (opt, protocol) {
         // protocol get msg
         function get (msg) {
             const { head, refs, type, data } = msg
-            // button
-            if (type.match(/current/)) return console.log(data);
             // toggle
             if (type.match(/switched/)) return switched_event(data)
             // dropdown

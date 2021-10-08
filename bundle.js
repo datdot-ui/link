@@ -850,29 +850,38 @@ function demo () {
         const id = head[2]
         const role = head[0].split(' / ')[1]
         const from = head[0].split(' / ')[0]
-        const make = message_maker(`${from} / ${role} / Demo`)
-        if (role.match(/button|menuitem/)) return recipients['logs']( make({type: 'triggered'}) )
-        if (role === 'tab') return handle_tab_event(from, data)
+        const make = message_maker(`${from} / ${role} / demo`)
+        if (role.match(/button|menuitem/)) return handle_triggered(make, {from, data})
+        if (role === 'tab') return handle_tab_event(make, from, data)
         if (role === 'switch') return handle_toggle_event(make, from, data)
         if (role === 'listbox') return handle_dropdown_menu_event(make, from, data)
         if (role === 'option') return handle_select_event(from, data)
     }
 
-    function handle_tab_event (from, data) {
-        const tabs = [...demo_tab.children]
-        tabs.map( tab => {
-            const state = from === tab.getAttribute('aria-label') ? !data : data
-            const current = from === tab.getAttribute('aria-label') ? from : tab.getAttribute('aria-label')
-            const type = from === tab.getAttribute('aria-label') ? 'checked' : 'unchecked'
-            const make = message_maker(`${current} / tab / Demo`)
-            recipients[current]( make({type, data: state}) )
+    function handle_triggered (make, {from, data}) {
+        if (data.current) recipients[from](make({type: 'current', data}));
+        recipients['logs']( make({type: 'triggered'}) )
+    }
+
+    function handle_tab_event (make, from, {checked, current}) {
+        const {childNodes} = demo_tab
+        const result = [...childNodes].filter( child => child.getAttribute('aria-label') !== from)
+        const current_message = make({type: 'checked', data: {selected: !checked, current}})
+        recipients[from](current_message)
+        recipients['logs'](current_message)
+        // tabs.map( tab => {
+        //     const state = from === tab.getAttribute('aria-label') ? !data : data
+        //     const current = from === tab.getAttribute('aria-label') ? from : tab.getAttribute('aria-label')
+        //     const type = from === tab.getAttribute('aria-label') ? 'checked' : 'unchecked'
+        //     const make = message_maker(`${current} / tab / Demo`)
+        //     recipients[current]( make({type, data: {selected: state, current: state}}) )
             
-            if (from === tab.getAttribute('aria-label')) {
-                recipients['logs']( make({type, data: {selected: state, current: state}}) )
-                return handle_panel_change(tab.getAttribute('aria-controls')) 
-            }
-            // return recipients['logs']( make({type, data: {selected: state, current: state}}) )
-        })
+        //     if (from === tab.getAttribute('aria-label')) {
+        //         recipients['logs']( make({type, data: {selected: state, current: state}}) )
+        //         return handle_panel_change(tab.getAttribute('aria-controls')) 
+        //     }
+        //     // return recipients['logs']( make({type, data: {selected: state, current: state}}) )
+        // })
     }
 
     function handle_panel_change(id) {
@@ -916,7 +925,7 @@ function demo () {
     function handle_toggle_event (make, from, data) {
         const state = !data.checked
         const is_current = !data.current
-        const message = make({type: 'switched', data: {checked: state, current: data.current}})
+        const message = make({type: 'switched', data: {checked: state, current: is_current}})
         let body = state ? 'Toggle on' : 'Toggle off'
         if (from === 'thumb-blossom') body = state ? 'Blossom open' : 'Blossom close'
         const cover = state ? 'https://cdn.pixabay.com/photo/2019/05/11/02/33/cherry-blossom-4194997_960_720.jpg' : 'https://cdn.pixabay.com/photo/2016/02/19/11/07/japanese-cherry-blossoms-1209577_960_720.jpg'
@@ -924,7 +933,7 @@ function demo () {
         const content =  {text: body, cover: from === 'thumb-blossom' ? cover : undefined, icon}
         recipients[from](message)
         recipients[from](make({type: 'changed', data: content}))
-        recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state, current: data.current}}) )
+        recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state, current: is_current}}) )
         recipients['logs']( make({to: 'self', type: 'changed', data: content}) )
     }
 
@@ -3184,7 +3193,6 @@ function i_button (opt, protocol) {
                 el.setAttribute('disabled', is_disabled)
             } 
             if (is_checked) set_attr({aria: 'checked', prop: is_checked})
-            if (is_current) set_attr({aria: 'current', prop: is_current})
             if (role.match(/option/)) {
                 is_selected = is_current
                 set_attr({aria: 'selected', prop: is_selected})
@@ -3192,6 +3200,8 @@ function i_button (opt, protocol) {
             if (is_expanded) {
                 set_attr({aria: 'selected', prop: is_expanded})
             }
+            // make current status
+            set_attr({aria: 'current', prop: is_current})
         }
 
         function set_attr ({aria, prop}) {
@@ -3214,6 +3224,7 @@ function i_button (opt, protocol) {
 
         // toggle
         function switched_event (data) {
+            console.log(data);
             const {checked, current} = data
             is_checked = checked
             is_current = current
@@ -3227,9 +3238,9 @@ function i_button (opt, protocol) {
             set_attr({aria: 'expanded', prop: is_expanded})
         }
         // tab checked
-        function checked_event (data) {
-            is_checked = data
-            is_current = is_checked
+        function checked_event ({checked, current}) {
+            is_checked = checked
+            is_current = current
             set_attr({aria: 'selected', prop: is_checked})
             set_attr({aria: 'current', prop: is_current})
             el.setAttribute('tabindex', is_current ? 0 : -1)
@@ -3292,12 +3303,10 @@ function i_button (opt, protocol) {
             } 
         }
 
-
         // button click
         function handle_click () {
             if (is_current) return
             const type = 'click'
-            is_current = 'current' in opt ? !current : undefined
             if (role === 'tab') return send( make({type, data: {checked: is_checked, current: !current}}) )
             if (role === 'switch') return send( make({type, data: {checked: is_checked, current: !current}}) )
             if (role === 'listbox') {
@@ -3308,7 +3317,7 @@ function i_button (opt, protocol) {
                 is_selected = !is_selected
                 return send( make({type, data: {selected: is_selected, content: is_selected ? {text: body, cover, icon} : '' }}) )
             }
-            send( make({type}) )
+            if (role === 'button') return send( make({type, data: {current: is_current}}) )
         }
         // protocol get msg
         function get (msg) {

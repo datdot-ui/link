@@ -851,7 +851,7 @@ function demo () {
         const from = head[0].split(' / ')[0]
         const make = message_maker(`${from} / ${role} / demo`)
         if (role.match(/button|menuitem/)) return handle_triggered(make, {from, data})
-        if (role === 'tab') return handle_tab_event(from, data)
+        if (role === 'tab') return handle_tab_event(make, from, data)
         if (role === 'switch') return handle_toggle_event(make, from, data)
         if (role === 'listbox') return handle_dropdown_menu_event(make, from, data)
         if (role === 'option') return handle_select_event(from, data)
@@ -862,21 +862,25 @@ function demo () {
         recipients['logs']( make({type: 'triggered'}) )
     }
 
-    function handle_tab_event (from, data) {
-        const tabs = [...demo_tab.children]
-        tabs.map( tab => {
-            const state = from === tab.getAttribute('aria-label') ? !data : data
-            const current = from === tab.getAttribute('aria-label') ? from : tab.getAttribute('aria-label')
-            const type = from === tab.getAttribute('aria-label') ? 'checked' : 'unchecked'
-            const make = message_maker(`${current} / tab / Demo`)
-            recipients[current]( make({type, data: state}) )
+    function handle_tab_event (make, from, {checked, current}) {
+        const {childNodes} = demo_tab
+        const result = [...childNodes].filter( child => child.getAttribute('aria-label') !== from)
+        const current_message = make({type: 'checked', data: {selected: !checked, current}})
+        recipients[from](current_message)
+        recipients['logs'](current_message)
+        // tabs.map( tab => {
+        //     const state = from === tab.getAttribute('aria-label') ? !data : data
+        //     const current = from === tab.getAttribute('aria-label') ? from : tab.getAttribute('aria-label')
+        //     const type = from === tab.getAttribute('aria-label') ? 'checked' : 'unchecked'
+        //     const make = message_maker(`${current} / tab / Demo`)
+        //     recipients[current]( make({type, data: {selected: state, current: state}}) )
             
-            if (from === tab.getAttribute('aria-label')) {
-                recipients['logs']( make({type, data: {selected: state, current: state}}) )
-                return handle_panel_change(tab.getAttribute('aria-controls')) 
-            }
-            // return recipients['logs']( make({type, data: {selected: state, current: state}}) )
-        })
+        //     if (from === tab.getAttribute('aria-label')) {
+        //         recipients['logs']( make({type, data: {selected: state, current: state}}) )
+        //         return handle_panel_change(tab.getAttribute('aria-controls')) 
+        //     }
+        //     // return recipients['logs']( make({type, data: {selected: state, current: state}}) )
+        // })
     }
 
     function handle_panel_change(id) {
@@ -920,7 +924,7 @@ function demo () {
     function handle_toggle_event (make, from, data) {
         const state = !data.checked
         const is_current = !data.current
-        const message = make({type: 'switched', data: {checked: state, current: data.current}})
+        const message = make({type: 'switched', data: {checked: state, current: is_current}})
         let body = state ? 'Toggle on' : 'Toggle off'
         if (from === 'thumb-blossom') body = state ? 'Blossom open' : 'Blossom close'
         const cover = state ? 'https://cdn.pixabay.com/photo/2019/05/11/02/33/cherry-blossom-4194997_960_720.jpg' : 'https://cdn.pixabay.com/photo/2016/02/19/11/07/japanese-cherry-blossoms-1209577_960_720.jpg'
@@ -928,7 +932,7 @@ function demo () {
         const content =  {text: body, cover: from === 'thumb-blossom' ? cover : undefined, icon}
         recipients[from](message)
         recipients[from](make({type: 'changed', data: content}))
-        recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state, current: data.current}}) )
+        recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state, current: is_current}}) )
         recipients['logs']( make({to: 'self', type: 'changed', data: content}) )
     }
 
