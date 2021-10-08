@@ -43,6 +43,8 @@ function demo () {
     const current1 = button({
         name: 'button1',
         body: 'Button1',
+        expanded: false,
+        // current: true,
     }, protocol('button1'))
 
     const current2 = button({
@@ -3204,6 +3206,7 @@ function i_button (opt, protocol) {
             }
             // make current status
             if ('current' in opt) set_attr({aria: 'current', prop: is_current})
+            if ('expanded' in opt) set_attr({aria: 'expanded', prop: is_expanded})
         }
 
         function set_attr ({aria, prop}) {
@@ -3512,6 +3515,10 @@ function i_button (opt, protocol) {
         width: 100%;
         height: auto;
     }
+    :host(i-button[aria-expanded="true"]:focus) {
+        --color: var(--color-focus);
+        --bg-color: var(--bg-color-focus);
+    } 
     :host(i-button[role="tab"]) {
         --width: ${width ? width : '100%'};
         --border-radius: ${border_radius ? border_radius : '0'};

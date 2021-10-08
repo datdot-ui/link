@@ -42,6 +42,8 @@ function demo () {
     const current1 = button({
         name: 'button1',
         body: 'Button1',
+        expanded: false,
+        // current: true,
     }, protocol('button1'))
 
     const current2 = button({
