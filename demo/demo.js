@@ -42,13 +42,11 @@ function demo () {
     const current1 = button({
         name: 'button1',
         body: 'Button1',
-        current: true,
     }, protocol('button1'))
 
     const current2 = button({
         name: 'button2',
         body: 'Button2',
-        current: false
     }, protocol('button2'))
 
     // image buttons
@@ -865,7 +863,6 @@ function demo () {
     function handle_panel_change(id) {
         const panels = document.querySelector('.panels')
         const {childNodes} = panels
-        console.log(id);
         childNodes.forEach( item => {
             const index = item.id === id ? 0 : -1
             item.setAttribute('tabindex', index)
@@ -1078,8 +1075,10 @@ const css = csjs`
     --primary-weight-hover: 300;
     --primary-color: var(--color-black);
     --primary-color-hover: var(--color-white);
+    --primary-color-focus: var(--color-orange);
     --primary-bg-color: var(--color-white);
     --primary-bg-color-hover: var(--color-black);
+    --primary-bg-color-focus: var(--color-greyA2), 0.5;
     --primary-border-width: 1px;
     --primary-border-style: solid;
     --primary-border-color: var(--color-black);
@@ -1165,6 +1164,7 @@ const css = csjs`
     --link-size-hover: var(--primary-link-size);
     --link-color: var(--color-heavy-blue);
     --link-color-hover: var(--color-dodger-blue);
+    --link-color-focus: var(--color-flame);
     --link-bg-color: transparent;
     --link-icon-size: var(--size30);
     --link-icon-fill: var(--primary-link-color);

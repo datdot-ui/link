@@ -43,13 +43,11 @@ function demo () {
     const current1 = button({
         name: 'button1',
         body: 'Button1',
-        current: true,
     }, protocol('button1'))
 
     const current2 = button({
         name: 'button2',
         body: 'Button2',
-        current: false
     }, protocol('button2'))
 
     // image buttons
@@ -866,7 +864,6 @@ function demo () {
     function handle_panel_change(id) {
         const panels = document.querySelector('.panels')
         const {childNodes} = panels
-        console.log(id);
         childNodes.forEach( item => {
             const index = item.id === id ? 0 : -1
             item.setAttribute('tabindex', index)
@@ -1079,8 +1076,10 @@ const css = csjs`
     --primary-weight-hover: 300;
     --primary-color: var(--color-black);
     --primary-color-hover: var(--color-white);
+    --primary-color-focus: var(--color-orange);
     --primary-bg-color: var(--color-white);
     --primary-bg-color-hover: var(--color-black);
+    --primary-bg-color-focus: var(--color-greyA2), 0.5;
     --primary-border-width: 1px;
     --primary-border-style: solid;
     --primary-border-color: var(--color-black);
@@ -1166,6 +1165,7 @@ const css = csjs`
     --link-size-hover: var(--primary-link-size);
     --link-color: var(--color-heavy-blue);
     --link-color-hover: var(--color-dodger-blue);
+    --link-color-focus: var(--color-flame);
     --link-bg-color: transparent;
     --link-icon-size: var(--size30);
     --link-icon-fill: var(--primary-link-color);
@@ -2977,7 +2977,7 @@ function i_link (opt, protocol) {
         // weight
         weight, weight_hover, disabled_weight,
         // color
-        color, color_hover, disabled_color,
+        color, color_hover, color_focus, disabled_color,
         // background-color    
         bg_color, bg_color_hover, disabled_bg_color,
         // deco
@@ -3004,6 +3004,7 @@ function i_link (opt, protocol) {
         --size: ${size ? size : 'var(--link-size)'};
         --weight: ${weight ? weight : 'var(--weight300)'};
         --color: ${color ? color : 'var(--link-color)'};
+        --color-focus: ${color_focus ? color_focus : 'var(--link-color-focus)'};
         --bg-color: ${bg_color ? bg_color : 'var(--link-bg-color)'};
         --opacity: ${opacity ? opacity : '0'};
         --deco: ${deco ? deco : 'none'};
@@ -3029,6 +3030,9 @@ function i_link (opt, protocol) {
         --bg-color: ${bg_color_hover ? bg_color_hover : 'var(--color-white)'};
         --opacity: ${opacity ? opacity : '0'};
         text-decoration: var(--deco);
+    }
+    :host(i-link:focus) {
+        --color: ${color_focus ? color_focus : 'var(--link-color-focus)'};
     }
     :host(i-link) img {
         --scale: ${scale ? scale : '1'};
@@ -3095,6 +3099,9 @@ function i_link (opt, protocol) {
         --weight: ${weight ? weight : 'var(--menu-weight-hover)'};
         text-decoration: none;
         background-color: transparent;
+    }
+    :host(i-link[role="menuitem"]:focus) {
+        --color: var(--color-focus);
     }
     :host(i-link[role="menuitem"]) .icon {
         --icon-size: ${icon_size ? icon_size : 'var(--menu-icon-size)'};
@@ -3196,7 +3203,7 @@ function i_button (opt, protocol) {
                 set_attr({aria: 'selected', prop: is_expanded})
             }
             // make current status
-            set_attr({aria: 'current', prop: is_current})
+            if ('current' in opt) set_attr({aria: 'current', prop: is_current})
         }
 
         function set_attr ({aria, prop}) {
@@ -3301,6 +3308,7 @@ function i_button (opt, protocol) {
         function handle_click () {
             if (is_current) return
             const type = 'click'
+            if (role === 'button' && 'current' in opt) return 
             if (role === 'tab') return send( make({type, data: {selected: true, current: true, controls: el.getAttribute('aria-controls')}}) )
             if (role === 'switch') return send( make({type, data: {checked: is_checked, current: !current}}) )
             if (role === 'listbox') {
@@ -3340,9 +3348,9 @@ function i_button (opt, protocol) {
         // weight
         weight, weight_hover, 
         // color
-        color, color_hover,
+        color, color_hover, color_focus,
         // background-color
-        bg_color, bg_color_hover,
+        bg_color, bg_color_hover, bg_color_focus,
         // border
         border_color, border_color_hover,
         border_width, border_style, border_opacity, border_radius, 
@@ -3408,7 +3416,9 @@ function i_button (opt, protocol) {
         --size: ${size ? size : 'var(--primary-size)'};
         --weight: ${weight ? weight : 'var(--weight300)'};
         --color: ${color ? color : 'var(--primary-color)'};
+        --color-focus: ${color_focus ? color_focus : 'var(--primary-color-focus)'};
         --bg-color: ${bg_color ? bg_color : 'var(--primary-bg-color)'};
+        --bg-color-focus: ${bg_color_focus ? bg_color_focus : 'var(--primary-bg-color-focus)'};
         ${width && `--width: ${width}`};
         ${height && `--height: ${height}`};
         --opacity: ${opacity ? opacity : '1'};
@@ -3461,6 +3471,11 @@ function i_button (opt, protocol) {
     :host(i-button:hover:foucs:active) {
         --bg-color: ${bg_color ? bg_color : 'var(--primary-bg-color)'};
     }
+    :host(i-button:focus) {
+        --color: var(--color-focus);
+        --bg-color: var(--bg-color-focus);
+        background-color: hsla(var(--bg-color));
+    }  
     :host(i-button) g {
         --icon-fill: ${icon_fill ? icon_fill : 'var(--primary-icon-fill)'};
         fill: hsl(var(--icon-fill));
@@ -3507,6 +3522,10 @@ function i_button (opt, protocol) {
     :host(i-button[role="switch"]:hover) {
         --size: ${size_hover ? size_hover : 'var(--primary-size-hover)'};
     }
+    :host(i-button[role="switch"]:focus) {
+        --color: var(--color-focus);
+        --bg-color: var(--bg-color-focus);
+    }
     :host(i-button[role="listbox"]) {
         --color: ${listbox_collapsed_listbox_color ? listbox_collapsed_listbox_color : 'var(--listbox-collapsed-listbox-color)'};
         --size: ${listbox_collapsed_listbox_size ? listbox_collapsed_listbox_size : 'var(--listbox-collapsed-listbox-size)'};
@@ -3518,6 +3537,10 @@ function i_button (opt, protocol) {
         --size: ${listbox_collapsed_listbox_size_hover ? listbox_collapsed_listbox_size_hover : 'var(--listbox-collapsed-listbox-size-hover)'};
         --weight: ${listbox_collapsed_listbox_weight_hover ? listbox_collapsed_listbox_weight_hover : 'var(--listbox-collapsed-listbox-weight-hover)'};
         --bg-color: ${listbox_collapsed_bg_color_hover ? listbox_collapsed_bg_color_hover : 'var(--listbox-collapsed-bg-color-hover)'};
+    }
+    :host(i-button[role="listbox"]:focus), :host(i-button[role="listbox"][aria-expanded="true"]:focus) {
+        --color: var(--color-focus);
+        --bg-color: var(--bg-color-focus);
     }
     :host(i-button[role="listbox"]) > .icon {
         ${grid.icon ? make_grid(grid.icon) : make_grid({column: '2'})}
@@ -3548,6 +3571,10 @@ function i_button (opt, protocol) {
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-list-bg-color)'};
         --opacity: ${opacity ? opacity : '0'}
     }
+    :host(i-button[role="option"][aria-current="true"]:focus) {
+        --color: var(--color-focus);
+        --bg-color: var(--bg-color-focus);
+    }
     :host(i-button[role="option"][disabled]), :host(i-button[role="option"][disabled]:hover) {
         --size: ${disabled_size ? disabled_size : 'var(--primary-disabled-size)'};
         --color: ${disabled_color ? disabled_color : 'var(--primary-disabled-color)'};
@@ -3570,6 +3597,10 @@ function i_button (opt, protocol) {
         --weight: ${current_weight ? current_weight : 'var(--current-weight)'};
         --color: ${current_color ? current_color : 'var(--current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
+    }
+    :host(i-button[aria-current="true"]:focus) {
+        --color: var(--color-focus);
+        --bg-color: var(--bg-color-focus);
     }
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon, 
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon {
@@ -3658,6 +3689,10 @@ function i_button (opt, protocol) {
         --size: ${size_hover ? size_hover : 'var(--menu-size-hover)'};
         --weight: ${weight_hover ? weight_hover : 'var(--menu-weight-hover)'};
         --color: ${color_hover ? color_hover : 'var(--menu-color-hover)'};
+    }
+    :host(i-button[role="menuitem"]:focus) {
+        --color: var(--color-focus);
+        --bg-color: var(--bg-color-focus);
     }
     :host(i-button[role="menuitem"]) .avatar {
         --avatar-width: ${avatar_width ? avatar_width : 'var(--menu-avatar-width)'};
