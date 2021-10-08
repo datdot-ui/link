@@ -7,8 +7,8 @@ const make_grid = require('make-grid')
 
 module.exports = {i_button, i_link}
 
-function i_link (option, protocol) {
-    const {page = '*', flow = 'ui-link', name, role='link', body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = option
+function i_link (opt, protocol) {
+    const {page = '*', flow = 'ui-link', name, role='link', body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = opt
     const { icon } = icons
     const make_icon = icons && icon ? main_icon(icon) : undefined
     let {url = '#', target = '_self'} = link
@@ -232,8 +232,8 @@ function i_link (option, protocol) {
     return widget()
 }
 
-function i_button (option, protocol) {
-    const {page = "*", flow = 'ui-button', name, role = 'button', controls, body = '', icons = {}, cover, classlist = null, mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme = {}} = option
+function i_button (opt, protocol) {
+    const {page = "*", flow = 'ui-button', name, role = 'button', controls, body = '', icons = {}, cover, classlist = null, mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme = {}} = opt
     const {icon, select = {}, list = {}} = icons
     const make_icon = icon ? main_icon(icon) : undefined
     if (role === 'listbox') var make_select_icon = select_icon(select)
@@ -280,25 +280,18 @@ function i_button (option, protocol) {
                 set_attr({aria: 'controls', prop: controls})
                 el.setAttribute('tabindex', is_current ? 0 : -1)
             }
-            if (role === 'switch') {
-                set_attr({aria: 'checked', prop: is_checked})
-                if (current) set_attr({aria: 'current', prop: is_current})
-            }
-            if (role === 'listbox') {
-                set_attr({aria: 'haspopup', prop: role})
-            }
+            if (role === 'switch') set_attr({aria: 'checked', prop: is_checked})
+            if (role === 'listbox') set_attr({aria: 'haspopup', prop: role})
             if (disabled) {
                 set_attr({aria: 'disabled', prop: is_disabled})
                 el.setAttribute('disabled', is_disabled)
             } 
             if (is_checked) set_attr({aria: 'checked', prop: is_checked})
-            if (is_current) {
+            if (is_current) set_attr({aria: 'current', prop: is_current})
+            if (role.match(/option/)) {
                 is_selected = is_current
-                set_attr({aria: 'current', prop: is_current})
-            }
-            if (is_selected || !is_selected && role.match(/option/)) {
                 set_attr({aria: 'selected', prop: is_selected})
-            } 
+            }
             if (is_expanded) {
                 set_attr({aria: 'selected', prop: is_expanded})
             }
@@ -401,15 +394,18 @@ function i_button (option, protocol) {
                 }
             } 
         }
+
+
         // button click
         function handle_click () {
             if (is_current) return
             const type = 'click'
-            if (role === 'tab') return send( make({type, data: is_checked}) )
-            if (role === 'switch') return send( make({type, data: is_checked}) )
+            is_current = 'current' in opt ? !current : undefined
+            if (role === 'tab') return send( make({type, data: {checked: is_checked, current: !current}}) )
+            if (role === 'switch') return send( make({type, data: {checked: is_checked, current: !current}}) )
             if (role === 'listbox') {
                 is_expanded = !is_expanded
-                return send( make({type, data: {expanded: is_expanded}}) )
+                return send( make({type, data: {expanded: is_expanded, current: !current}}) )
             }
             if (role === 'option') {
                 is_selected = !is_selected

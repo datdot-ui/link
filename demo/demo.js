@@ -39,6 +39,18 @@ function demo () {
         }
     }, protocol('primary'))
 
+    const current1 = button({
+        name: 'button1',
+        body: 'Button1',
+        current: true,
+    }, protocol('button1'))
+
+    const current2 = button({
+        name: 'button2',
+        body: 'Button2',
+        current: false
+    }, protocol('button2'))
+
     // image buttons
     const thumb1_btn = button(
     {
@@ -145,7 +157,6 @@ function demo () {
         // },
         // cover: 'https://cdn.pixabay.com/photo/2016/02/27/06/43/cherry-blossom-tree-1225186_960_720.jpg',
         // checked: false, 
-        current: true,
         theme : {
             style: ``,
             props: {
@@ -368,7 +379,7 @@ function demo () {
     {
         name: 'filter', 
         role: 'listbox',
-        body: 'Filter', 
+        body: 'Filter',
         icons: {
             select: {
                 name: 'filter',
@@ -376,6 +387,7 @@ function demo () {
         },
         // classlist: 'icon-col-2',
         expanded: false,
+        current: true,
         theme : {
             props: {
                 listbox_collapsed_icon_fill: 'var(--color-blue)',
@@ -750,7 +762,7 @@ function demo () {
         <section>
             <h2>Text</h2>
             <div class=${css.text}>
-                ${primary}${disabled}${toggle}
+                ${primary}${disabled}${toggle}${current1}${current2}
             </div>
         </section>
         <section>
