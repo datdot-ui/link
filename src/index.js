@@ -334,7 +334,6 @@ function i_button (opt, protocol) {
         function tab_selected_event (data) {
             is_selected = data.selected
             is_current = data.current
-            console.log(data);
             set_attr({aria: 'selected', prop: is_selected})
             set_attr({aria: 'current', prop: is_current})
             el.setAttribute('tabindex', is_current ? 0 : -1)
@@ -401,7 +400,7 @@ function i_button (opt, protocol) {
         function handle_click () {
             if (is_current) return
             const type = 'click'
-            if (role === 'tab') return send( make({type, data: {selected: true, current: true}}) )
+            if (role === 'tab') return send( make({type, data: {selected: true, current: true, controls: el.getAttribute('aria-controls')}}) )
             if (role === 'switch') return send( make({type, data: {checked: is_checked, current: !current}}) )
             if (role === 'listbox') {
                 is_expanded = !is_expanded

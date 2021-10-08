@@ -862,35 +862,10 @@ function demo () {
         recipients['logs']( make({type: 'triggered'}) )
     }
 
-    function handle_tab_event (make, from, {selected, current}) {
-        const {childNodes} = demo_tab
-        const result = [...childNodes].filter( child => child.getAttribute('aria-label') !== from)
-        const current_message = make({type: 'tab-selected', data: {selected, current}})
-        recipients[from](current_message)
-        recipients['logs'](current_message)
-
-        result.forEach( tab => {
-            const name = tab.getAttribute('aria-label')
-            recipients[name](make({type: 'tab-selected', data: {selected: !selected, current: !current}}))
-        })
-        // tabs.map( tab => {
-        //     const state = from === tab.getAttribute('aria-label') ? !data : data
-        //     const current = from === tab.getAttribute('aria-label') ? from : tab.getAttribute('aria-label')
-        //     const type = from === tab.getAttribute('aria-label') ? 'checked' : 'unchecked'
-        //     const make = message_maker(`${current} / tab / Demo`)
-        //     recipients[current]( make({type, data: {selected: state, current: state}}) )
-            
-        //     if (from === tab.getAttribute('aria-label')) {
-        //         recipients['logs']( make({type, data: {selected: state, current: state}}) )
-        //         return handle_panel_change(tab.getAttribute('aria-controls')) 
-        //     }
-        //     // return recipients['logs']( make({type, data: {selected: state, current: state}}) )
-        // })
-    }
-
     function handle_panel_change(id) {
         const panels = document.querySelector('.panels')
         const {childNodes} = panels
+        console.log(id);
         childNodes.forEach( item => {
             const index = item.id === id ? 0 : -1
             item.setAttribute('tabindex', index)
@@ -899,19 +874,34 @@ function demo () {
         })
     }
 
-    function handle_tab_icon_event (from, data) {
-        const tabs = [...demo_icon_tab.children]
-        tabs.map( tab => {
-            const state = from === tab.getAttribute('aria-label') ? true : data
-            const current = from === tab.getAttribute('arsia-label') ? from : tab.getAttribute('aria-label')
-            const type = from === tab.getAttribute('aria-label') ? 'checked' : 'unchecked'
-            const make = message_maker(`${current} / tab / Demo`)
-            recipients[current]( make({type, data: state}) )
-            if (from === tab.getAttribute('aria-label')) {
-                recipients['logs']( make({type, data: {selected: state, current: state}}) )
-                return handle_text_panel_change(tab.getAttribute('aria-controls')) 
-            }
-            return recipients['logs']( make({type, data: {selected: state, current: state}}) )
+    function handle_tab_event (make, from, {selected, current, controls}) {
+        const {childNodes} = demo_tab
+        const result = [...childNodes].filter( child => child.getAttribute('aria-label') !== from)
+        const current_message = make({type: 'tab-selected', data: {selected, current}})
+        recipients[from](current_message)
+        recipients['logs'](current_message)
+        // change contante in panel
+        handle_panel_change(controls)
+        // if not target is from, then make tab current and selected changed to false
+        result.forEach( tab => {
+            const name = tab.getAttribute('aria-label')
+            recipients[name](make({type: 'tab-selected', data: {selected: !selected, current: !current}}))
+        })
+    }
+
+    function handle_tab_icon_event (from, {selected, current, controls}) {
+        const make = message_maker(`${from} / ui-tab / demo`)
+        const {childNodes} = demo_icon_tab
+        const result = [...childNodes].filter( child => child.getAttribute('aria-label') !== from)
+        const current_message = make({type: 'tab-selected', data: {selected, current}})
+        recipients[from](current_message)
+        recipients['logs'](current_message)
+        // change contante in panel
+        handle_text_panel_change(controls)
+        // if not target is from, then make tab current and selected changed to false
+        result.forEach( tab => {
+            const name = tab.getAttribute('aria-label')
+            recipients[name](make({type: 'tab-selected', data: {selected: !selected, current: !current}}))
         })
     }
 
