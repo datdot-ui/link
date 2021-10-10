@@ -3143,7 +3143,7 @@ function i_link (opt, protocol) {
 }
 
 function i_button (opt, protocol) {
-    const {page = "*", flow = 'ui-button', name, role = 'button', controls, body = '', icons = {}, cover, classlist = null, mode = '', state, expanded = false, current = false, selected = false, checked = false, disabled = false, theme = {}} = opt
+    const {page = "*", flow = 'ui-button', name, role = 'button', controls, body = '', icons = {}, cover, classlist = null, mode = '', state, expanded = false, current = undefined, selected = false, checked = false, disabled = false, theme = {}} = opt
     const {icon, select = {}, list = {}} = icons
     const make_icon = icon ? main_icon(icon) : undefined
     if (role === 'listbox') var make_select_icon = select_icon(select)
@@ -3152,10 +3152,8 @@ function i_button (opt, protocol) {
     let is_checked = checked
     let is_disabled = disabled
     let is_selected = selected
-    let is_expanded = expanded
+    let is_expanded = 'expanded' in opt ? expanded : void 0
 
-    document.body.addEventListener("touchstart",function(){ });
-    
     function widget () {
         const send = protocol(get)
         const make = message_maker(`${name} / ${role} / ${flow} / ${page}`)
@@ -3201,12 +3199,11 @@ function i_button (opt, protocol) {
                 is_selected = is_current
                 set_attr({aria: 'selected', prop: is_selected})
             }
-            if (is_expanded) {
-                set_attr({aria: 'selected', prop: is_expanded})
+            if ('expanded' in opt) {
+                set_attr({aria: 'expanded', prop: is_expanded})
             }
             // make current status
-            if ('current' in opt) set_attr({aria: 'current', prop: is_current})
-            if ('expanded' in opt) set_attr({aria: 'expanded', prop: is_expanded})
+            if (current !== undefined) set_attr({aria: 'current', prop: is_current})
         }
 
         function set_attr ({aria, prop}) {
@@ -3229,16 +3226,18 @@ function i_button (opt, protocol) {
 
         // toggle
         function switched_event (data) {
-            const {checked, current} = data
+            const {checked} = data
             is_checked = checked
-            is_current = current
             if (!is_checked) return el.removeAttribute('aria-checked')
             set_attr({aria: 'checked', prop: is_checked})
-            if (current) set_attr({aria: 'current', prop: is_current})
         }
-        // dropdown menu
         function expanded_event (data) {
-            is_expanded = !data
+            is_expanded = data
+            set_attr({aria: 'expanded', prop: is_expanded})
+        }
+        function collapsed_event (data) {
+            console.log(data)
+            is_expanded = false
             set_attr({aria: 'expanded', prop: is_expanded})
         }
         // tab selected
@@ -3309,33 +3308,53 @@ function i_button (opt, protocol) {
 
         // button click
         function handle_click () {
-            if (is_current) return
             const type = 'click'
-            if (role === 'button' && 'current' in opt) return 
-            if (role === 'tab') return send( make({type, data: {selected: true, current: true, controls: el.getAttribute('aria-controls')}}) )
-            if (role === 'switch') return send( make({type, data: {checked: is_checked, current: !current}}) )
+            if ('current' in opt) {
+                send( make({type: 'current', data: {name, current: is_current}}) )
+            }
+            if ('expanded' in opt) {
+                const type = !is_expanded ? 'expanded' : 'collapsed'
+                send( make({type, data: {name, expanded: is_expanded}}))
+            }
+            if (role === 'button') {
+                return send( make({type, to: controls} ))
+            }
+            if (role === 'tab') {
+                if (is_current) return
+                is_selected = !is_selected
+                // is_current = !is_current
+                return send( make({type, data: {page: name, selected: is_selected}}) )
+            }
+            if (role === 'switch') {
+                return send( make({type, data: {name, checked: is_checked}}) )
+            }
             if (role === 'listbox') {
                 is_expanded = !is_expanded
-                return send( make({type, data: {expanded: is_expanded, current: !current}}) )
+                return send( make({type, data: {name, expanded: is_expanded}}))
             }
             if (role === 'option') {
                 is_selected = !is_selected
-                return send( make({type, data: {selected: is_selected, content: is_selected ? {text: body, cover, icon} : '' }}) )
+                return send( make({type, data: {name, selected: is_selected, content: is_selected ? {text: body, cover, icon} : '' }}) )
             }
-            if (role === 'button') return send( make({type, data: {current: is_current}}) )
         }
         // protocol get msg
         function get (msg) {
             const { head, refs, type, data } = msg
+            const from = head[0].split(' / ')[0]
             // toggle
             if (type.match(/switched/)) return switched_event(data)
             // dropdown
-            if (type.match(/expanded|collapsed/)) return expanded_event(!data)
+            if (type.match(/expanded/)) return expanded_event(data)
+            if (type.match(/collapsed/)) return collapsed_event(data)
             // tab, checkbox
             if (type.match(/tab-selected/)) return tab_selected_event(data)
             // option
             if (type.match(/selected|unselected/)) return list_selected_event(data)
             if (type.match(/changed/)) return changed_event(data)
+            if (type.match(/current/)) {
+                is_current = data
+                return set_attr({aria: 'current', prop: is_current})
+            }
         }
     }
    
@@ -3442,6 +3461,7 @@ function i_button (opt, protocol) {
         --avatar-width: ${avatar_width ? avatar_width : 'var(--primary-avatar-width)'};
         --avatar-height: ${avatar_height ? avatar_height : 'var(--primary-avatar-height)'};
         --avatar-radius: ${avatar_radius ? avatar_radius : 'var(--primary-avatar-radius)'};
+        --current-icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--current-icon-fill)'};
         display: inline-grid;
         ${grid.button ? make_grid(grid.button) : make_grid({auto: {auto_flow: 'column'}, gap: '5px', justify: 'content-center', align: 'items-center'})}
         ${width && 'width: var(--width);'};
@@ -3605,6 +3625,9 @@ function i_button (opt, protocol) {
         --color: ${current_color ? current_color : 'var(--current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
     }
+    :host(i-button[aria-current="true"]) g {
+        --icon-fill: var(--current-icon-fill);
+    }
     :host(i-button[aria-current="true"]:focus) {
         --color: var(--color-focus);
         --bg-color: var(--bg-color-focus);
@@ -3615,7 +3638,7 @@ function i_button (opt, protocol) {
     }
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon g,
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon g {
-        --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--current-icon-fill)'};
+        --icon-fill: var(--current-icon-fill);
     }
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
     :host(i-button[aria-checked="true"]:hover), :host(i-button[aria-expanded="true"]:hover) {
@@ -3623,6 +3646,9 @@ function i_button (opt, protocol) {
         --weight: ${current_weight ? current_weight : 'var(--current-weight)'};
         --color: ${current_color ? current_color : 'var(--current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
+    }
+    :host(i-button[role="switch"][aria-expanded="true"]) g {
+        --icon-fill: var(--current-icon-fill);
     }
     /* listbox collapsed */
     :host(i-button[role="listbox"]) > .icon {
