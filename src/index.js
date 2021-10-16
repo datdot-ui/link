@@ -316,7 +316,6 @@ function i_button (opt, protocol) {
             // listbox or dropdown button
             if (role.match(/listbox/)) shadow.append(make_select_icon, listbox)
             items.forEach( item => {
-                // console.log(item)
                 if (item === undefined) return
                 target.append(item)
             })
@@ -551,7 +550,6 @@ function i_button (opt, protocol) {
         --avatar-width: ${avatar_width ? avatar_width : 'var(--primary-avatar-width)'};
         --avatar-height: ${avatar_height ? avatar_height : 'var(--primary-avatar-height)'};
         --avatar-radius: ${avatar_radius ? avatar_radius : 'var(--primary-avatar-radius)'};
-        --current-icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--current-icon)'};
         --current-icon-size: ${current_icon_size ? current_icon_size : 'var(--current-icon-size)'};
         display: inline-grid;
         ${grid.button ? make_grid(grid.button) : make_grid({auto: {auto_flow: 'column'}, gap: '5px', justify: 'content-center', align: 'items-center'})}
@@ -716,14 +714,11 @@ function i_button (opt, protocol) {
         --color: ${current_color ? current_color : 'var(--current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
     }
-
-1. Fix tab and option for roles and adjust styles
-2. Refactor current tab codes and click event, total in 1hr 30m
     :host(i-button[aria-current="true"]) .icon,  :host(i-button[aria-current="true"]:hover) .icon {
         --icon-size: var(--current-icon-size);
     }
     :host(i-button[aria-current="true"]) g {
-        --icon-fill: var(--current-icon-fill);
+        --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--current-icon-fill)'};
     }
     :host(i-button[aria-current="true"]:focus) {
         --color: var(--color-focus);
@@ -733,10 +728,11 @@ function i_button (opt, protocol) {
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon {
         --icon-size: var(--current-icon-size);
     }
+    /*
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon g,
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon g {
         --icon-fill: var(--current-icon-fill);
-    }
+    }*/
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
     :host(i-button[aria-checked="true"]:hover), :host(i-button[aria-expanded="true"]:hover) {
         --size: ${current_size ? current_size : 'var(--current-size)'};
@@ -744,9 +740,10 @@ function i_button (opt, protocol) {
         --color: ${current_color ? current_color : 'var(--current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
     }
+    /*
     :host(i-button[role="switch"][aria-expanded="true"]) g {
         --icon-fill: var(--current-icon-fill);
-    }
+    }*/
     /* listbox collapsed */
     :host(i-button[role="listbox"]) > .icon {
         --icon-size: ${listbox_collapsed_icon_size ? listbox_collapsed_icon_size : 'var(--listbox-collapsed-icon-size)'};

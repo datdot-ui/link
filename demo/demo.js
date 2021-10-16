@@ -428,10 +428,10 @@ function demo () {
     const option = button(
     {
         name: 'option-star', 
-        body: 'Star', 
+        // body: 'Star', 
         role: 'option',
         icons: {
-            list: {
+            icon: {
                 name: 'star',
             }
         },
@@ -1118,7 +1118,7 @@ const css = csjs`
     --current-color: var(--color-white);
     --current-bg-color: var(--color-black);
     --current-icon-size: var(--primary-icon-size);
-    --current-icon: var(--color-white);
+    --current-icon-fill: var(--color-white);
     --current-list-selected-icon-size: var(--list-selected-icon-size);
     --current-list-selected-icon-fill: var(--color-white);
     --current-list-selected-icon-fill-hover: var(--color-white);
