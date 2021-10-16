@@ -1636,10 +1636,12 @@ function demo () {
         theme: { 
             props: {
                     size: 'var(--size14)', 
-                    current_color: 'var(--color-maya-blue)', 
                     icon_fill: 'var(--color-maya-blue)', 
                     icon_fill_hover:  'var(--color-maya-blue)', 
                     icon_size: '24px',
+                    current_color: 'var(--color-maya-blue)', 
+                    current_icon_fill: 'var(--color-maya-blue)',
+                    current_icon_size: '24px'
             },
             grid: {
                 button: {
@@ -2208,13 +2210,13 @@ function demo () {
             <h2>Tab</h2>
             ${demo_tab}
             <div class="panels">
-                <div id="panel1" role="tabpanel" tabindex="0" aria-labelledby="tab1">
+                <div id="panel1" class="panel1" role="tabpanel" tabindex="0" aria-labelledby="tab1">
                     <img src="https://cdn.pixabay.com/photo/2017/10/18/16/08/wolves-2864647_960_720.jpg" alt="wolf">
                 </div>
-                <div id="panel2" role="tabpanel" tabindex="0" aria-labelledby="tab2" hidden="true">
+                <div id="panel2" class="panel1" role="tabpanel" tabindex="0" aria-labelledby="tab2" hidden="true">
                     <img src="https://cdn.pixabay.com/photo/2018/07/13/10/20/kittens-3535404_960_720.jpg" alt="kittens">
                 </div>
-                <div id="panel3" role="tabpanel" tabindex="0" aria-labelledby="tab3" hidden="true">
+                <div id="panel3" class="panel1" role="tabpanel" tabindex="0" aria-labelledby="tab3" hidden="true">
                     <img src="https://cdn.pixabay.com/photo/2016/07/23/23/02/lavenders-1537694_960_720.jpg" alt="bees">
                 </div>
             </div>
@@ -2223,15 +2225,15 @@ function demo () {
             <h2>Tab & icon</h2>
             ${demo_icon_tab}
             <div class="article-panels">
-                <div id="panel4" role="tabpanel" tabindex="0" aria-labelledby="tab4">
+                <div id="panel4" class="panel2" role="tabpanel" tabindex="0" aria-labelledby="tab4">
                     <h1>What is Lorem Ipsum?</h1>
                     <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
                 </div>
-                <div id="panel5" role="tabpanel" tabindex="0" aria-labelledby="tab5" hidden="true">
+                <div id="panel5" class="panel2" role="tabpanel" tabindex="0" aria-labelledby="tab5" hidden="true">
                     <h1>Why do we use it?</h1>
                     <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).</p>
                 </div>
-                <div id="panel6" role="tabpanel" tabindex="0" aria-labelledby="tab6" hidden="true">
+                <div id="panel6" class="panel2" role="tabpanel" tabindex="0" aria-labelledby="tab6" hidden="true">
                     <h1>Where does it come from?</h1>
                     <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.</p>
                 </div>
@@ -2258,21 +2260,20 @@ function demo () {
     return app
 
     // handle events
-    function handle_click_event ({head, refs, data}) {
+    function handle_click_event ({head, type, refs, data}) {
         const to = head[1]
         const id = head[2]
         const role = head[0].split(' / ')[1]
         const from = head[0].split(' / ')[0]
         const make = message_maker(`${from} / ${role} / demo`)
-        if (role.match(/button|menuitem/)) return handle_triggered(make, {from, data})
-        if (role === 'tab') return handle_tab_event(make, from, data)
+        if (role.match(/button|menuitem/)) return handle_triggered({make, type, from, data})
+        if (role === 'tab') return handle_tab_event({make, from, to, data})
         if (role === 'switch') return handle_toggle_event(make, from, data)
         if (role === 'listbox') return handle_dropdown_menu_event(make, from, data)
-        if (role === 'option') return handle_select_event(from, data)
+        if (role === 'option') return handle_select_event({from, to, data})
     }
 
-    function handle_triggered (make, {from, data}) {
-        if (data.current) recipients[from](make({type: 'current', data}));
+    function handle_triggered ({make}) {
         recipients['logs']( make({type: 'triggered'}) )
     }
 
@@ -2287,44 +2288,44 @@ function demo () {
         })
     }
 
-    function handle_tab_event (make, from, {selected, current, controls}) {
-        const {childNodes} = demo_tab
-        const result = [...childNodes].filter( child => child.getAttribute('aria-label') !== from)
-        const current_message = make({type: 'tab-selected', data: {selected, current}})
-        recipients[from](current_message)
-        recipients['logs'](current_message)
-        // change contante in panel
-        handle_panel_change(controls)
-        // if not target is from, then make tab current and selected changed to false
-        result.forEach( tab => {
-            const name = tab.getAttribute('aria-label')
-            recipients[name](make({type: 'tab-selected', data: {selected: !selected, current: !current}}))
-        })
+    function handle_tab_event ({make, from, to, data}) {
+        const {name, selected} = data
+        handle_text_panel_change(to, '.panel1')
+        Object.entries(recipients).forEach(([key, value]) => {
+            if (key === name) {
+                recipients[name](make({type: 'tab-selected', data: {selected}}))
+                recipients['logs']( make({to, type: 'tab-selected', data: {name}}) )
+                return recipients[name](make({type: 'current', data: selected}))
+            }
+            recipients[key](make({type: 'tab-selected', data: {selected: !selected}}))
+            return recipients[key](make({type: 'current', data: !selected}))
+        }) 
     }
 
-    function handle_tab_icon_event (from, {selected, current, controls}) {
+    function handle_tab_icon_event ({from, to, data}) {
         const make = message_maker(`${from} / ui-tab / demo`)
-        const {childNodes} = demo_icon_tab
-        const result = [...childNodes].filter( child => child.getAttribute('aria-label') !== from)
-        const current_message = make({type: 'tab-selected', data: {selected, current}})
-        recipients[from](current_message)
-        recipients['logs'](current_message)
+        const {name, selected} = data
         // change contante in panel
-        handle_text_panel_change(controls)
+        handle_text_panel_change(to, '.panel2')
         // if not target is from, then make tab current and selected changed to false
-        result.forEach( tab => {
-            const name = tab.getAttribute('aria-label')
-            recipients[name](make({type: 'tab-selected', data: {selected: !selected, current: !current}}))
-        })
+        Object.entries(recipients).forEach(([key, value]) => {
+            if (key === name) {
+                recipients[name](make({type: 'tab-selected', data: {selected}}))
+                recipients['logs']( make({to, type: 'tab-selected', data: {name}}) )
+                return recipients[name](make({type: 'current', data: selected}))
+            }
+            recipients[key](make({type: 'tab-selected', data: {selected: !selected}}))
+            return recipients[key](make({type: 'current', data: !selected}))
+        }) 
     }
 
-    function handle_text_panel_change(id) {
-        const panels = document.querySelector('.article-panels')
-        const {childNodes} = panels
-        childNodes.forEach( item => {
-            const index = item.id === id ? 0 : -1
+    function handle_text_panel_change(id, items) {
+        const panels = document.querySelectorAll(items)
+        panels.forEach( item => {
+            const check = item.id === id
+            const index = check ? 0 : -1
             item.setAttribute('tabindex', index)
-            if (item.id === id) item.removeAttribute('hidden')
+            if (check) item.removeAttribute('hidden')   
             else item.setAttribute('hidden', 'true')
         })
     }
@@ -2351,11 +2352,11 @@ function demo () {
         recipients['logs']( make({type}) )
     }
 
-    function handle_select_event (from, data) {
-        const {selected, content} = data
-        const make = message_maker(from)
+    function handle_select_event ({to, data}) {
+        const {name, selected, content} = data
+        const make = message_maker(name)
         const type = selected ? 'selected' : 'unselected'
-        recipients[from]({type, data: selected})
+        recipients[name]({type, data: selected})
         recipients['logs']( make({to: `options`, type, data: {content} }) )
     }
     function handle_changed_event (type, data) {
@@ -2371,24 +2372,26 @@ function demo () {
                 const id = head[2]
                 const role = head[0].split(' / ')[1]
                 const from = head[0].split(' / ')[0]
-                if (type === 'click') return handle_tab_icon_event(from, data)
-                
+                if (type === 'click') return handle_tab_icon_event({from, to, data})
                 recipients['logs'](msg)
             }
         }
     }
+
     function protocol (name) {
         return send => {
             recipients[name] = send
             return get
         }
     }
-
     function get (msg) {
-        const { type, data } = msg
-        recipients['logs'](msg)
+        const { head, type, data } = msg
+        const from = head[0].split(' / ')[0]
+        const to = head[1]
+        if (type.match(/ready/)) return recipients['logs'](msg)
         if (type === 'click') return handle_click_event(msg)
-        if (type === 'changed') handle_changed_event(type, data)
+        if (type === 'changed') return handle_changed_event(type, data)
+        if (type.match(/current/)) return 
     }
 }
 
@@ -2528,7 +2531,7 @@ const css = csjs`
     --current-color: var(--color-white);
     --current-bg-color: var(--color-black);
     --current-icon-size: var(--primary-icon-size);
-    --current-icon-fill: var(--color-white);
+    --current-icon: var(--color-white);
     --current-list-selected-icon-size: var(--list-selected-icon-size);
     --current-list-selected-icon-fill: var(--color-white);
     --current-list-selected-icon-fill-hover: var(--color-white);
@@ -3573,7 +3576,7 @@ function i_button (opt, protocol) {
         const message = make({to: 'demo.js', type: 'ready', data})
         send(message)
         const el = make_element({name: 'i-button', classlist, role })
-        const shadow = el.attachShadow({mode: 'open'})
+        const shadow = el.attachShadow({mode: 'closed'})
         const text = make_element({name: 'span', classlist: 'text'})
         const avatar = make_element({name: 'span', classlist: 'avatar'})
         const listbox = make_element({name: 'span', classlist: 'listbox'})
@@ -3631,7 +3634,7 @@ function i_button (opt, protocol) {
             // listbox or dropdown button
             if (role.match(/listbox/)) shadow.append(make_select_icon, listbox)
             items.forEach( item => {
-                console.log(item)
+                // console.log(item)
                 if (item === undefined) return
                 target.append(item)
             })
@@ -3729,7 +3732,7 @@ function i_button (opt, protocol) {
             if (role === 'tab') {
                 if (is_current) return
                 is_selected = !is_selected
-                return send( make({to: controls, type, data: {page: name, selected: is_selected}}) )
+                return send( make({to: controls, type, data: {name, selected: is_selected}}) )
             }
             if (role === 'switch') {
                 return send( make({to: controls, type, data: {name, checked: is_checked}}) )
@@ -3746,7 +3749,6 @@ function i_button (opt, protocol) {
         // protocol get msg
         function get (msg) {
             const { head, refs, type, data } = msg
-            const from = head[0].split(' / ')[0]
             // toggle
             if (type.match(/switched/)) return switched_event(data)
             // dropdown
@@ -3867,7 +3869,8 @@ function i_button (opt, protocol) {
         --avatar-width: ${avatar_width ? avatar_width : 'var(--primary-avatar-width)'};
         --avatar-height: ${avatar_height ? avatar_height : 'var(--primary-avatar-height)'};
         --avatar-radius: ${avatar_radius ? avatar_radius : 'var(--primary-avatar-radius)'};
-        --current-icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--current-icon-fill)'};
+        --current-icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--current-icon)'};
+        --current-icon-size: ${current_icon_size ? current_icon_size : 'var(--current-icon-size)'};
         display: inline-grid;
         ${grid.button ? make_grid(grid.button) : make_grid({auto: {auto_flow: 'column'}, gap: '5px', justify: 'content-center', align: 'items-center'})}
         ${width && 'width: var(--width);'};
@@ -4031,6 +4034,12 @@ function i_button (opt, protocol) {
         --color: ${current_color ? current_color : 'var(--current-color)'};
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
     }
+
+1. Fix tab and option for roles and adjust styles
+2. Refactor current tab codes and click event, total in 1hr 30m
+    :host(i-button[aria-current="true"]) .icon,  :host(i-button[aria-current="true"]:hover) .icon {
+        --icon-size: var(--current-icon-size);
+    }
     :host(i-button[aria-current="true"]) g {
         --icon-fill: var(--current-icon-fill);
     }
@@ -4040,7 +4049,7 @@ function i_button (opt, protocol) {
     }
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon, 
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon {
-        --icon-size: ${current_icon_size ? current_icon_size : 'var(--current-icon-size)'};
+        --icon-size: var(--current-icon-size);
     }
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon g,
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon g {
