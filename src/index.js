@@ -10,7 +10,7 @@ module.exports = {i_button, i_link}
 function i_link (opt, protocol) {
     const {page = '*', flow = 'ui-link', name, role='link', body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = opt
     const { icon } = icons
-    const make_icon = icons && icon ? main_icon(icon) : undefined
+    const make_icon = 'icon' in icons ? main_icon(icon) : undefined
     let {url = '#', target = '_self'} = link
     let is_disabled = disabled
 
@@ -35,7 +35,7 @@ function i_link (opt, protocol) {
         const add_text = body ? typeof body === 'string' && (add_icon || add_cover ) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
         if (typeof cover === 'string') avatar.append(make_img({src: cover, alt: name}))
         if (typeof cover === 'object') send(make({type: 'error', data: `cover[${typeof cover}] must to be a string`}))
-        if (add_icon) shadow.append(add_icon)
+        if (add_icon) shadow.append(make_icon)
         if (add_cover) shadow.append(add_cover)
         if (add_text) shadow.append(add_text)
         send(message)
@@ -308,7 +308,7 @@ function i_button (opt, protocol) {
         }
 
         // make element to append into shadowDOM
-        function append_items() {
+        function append_items() {           
             const items = [make_icon, add_cover, add_text]
             const target = role === 'listbox' ? listbox : role === 'option' ?  option : shadow
             // list of listbox or dropdown menu
@@ -316,6 +316,7 @@ function i_button (opt, protocol) {
             // listbox or dropdown button
             if (role.match(/listbox/)) shadow.append(make_select_icon, listbox)
             items.forEach( item => {
+                console.log(item)
                 if (item === undefined) return
                 target.append(item)
             })
@@ -333,16 +334,13 @@ function i_button (opt, protocol) {
             set_attr({aria: 'expanded', prop: is_expanded})
         }
         function collapsed_event (data) {
-            console.log(data)
-            is_expanded = false
+            is_expanded = data
             set_attr({aria: 'expanded', prop: is_expanded})
         }
         // tab selected
-        function tab_selected_event (data) {
-            is_selected = data.selected
-            is_current = data.current
+        function tab_selected_event ({selected}) {
+            is_selected = selected
             set_attr({aria: 'selected', prop: is_selected})
-            set_attr({aria: 'current', prop: is_current})
             el.setAttribute('tabindex', is_current ? 0 : -1)
         }
         function list_selected_event (state) {
@@ -355,7 +353,6 @@ function i_button (opt, protocol) {
             // option is selected then send selected items to listbox button
             if (is_selected) send(make({to: 'listbox', type: 'changed', data: {text: body, cover, icon} }))
         }
-
         function changed_event (data) {
             const {text, cover, icon} = data
             const new_text = make_element({name: 'span', classlist: 'text'})
@@ -383,7 +380,6 @@ function i_button (opt, protocol) {
                     if (old_icon) old_icon.parentNode.replaceChild(new_icon, old_icon)
                     else shadow.insertBefore(new_icon, shadow.firstChild)
                 } 
-                
             }
             // change content for listbox
             if (role.match(/listbox/)) {
@@ -402,12 +398,11 @@ function i_button (opt, protocol) {
                 }
             } 
         }
-
         // button click
         function handle_click () {
             const type = 'click'
             if ('current' in opt) {
-                send( make({type: 'current', data: {name, current: is_current}}) )
+                send( make({to: controls, type: 'current', data: {name, current: is_current}}) )
             }
             if ('expanded' in opt) {
                 const type = !is_expanded ? 'expanded' : 'collapsed'
@@ -419,11 +414,10 @@ function i_button (opt, protocol) {
             if (role === 'tab') {
                 if (is_current) return
                 is_selected = !is_selected
-                // is_current = !is_current
-                return send( make({type, data: {page: name, selected: is_selected}}) )
+                return send( make({to: controls, type, data: {page: name, selected: is_selected}}) )
             }
             if (role === 'switch') {
-                return send( make({type, data: {name, checked: is_checked}}) )
+                return send( make({to: controls, type, data: {name, checked: is_checked}}) )
             }
             if (role === 'listbox') {
                 is_expanded = !is_expanded
@@ -431,7 +425,7 @@ function i_button (opt, protocol) {
             }
             if (role === 'option') {
                 is_selected = !is_selected
-                return send( make({type, data: {name, selected: is_selected, content: is_selected ? {text: body, cover, icon} : '' }}) )
+                return send( make({to: controls, type, data: {name, selected: is_selected, content: is_selected ? {text: body, cover, icon} : '' }}) )
             }
         }
         // protocol get msg

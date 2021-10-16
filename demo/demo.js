@@ -8,6 +8,7 @@ const img_btn = require('img-btn')
 const terminal = require('datdot-terminal')
 const icon = require('datdot-ui-icon')
 const message_maker = require('../src/node_modules/message-maker')
+const make_grid = require('../src/node_modules/make-grid')
 const button = i_button
 const link = i_link
 
@@ -17,8 +18,8 @@ function demo () {
     // logs must be initialized first before components
     const logs = terminal(
     {
-        mode: 'comfortable', 
-        expanded: true
+        mode: 'compact', 
+        expanded: false
     }, protocol('logs'))
     // buttons
     const primary = button(
@@ -839,7 +840,7 @@ function demo () {
         
     </div>`
     const container = bel`<div class="${css.container}">${content}</div>`
-    const app = bel`<div class="${css.wrap}" data-state="debug">${container}${logs}</div>`
+    const app = bel`<div class="${css.wrap}">${container}${logs}</div>`
 
     return app
 
@@ -1225,41 +1226,22 @@ img {
 }
 .wrap {
     display: grid;
+    ${make_grid({rows: 'minmax(0, 1fr) 200px', areas: ["container", "terminal"]})}
+    height: 100%;
 }
-.content {}
+.container {
+    grid-area: container;
+    overflow: hidden scroll;
+    height: 100%;
+}
+.content {
+    padding: 2% 5%;
+}
 .text, .icon {
     display: flex;
     flex-wrap: wrap;
     gap: 12px 8px;
     margin-bottom: 20px;
-}
-[data-state="view"] {
-    height: 100%;
-}
-[data-state="view"] i-log {
-    display: none;
-}
-[data-state="debug"] {
-    grid-template-rows: auto;
-    grid-template-columns: 62% auto;
-    height: 100%;
-}
-[data-state="debug"] i-log {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 40%;
-    height: 100%;
-}
-.container {
-    display: grid;
-    grid-template-rows: min-content;
-    grid-template-columns: 90%;
-    justify-content: center;
-    align-items: start;
-    background-color: var(--color-white);
-    height: 100%;
-    overflow: hidden auto;
 }
 .tabs {
     display: grid;
@@ -1295,19 +1277,6 @@ section .links:nth-child(2) {
 }
 .thumb i-button:first-child {
    margin-bottom: 20px;
-}
-@media (max-width: 768px) {
-    [data-state="debug"] {
-        grid-template-rows: 65% 35%;
-        grid-template-columns: auto;
-    }
-    [data-state="debug"] i-log {
-        position: inherit;
-        width: 100%;
-    }
-    .container {
-        grid-template-rows: 80px auto;
-    }
 }
 `
 
