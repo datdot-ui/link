@@ -920,8 +920,7 @@ function demo () {
 
     function handle_toggle_event (make, from, data) {
         const state = !data.checked
-        const is_current = !data.current
-        const message = make({type: 'switched', data: {checked: state, current: is_current}})
+        const message = make({type: 'switched', data: {checked: state}})
         let body = state ? 'Toggle on' : 'Toggle off'
         if (from === 'thumb-blossom') body = state ? 'Blossom open' : 'Blossom close'
         const cover = state ? 'https://cdn.pixabay.com/photo/2019/05/11/02/33/cherry-blossom-4194997_960_720.jpg' : 'https://cdn.pixabay.com/photo/2016/02/19/11/07/japanese-cherry-blossoms-1209577_960_720.jpg'
@@ -929,7 +928,7 @@ function demo () {
         const content =  {text: body, cover: from === 'thumb-blossom' ? cover : undefined, icon}
         recipients[from](message)
         recipients[from](make({type: 'changed', data: content}))
-        recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state, current: is_current}}) )
+        recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state}}) )
         recipients['logs']( make({to: 'self', type: 'changed', data: content}) )
     }
 
