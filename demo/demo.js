@@ -428,13 +428,14 @@ function demo () {
     const option = button(
     {
         name: 'option-star', 
-        // body: 'Star', 
         role: 'option',
+        // body: 'Star', 
         icons: {
             icon: {
                 name: 'star',
             }
         },
+        // cover: 'https://cdn.pixabay.com/photo/2021/08/31/11/58/woman-6588614_960_720.jpg',
         // classlist: 'icon-col-2',
         selected: true,
         theme : {

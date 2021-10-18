@@ -293,7 +293,7 @@ function i_button (opt, protocol) {
             } 
             if (is_checked) set_attr({aria: 'checked', prop: is_checked})
             if (role.match(/option/)) {
-                is_selected = is_current
+                is_selected = is_current ? is_current : is_selected
                 set_attr({aria: 'selected', prop: is_selected})
             }
             if ('expanded' in opt) {
