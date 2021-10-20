@@ -925,7 +925,7 @@ function demo () {
         if (from === 'thumb-blossom') body = state ? 'Blossom open' : 'Blossom close'
         const cover = state ? 'https://cdn.pixabay.com/photo/2019/05/11/02/33/cherry-blossom-4194997_960_720.jpg' : 'https://cdn.pixabay.com/photo/2016/02/19/11/07/japanese-cherry-blossoms-1209577_960_720.jpg'
         const icon = state ? {name: 'star'} : {name: 'edit'}
-        const content =  {text: body, cover: from === 'thumb-blossom' ? cover : undefined, icon}
+        const content =  {text: body, cover: from === 'thumb-blossom' ? cover : undefined, icon, title: undefined}
         recipients[from](message)
         recipients[from](make({type: 'changed', data: content}))
         recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state}}) )

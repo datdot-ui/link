@@ -2338,7 +2338,7 @@ function demo () {
         if (from === 'thumb-blossom') body = state ? 'Blossom open' : 'Blossom close'
         const cover = state ? 'https://cdn.pixabay.com/photo/2019/05/11/02/33/cherry-blossom-4194997_960_720.jpg' : 'https://cdn.pixabay.com/photo/2016/02/19/11/07/japanese-cherry-blossoms-1209577_960_720.jpg'
         const icon = state ? {name: 'star'} : {name: 'edit'}
-        const content =  {text: body, cover: from === 'thumb-blossom' ? cover : undefined, icon}
+        const content =  {text: body, cover: from === 'thumb-blossom' ? cover : undefined, icon, title: undefined}
         recipients[from](message)
         recipients[from](make({type: 'changed', data: content}))
         recipients['logs']( make({to: 'self', type: 'triggered', data: {checked: state}}) )
@@ -3673,32 +3673,41 @@ function i_button (opt, protocol) {
             if (is_selected) send(make({to: 'listbox', type: 'changed', data: {text: body, cover, icon} }))
         }
         function changed_event (data) {
-            const {text, cover, icon} = data
+            const {text, cover, icon, title} = data
+            // new element
             const new_text = make_element({name: 'span', classlist: 'text'})
             const new_avatar = make_element({name: 'span', classlist: 'avatar'})
+            // old element
+            const old_icon = shadow.querySelector('.icon')
+            const old_avatar = shadow.querySelector('.avatar')
+            const old_text = shadow.querySelector('.text')
             // change content for button or switch or tab
             if (role.match(/button|switch|tab/)) {
-                const old_icon = shadow.querySelector('.icon')
-                const old_avatar = shadow.querySelector('.avatar')
-                const old_text = shadow.querySelector('.text')
-                if (old_text) {
-                    if (text) old_text.textContent = text
+                
+                if (text) {
+                    if (old_text) old_text.textContent = text
+                } else {
+                    if (old_text) old_text.remove()
                 }
                 if (cover) {
                     if (old_avatar) {
                         const img = old_avatar.querySelector('img')
-                        img.alt = text
+                        img.alt = text || title
                         img.src = cover
                     } else {
-                        new_avatar.append(make_img({src: cover, alt: text}))
+                        new_avatar.append(make_img({src: cover, alt: text || title}))
                         shadow.insertBefore(new_avatar, shadow.firstChild)
                     }
+                } else {
+                    if (old_avatar) old_avatar.remove()
                 }
                 if (icon) {
                     const new_icon = main_icon(icon)
                     if (old_icon) old_icon.parentNode.replaceChild(new_icon, old_icon)
                     else shadow.insertBefore(new_icon, shadow.firstChild)
-                } 
+                } else {
+                    if (old_icon) old_icon.remove()
+                }
             }
             // change content for listbox
             if (role.match(/listbox/)) {
@@ -3723,7 +3732,7 @@ function i_button (opt, protocol) {
             if ('current' in opt) {
                 send( make({to: controls, type: 'current', data: {name, current: is_current}}) )
             }
-            if ('expanded' in opt) {
+            if (expanded !== undefined) {
                 const type = !is_expanded ? 'expanded' : 'collapsed'
                 send( make({type, data: {name, expanded: is_expanded}}))
             }
