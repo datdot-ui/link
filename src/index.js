@@ -738,11 +738,6 @@ function i_button (opt, protocol) {
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon {
         --icon-size: ${current_icon_size ? current_icon_size : 'var(--current-icon-size)'};
     }
-    /*
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon g,
-    :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon g {
-        --icon-fill: var(--current-icon-fill);
-    }*/
     :host(i-button[aria-checked="true"]), :host(i-button[aria-expanded="true"]),
     :host(i-button[aria-checked="true"]:hover), :host(i-button[aria-expanded="true"]:hover) {
         --size: ${current_size ? current_size : 'var(--current-size)'};
