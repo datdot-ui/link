@@ -365,7 +365,7 @@ function i_button (opt, protocol) {
             const old_text = shadow.querySelector('.text')
             // change content for button or switch or tab
             if (role.match(/button|switch|tab/)) {
-                
+                el.setAttribute('aria-label', text || title)
                 if (text) {
                     if (old_text) old_text.textContent = text
                 } else {
@@ -725,10 +725,10 @@ function i_button (opt, protocol) {
         --bg-color: ${current_bg_color ? current_bg_color : 'var(--current-bg-color)'};
     }
     :host(i-button[aria-current="true"]) .icon,  :host(i-button[aria-current="true"]:hover) .icon {
-        --icon-size: ${current_icon_size || 'var(--current-icon-size)'};
+        --icon-size: ${current_icon_size ? current_icon_size : 'var(--current-icon-size)'};
     }
     :host(i-button[aria-current="true"]) g {
-        --icon-fill: ${current_icon_fill || 'var(--current-icon-fill)'};
+        --icon-fill: ${current_icon_fill ? current_icon_fill : 'var(--current-icon-fill)'};
     }
     :host(i-button[aria-current="true"]:focus) {
         --color: var(--color-focus);
@@ -736,7 +736,7 @@ function i_button (opt, protocol) {
     }
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon, 
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]:hover) .option > .icon {
-        --icon-size: ${current_icon_size || 'var(--current-icon-size)'};
+        --icon-size: ${current_icon_size ? current_icon_size : 'var(--current-icon-size)'};
     }
     /*
     :host(i-button[role="option"][aria-current="true"][aria-selected="true"]) .option > .icon g,
