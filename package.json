@@ -22,12 +22,14 @@
   "license": "MIT",
   "homepage": "https://github.com/datdotorg-io/datdot-ui-button#readme",
   "devDependencies": {
+    "browserify": "^17.0.0",
     "budo": "^11.6.4"
   },
   "dependencies": {
     "bel": "^6.0.0",
     "csjs-inject": "^1.0.1",
     "datdot-terminal": "git+https://github.com/datdotorg/datdot-terminal.git",
-    "datdot-ui-icon": "git+https://github.com/datdotorg/datdot-ui-icon.git"
+    "datdot-ui-icon": "git+https://github.com/datdotorg/datdot-ui-icon.git",
+    "message-maker": "github:datdotorg/message-maker"
   }
 }
