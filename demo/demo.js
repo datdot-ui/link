@@ -1,4 +1,4 @@
-const head = require('head')()
+// const head = require('head')()
 const bel = require('bel')
 const csjs = require('csjs-inject')
 const i_link = require('..')
