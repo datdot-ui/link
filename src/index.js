@@ -25,7 +25,10 @@ function i_link (opts, parent_protocol) {
     notify(recipients['parent'].make({ to: address, type: 'ready', refs: {} }))
 
     function listen (msg) {
-        console.log('New message', { msg })
+        const { head, refs, type, data, meta } = msg // receive msg
+        inbox[head.join('/')] = msg                  // store msg
+        const [from, to] = head
+        console.log('New message', { from, name: recipients[from].name, msg })
         // toggle
         if (type.match(/switched/)) return switched_event(data)
         // dropdown
@@ -41,6 +44,7 @@ function i_link (opts, parent_protocol) {
             return set_attr({aria: 'current', prop: is_current})
         }
     }
+    
 //-------------------------------------------------
     const { name, role='link', body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = opts
     const { icon } = icons

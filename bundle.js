@@ -1,6 +1,6 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 (function (__filename){(function (){
-const head = require('head')()
+// const head = require('head')()
 const bel = require('bel')
 const csjs = require('csjs-inject')
 const i_link = require('..')
@@ -656,23 +656,7 @@ section .links:nth-child(2) {
 
 document.body.append(demo())
 }).call(this)}).call(this,"/demo/demo.js")
-},{"..":54,"../src/node_modules/make-grid":56,"bel":5,"csjs-inject":8,"datdot-terminal":25,"datdot-ui-icon":43,"head":2,"img-btn":3,"message-maker":50}],2:[function(require,module,exports){
-module.exports = head
-
-function head (lang = 'UTF-8', title = 'Button - DatDot UI') {
-    document.documentElement.lang = 'en'
-    document.title = title
-    const lan = document.createElement('meta')
-    const viewport = document.createElement('meta')
-    const description = document.createElement('meta')
-    lan.setAttribute('charset', lang)
-    viewport.setAttribute('name', 'viewport')
-    viewport.setAttribute('content', 'width=device-width, initial-scale=1, user-scalable=no')
-    description.setAttribute('name', 'description')
-    description.setAttribute('content', 'Datdot-UI is a web component and the widgets for datdot.org using.')
-    document.head.append(lan, viewport)
-}
-},{}],3:[function(require,module,exports){
+},{"..":53,"../src/node_modules/make-grid":55,"bel":4,"csjs-inject":7,"datdot-terminal":24,"datdot-ui-icon":42,"img-btn":2,"message-maker":49}],2:[function(require,module,exports){
 module.exports = img_btn
 
 function img_btn ({name, body, icon = {}, cover, disabled, props = {}}, button, protocol) {
@@ -746,7 +730,7 @@ function img_btn ({name, body, icon = {}, cover, disabled, props = {}}, button, 
             }
         }, protocol)
 } 
-},{}],4:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var trailingNewlineRegex = /\n[\s]+$/
 var leadingNewlineRegex = /^\n[\s]+/
 var trailingSpaceRegex = /[\s]+$/
@@ -879,7 +863,7 @@ module.exports = function appendChild (el, childs) {
   }
 }
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 var hyperx = require('hyperx')
 var appendChild = require('./appendChild')
 
@@ -980,7 +964,7 @@ module.exports = hyperx(belCreateElement, {comments: true})
 module.exports.default = module.exports
 module.exports.createElement = belCreateElement
 
-},{"./appendChild":4,"hyperx":52}],6:[function(require,module,exports){
+},{"./appendChild":3,"hyperx":51}],5:[function(require,module,exports){
 (function (global){(function (){
 'use strict';
 
@@ -999,12 +983,12 @@ function csjsInserter() {
 module.exports = csjsInserter;
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"csjs":11,"insert-css":53}],7:[function(require,module,exports){
+},{"csjs":10,"insert-css":52}],6:[function(require,module,exports){
 'use strict';
 
 module.exports = require('csjs/get-css');
 
-},{"csjs/get-css":10}],8:[function(require,module,exports){
+},{"csjs/get-css":9}],7:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -1013,17 +997,17 @@ module.exports = csjs;
 module.exports.csjs = csjs;
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":6,"./get-css":7}],9:[function(require,module,exports){
+},{"./csjs":5,"./get-css":6}],8:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/csjs');
 
-},{"./lib/csjs":15}],10:[function(require,module,exports){
+},{"./lib/csjs":14}],9:[function(require,module,exports){
 'use strict';
 
 module.exports = require('./lib/get-css');
 
-},{"./lib/get-css":19}],11:[function(require,module,exports){
+},{"./lib/get-css":18}],10:[function(require,module,exports){
 'use strict';
 
 var csjs = require('./csjs');
@@ -1033,7 +1017,7 @@ module.exports.csjs = csjs;
 module.exports.noScope = csjs({ noscope: true });
 module.exports.getCss = require('./get-css');
 
-},{"./csjs":9,"./get-css":10}],12:[function(require,module,exports){
+},{"./csjs":8,"./get-css":9}],11:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1055,7 +1039,7 @@ module.exports = function encode(integer) {
   return str;
 };
 
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -1099,7 +1083,7 @@ function getClassChain(obj) {
   return acc;
 }
 
-},{"./composition":14}],14:[function(require,module,exports){
+},{"./composition":13}],13:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -1179,7 +1163,7 @@ function ignoreComposition(values) {
  */
 function Composition() {}
 
-},{}],15:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 var extractExtends = require('./css-extract-extends');
@@ -1257,7 +1241,7 @@ function without(obj, unwanted) {
   }, {});
 }
 
-},{"./build-exports":13,"./composition":14,"./css-extract-extends":16,"./css-key":17,"./extract-exports":18,"./scopeify":24}],16:[function(require,module,exports){
+},{"./build-exports":12,"./composition":13,"./css-extract-extends":15,"./css-key":16,"./extract-exports":17,"./scopeify":23}],15:[function(require,module,exports){
 'use strict';
 
 var makeComposition = require('./composition').makeComposition;
@@ -1310,7 +1294,7 @@ function getClassName(str) {
   return trimmed[0] === '.' ? trimmed.substr(1) : trimmed;
 }
 
-},{"./composition":14}],17:[function(require,module,exports){
+},{"./composition":13}],16:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1320,7 +1304,7 @@ function getClassName(str) {
 
 module.exports = ' css ';
 
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 var regex = require('./regex');
@@ -1347,7 +1331,7 @@ function getExport(css, regex) {
   return prop;
 }
 
-},{"./regex":21}],19:[function(require,module,exports){
+},{"./regex":20}],18:[function(require,module,exports){
 'use strict';
 
 var cssKey = require('./css-key');
@@ -1356,7 +1340,7 @@ module.exports = function getCss(csjs) {
   return csjs[cssKey];
 };
 
-},{"./css-key":17}],20:[function(require,module,exports){
+},{"./css-key":16}],19:[function(require,module,exports){
 'use strict';
 
 /**
@@ -1374,7 +1358,7 @@ module.exports = function hashStr(str) {
   return hash >>> 0;
 };
 
-},{}],21:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var findClasses = /(\.)(?!\d)([^\s\.,{\[>+~#:)]*)(?![^{]*})/.source;
@@ -1390,7 +1374,7 @@ module.exports = {
   ignoreComments: ignoreComments,
 };
 
-},{}],22:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 var ignoreComments = require('./regex').ignoreComments;
 
 module.exports = replaceAnimations;
@@ -1421,7 +1405,7 @@ function replaceAnimations(result) {
   return result;
 }
 
-},{"./regex":21}],23:[function(require,module,exports){
+},{"./regex":20}],22:[function(require,module,exports){
 'use strict';
 
 var encode = require('./base62-encode');
@@ -1435,7 +1419,7 @@ module.exports = function fileScoper(fileSrc) {
   }
 };
 
-},{"./base62-encode":12,"./hash-string":20}],24:[function(require,module,exports){
+},{"./base62-encode":11,"./hash-string":19}],23:[function(require,module,exports){
 'use strict';
 
 var fileScoper = require('./scoped-name');
@@ -1476,7 +1460,7 @@ function scopify(css, ignores) {
   return replaceAnimations(result);
 }
 
-},{"./regex":21,"./replace-animations":22,"./scoped-name":23}],25:[function(require,module,exports){
+},{"./regex":20,"./replace-animations":21,"./scoped-name":22}],24:[function(require,module,exports){
 const bel = require('bel')
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
@@ -1970,7 +1954,7 @@ mark.current {
     }
 }
 `
-},{"bel":5,"datdot-ui-button":31,"footer":26,"generator-color":27,"make-grid":28,"message-maker":29,"support-style-sheet":30}],26:[function(require,module,exports){
+},{"bel":4,"datdot-ui-button":30,"footer":25,"generator-color":26,"make-grid":27,"message-maker":28,"support-style-sheet":29}],25:[function(require,module,exports){
 const bel = require('bel')
 const style_sheet = require('support-style-sheet')
 const {i_button} = require('datdot-ui-button')
@@ -2221,7 +2205,7 @@ function footer (opts = {}, protocol) {
     `
     return widget()
 }
-},{"./make-grid":28,"bel":5,"datdot-ui-button":31,"datdot-ui-dropdown":38,"message-maker":29,"support-style-sheet":30}],27:[function(require,module,exports){
+},{"./make-grid":27,"bel":4,"datdot-ui-button":30,"datdot-ui-dropdown":37,"message-maker":28,"support-style-sheet":29}],26:[function(require,module,exports){
  module.exports = {int2hsla, str2hashint}
  function int2hsla (i) { return `hsla(${i % 360}, 100%, 70%, 1)` }
  function str2hashint (str) {
@@ -2232,7 +2216,7 @@ function footer (opts = {}, protocol) {
      })
      return hash
  }
-},{}],28:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 module.exports = make_grid
 
 function make_grid (opts = {}) {
@@ -2309,7 +2293,7 @@ function make_grid (opts = {}) {
         return style += `${grid_auto_flow}${grid_auto_rows}${grid_auto_columns}`
     }
 }
-},{}],29:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 module.exports = function message_maker (from) {
     let msg_id = 0
     return function make ({to, type, data = null, refs = []}) {
@@ -2318,7 +2302,7 @@ module.exports = function message_maker (from) {
         return message
     }
 }
-},{}],30:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 module.exports = support_style_sheet
 function support_style_sheet (root, style) {
     return (() => {
@@ -2334,7 +2318,7 @@ function support_style_sheet (root, style) {
         }
     })()
 }
-},{}],31:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 (function (__filename){(function (){
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
@@ -3030,7 +3014,7 @@ function i_button (opts, parent_protocol) {
     return widget()
 }
 }).call(this)}).call(this,"/node_modules/.pnpm/github.com+datdotorg+datdot-terminal@9a28a21e941d4e90bd4e8036cfe4c0d9ee9db95f/node_modules/datdot-ui-button/src/index.js")
-},{"make-element":32,"make-grid":33,"make-icon":34,"make-image":35,"message-maker":36,"support-style-sheet":37}],32:[function(require,module,exports){
+},{"make-element":31,"make-grid":32,"make-icon":33,"make-image":34,"message-maker":35,"support-style-sheet":36}],31:[function(require,module,exports){
 module.exports = make_element
 
 function make_element({name = '', classlist = null, role }) {
@@ -3051,9 +3035,9 @@ function make_element({name = '', classlist = null, role }) {
 }
 
 
-},{}],33:[function(require,module,exports){
-arguments[4][28][0].apply(exports,arguments)
-},{"dup":28}],34:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
+arguments[4][27][0].apply(exports,arguments)
+},{"dup":27}],33:[function(require,module,exports){
 const i_icon = require('datdot-ui-icon')
 
 module.exports = {main_icon, select_icon, list_icon}
@@ -3074,7 +3058,7 @@ function list_icon ({name = 'check', path} ) {
 }
 
 
-},{"datdot-ui-icon":43}],35:[function(require,module,exports){
+},{"datdot-ui-icon":42}],34:[function(require,module,exports){
 module.exports = img
 
 function img ({src, alt}) {
@@ -3083,11 +3067,11 @@ function img ({src, alt}) {
     img.setAttribute('alt', alt)
     return img
 }
-},{}],36:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
+arguments[4][28][0].apply(exports,arguments)
+},{"dup":28}],36:[function(require,module,exports){
 arguments[4][29][0].apply(exports,arguments)
 },{"dup":29}],37:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"dup":30}],38:[function(require,module,exports){
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
 const make_button = require('make-button')
@@ -3293,7 +3277,7 @@ function i_dropdown ({page = '*', flow = 'ui-dropdown', name, options = {}, expa
 }
 
 
-},{"make-button":39,"make-list":40,"message-maker":41,"support-style-sheet":42}],39:[function(require,module,exports){
+},{"make-button":38,"make-list":39,"message-maker":40,"support-style-sheet":41}],38:[function(require,module,exports){
 const {i_button} = require('datdot-ui-button')
 module.exports = make_button
 function make_button ({page, name, option = {}, mode, expanded, theme = {}}, protocol) {
@@ -3328,7 +3312,7 @@ function make_button ({page, name, option = {}, mode, expanded, theme = {}}, pro
     }, protocol(name))
 }
 
-},{"datdot-ui-button":31}],40:[function(require,module,exports){
+},{"datdot-ui-button":30}],39:[function(require,module,exports){
 const i_list = require('datdot-ui-list')
 module.exports = make_list
 function make_list ({page, name, option = {}, mode, hidden}, protocol) {
@@ -3389,11 +3373,11 @@ function make_list ({page, name, option = {}, mode, hidden}, protocol) {
         })
     }
 }
-},{"datdot-ui-list":46}],41:[function(require,module,exports){
+},{"datdot-ui-list":45}],40:[function(require,module,exports){
+arguments[4][28][0].apply(exports,arguments)
+},{"dup":28}],41:[function(require,module,exports){
 arguments[4][29][0].apply(exports,arguments)
 },{"dup":29}],42:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"dup":30}],43:[function(require,module,exports){
 (function (__filename){(function (){
 const style_sheet = require('support-style-sheet')
 const svg = require('svg')
@@ -3481,9 +3465,9 @@ module.exports = ({name, path, is_shadow = false, theme}, parent_protocol) => {
 }
 
 }).call(this)}).call(this,"/node_modules/datdot-ui-icon/src/index.js")
-},{"message-maker":50,"support-style-sheet":44,"svg":45}],44:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"dup":30}],45:[function(require,module,exports){
+},{"message-maker":49,"support-style-sheet":43,"svg":44}],43:[function(require,module,exports){
+arguments[4][29][0].apply(exports,arguments)
+},{"dup":29}],44:[function(require,module,exports){
 module.exports = svg
 function svg (path) {
     const span = document.createElement('span')
@@ -3497,7 +3481,7 @@ function svg (path) {
     }
     return span
 }   
-},{}],46:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 const style_sheet = require('support-style-sheet')
 const {i_button, i_link} = require('datdot-ui-button')
 const button = i_button
@@ -3873,13 +3857,13 @@ function i_list (opts = {}, protocol) {
 
     return widget()
 }
-},{"datdot-ui-button":31,"make-grid":47,"message-maker":48,"support-style-sheet":49}],47:[function(require,module,exports){
+},{"datdot-ui-button":30,"make-grid":46,"message-maker":47,"support-style-sheet":48}],46:[function(require,module,exports){
+arguments[4][27][0].apply(exports,arguments)
+},{"dup":27}],47:[function(require,module,exports){
 arguments[4][28][0].apply(exports,arguments)
 },{"dup":28}],48:[function(require,module,exports){
 arguments[4][29][0].apply(exports,arguments)
 },{"dup":29}],49:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"dup":30}],50:[function(require,module,exports){
 module.exports = function message_maker (from) {
   let msg_id = 0
   return function make ({to, type, data = null, refs = {} }) {
@@ -3887,7 +3871,7 @@ module.exports = function message_maker (from) {
       return { head: [from, to, msg_id++], refs, type, data, meta: { stack }}
   }
 }
-},{}],51:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 module.exports = attributeToProperty
 
 var transform = {
@@ -3908,7 +3892,7 @@ function attributeToProperty (h) {
   }
 }
 
-},{}],52:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 var attrToProp = require('hyperscript-attribute-to-property')
 
 var VAR = 0, TEXT = 1, OPEN = 2, CLOSE = 3, ATTR = 4
@@ -4205,7 +4189,7 @@ var closeRE = RegExp('^(' + [
 ].join('|') + ')(?:[\.#][a-zA-Z0-9\u007F-\uFFFF_:-]+)*$')
 function selfClosing (tag) { return closeRE.test(tag) }
 
-},{"hyperscript-attribute-to-property":51}],53:[function(require,module,exports){
+},{"hyperscript-attribute-to-property":50}],52:[function(require,module,exports){
 var inserted = {};
 
 module.exports = function (css, options) {
@@ -4229,7 +4213,7 @@ module.exports = function (css, options) {
     }
 };
 
-},{}],54:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 (function (__filename){(function (){
 const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
@@ -4258,8 +4242,26 @@ function i_link (opts, parent_protocol) {
     notify(recipients['parent'].make({ to: address, type: 'ready', refs: {} }))
 
     function listen (msg) {
-        console.log('New message', { msg })
+        const { head, refs, type, data, meta } = msg // receive msg
+        inbox[head.join('/')] = msg                  // store msg
+        const [from, to] = head
+        console.log('New message', { from, name: recipients[from].name, msg })
+        // toggle
+        if (type.match(/switched/)) return switched_event(data)
+        // dropdown
+        if (type.match(/expanded/)) return expanded_event(data)
+        if (type.match(/collapsed/)) return collapsed_event(data)
+        // tab, checkbox
+        if (type.match(/tab-selected/)) return tab_selected_event(data)
+        // option
+        if (type.match(/selected|unselected/)) return list_selected_event(data)
+        if (type.match(/changed/)) return changed_event(data)
+        if (type.match(/current/)) {
+            is_current = data
+            return set_attr({aria: 'current', prop: is_current})
+        }
     }
+    
 //-------------------------------------------------
     const { name, role='link', body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = opts
     const { icon } = icons
@@ -4484,14 +4486,14 @@ function i_link (opts, parent_protocol) {
     return widget()
 }
 }).call(this)}).call(this,"/src/index.js")
-},{"make-element":55,"make-grid":56,"make-icon":57,"make-image":58,"message-maker":50,"support-style-sheet":59}],55:[function(require,module,exports){
-arguments[4][32][0].apply(exports,arguments)
-},{"dup":32}],56:[function(require,module,exports){
-arguments[4][28][0].apply(exports,arguments)
-},{"dup":28}],57:[function(require,module,exports){
+},{"make-element":54,"make-grid":55,"make-icon":56,"make-image":57,"message-maker":49,"support-style-sheet":58}],54:[function(require,module,exports){
+arguments[4][31][0].apply(exports,arguments)
+},{"dup":31}],55:[function(require,module,exports){
+arguments[4][27][0].apply(exports,arguments)
+},{"dup":27}],56:[function(require,module,exports){
+arguments[4][33][0].apply(exports,arguments)
+},{"datdot-ui-icon":42,"dup":33}],57:[function(require,module,exports){
 arguments[4][34][0].apply(exports,arguments)
-},{"datdot-ui-icon":43,"dup":34}],58:[function(require,module,exports){
-arguments[4][35][0].apply(exports,arguments)
-},{"dup":35}],59:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"dup":30}]},{},[1]);
+},{"dup":34}],58:[function(require,module,exports){
+arguments[4][29][0].apply(exports,arguments)
+},{"dup":29}]},{},[1]);
