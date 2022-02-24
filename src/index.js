@@ -2,10 +2,12 @@ const style_sheet = require('support-style-sheet')
 const message_maker = require('message-maker')
 const make_img = require('make-image')
 const make_element = require('make-element')
-const {main_icon} = require('make-icon')
 const make_grid = require('make-grid')
+const i_icon = require('datdot-ui-icon')
+
 
 var id = 0
+var icon_count = 0
 
 module.exports = i_link
 
@@ -23,6 +25,13 @@ function i_link (opts, parent_protocol) {
     const {notify, address} = parent_protocol(myaddress, listen)
     names[address] = recipients['parent'] = { name: 'parent', notify, address, make: message_maker(myaddress) }
     notify(recipients['parent'].make({ to: address, type: 'ready', refs: {} }))
+
+    function make_protocol (name) {
+        return function protocol (address, notify) {
+            names[address] = recipients[name] = { name, address, notify, make: message_maker(myaddress) }
+            return { notify: listen, address: myaddress }
+        }
+    }
 
     function listen (msg) {
         const { head, refs, type, data, meta } = msg // receive msg
@@ -48,7 +57,7 @@ function i_link (opts, parent_protocol) {
 //-------------------------------------------------
     const { name, role='link', body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = opts
     const { icon } = icons
-    const make_icon = 'icon' in icons ? main_icon(icon) : undefined
+    const main_icon = i_icon({ name: icon?.name, path: icon?.path}, make_protocol(`${icon?.name}-${icon_count++}`))
     let {url = '#', target = '_self'} = link
     let is_disabled = disabled
 
@@ -67,11 +76,11 @@ function i_link (opts, parent_protocol) {
         style_sheet(shadow, style)
         // check icon, cover and body if has value
         const add_cover = typeof cover === 'string' ? avatar : undefined
-        const add_icon = icon ? make_icon : undefined
+        const add_icon = icon ? main_icon : undefined
         const add_text = body ? typeof body === 'string' && (add_icon || add_cover ) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
         if (typeof cover === 'string') avatar.append(make_img({src: cover, alt: name}))
         if (typeof cover === 'object') notify(make({ to: address, type: 'error', data: `cover[${typeof cover}] must to be a string` }))
-        if (add_icon) shadow.append(make_icon)
+        if (add_icon) shadow.append(main_icon)
         if (add_cover) shadow.append(add_cover)
         if (add_text) shadow.append(add_text)
         notify(make({to: address, type: 'ready'}))

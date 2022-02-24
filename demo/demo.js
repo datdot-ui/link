@@ -36,11 +36,12 @@ function demo () {
         const { notify, make, address } = names[from]
         notify(make({ to: address, type: 'ack', refs: { 'cause': head } }))
         // handle
-        if (type.match(/ready/)) return recipients['logs'](msg)
+        const { notify: logs_notify, make: logs_make, address: logs_address } = recipients['logs']
+        logs_notify(logs_make({ to: logs_address, type, data }))
+        if (type.match(/ready/)) return
         if (type === 'click') return handle_click_event(msg)
         if (type === 'changed') return handle_changed_event(type, data)
         if (type.match(/current/)) return 
-        recipients['logs'](msg)
     }
 //------------------------------------------
     // logs must be initialized first before components
