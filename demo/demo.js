@@ -241,7 +241,7 @@ function demo () {
     // handle events
     function handle_click_event ({head, type, refs, data}) {
         const [from, to, msg_id] = head
-        const name = recipients[from].name
+        const name = names[from].name
         // check if name ===...
         if (from === 'notice' || from === 'warn' || from === 'search') return handle_tab_icon_event({to, data})
         if (from.match(/button|menuitem/)) return handle_triggered({type, from, data})

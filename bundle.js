@@ -243,7 +243,7 @@ function demo () {
     // handle events
     function handle_click_event ({head, type, refs, data}) {
         const [from, to, msg_id] = head
-        const name = recipients[from].name
+        const name = names[from].name
         // check if name ===...
         if (from === 'notice' || from === 'warn' || from === 'search') return handle_tab_icon_event({to, data})
         if (from.match(/button|menuitem/)) return handle_triggered({type, from, data})
@@ -4245,7 +4245,7 @@ function i_link (opts, parent_protocol) {
         const { head, refs, type, data, meta } = msg // receive msg
         inbox[head.join('/')] = msg                  // store msg
         const [from, to] = head
-        console.log('New message', { from, name: recipients[from].name, msg })
+        console.log('New message', { from, name: names[from].name, msg })
         // toggle
         if (type.match(/switched/)) return switched_event(data)
         // dropdown
