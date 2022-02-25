@@ -322,7 +322,7 @@ function demo () {
         const cover = state ? 'https://cdn.pixabay.com/photo/2019/05/11/02/33/cherry-blossom-4194997_960_720.jpg' : 'https://cdn.pixabay.com/photo/2016/02/19/11/07/japanese-cherry-blossoms-1209577_960_720.jpg'
         const icon = state ? {name: 'star'} : {name: 'edit'}
         const content =  {text: body, cover: from === 'thumb-blossom' ? cover : undefined, icon, title: undefined}
-        const { address, notify, make } = recipients[from]
+        const { address, notify, make } = names[from]
         notify(make({ to: address, type: 'switched', data: { checked: state } }))
         notify(make({ to: address, type: 'changed', data: content }))
         const { address: logs_address, notify: logs_notify, make: logs_make } = recipients['logs']
@@ -333,7 +333,7 @@ function demo () {
     function handle_dropdown_menu_event (from, data) {
         const state = data.expanded
         const type = state ? 'expanded' : 'collapsed'
-        const { address, notify, make } = recipients[from]
+        const { address, notify, make } = names[from]
         notify(make({ to: address, type, data: state }))
         const { address: logs_address, notify: logs_notify, make: logs_make } = recipients['logs']
         logs_notify(logs_make({ to: logs_address, type }) )
