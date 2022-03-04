@@ -11,8 +11,6 @@ var icon_count = 0
 
 module.exports = i_link
 
-// TODO separate button and link into 2 modules
-
 function i_link (opts, parent_protocol) {
 //-------------------------------------------------
     const myaddress = `${__filename}-${id++}`
@@ -38,26 +36,13 @@ function i_link (opts, parent_protocol) {
         inbox[head.join('/')] = msg                  // store msg
         const [from, to] = head
         console.log('New message', { from, name: names[from].name, msg })
-        // toggle
-        if (type.match(/switched/)) return switched_event(data)
-        // dropdown
-        if (type.match(/expanded/)) return expanded_event(data)
-        if (type.match(/collapsed/)) return collapsed_event(data)
-        // tab, checkbox
-        if (type.match(/tab-selected/)) return tab_selected_event(data)
-        // option
-        if (type.match(/selected|unselected/)) return list_selected_event(data)
-        if (type.match(/changed/)) return changed_event(data)
-        if (type.match(/current/)) {
-            is_current = data
-            return set_attr({aria: 'current', prop: is_current})
-        }
     }
     
 //-------------------------------------------------
     const { name, role='link', body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = opts
     const { icon } = icons
-    const main_icon = i_icon({ name: icon?.name, path: icon?.path}, make_protocol(`${icon?.name}-${icon_count++}`))
+    if (icon?.name) var main_icon = i_icon({ name: icon.name, path: icon.path}, make_protocol(`${icon.name}-${icon_count++}`))
+    
     let {url = '#', target = '_self'} = link
     let is_disabled = disabled
 
@@ -85,6 +70,7 @@ function i_link (opts, parent_protocol) {
         if (add_text) shadow.append(add_text)
         notify(make({to: address, type: 'ready'}))
         if (!is_disabled) el.onclick = handle_open_link
+        
         return el
 
         function set_attr ({aria, prop}) {

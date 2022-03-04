@@ -38,10 +38,7 @@ function demo () {
         // handle
         const { notify: logs_notify, make: logs_make, address: logs_address } = recipients['logs']
         logs_notify(logs_make({ to: logs_address, type, data }))
-        if (type.match(/ready/)) return
         if (type === 'click') return handle_click_event(msg)
-        if (type === 'changed') return handle_changed_event(type, data)
-        if (type.match(/current/)) return 
     }
 //------------------------------------------
     // logs must be initialized first before components
@@ -52,18 +49,17 @@ function demo () {
     }, make_protocol('logs'))
 
     // links
-    const link1 = i_link(
-    {
+    const link1 = i_link({
         name: 'link-datdot',
         role: 'link',
         body: 'datdot.org',
         // cover: 'https://cdn.pixabay.com/photo/2018/01/17/20/22/analytics-3088958_960_720.jpg',
-        // icons: {
-        //     icon: {
-        //         name: 'plan-list'
-        //     }
-        // },
-        // classlist: 'icon-col-2',
+        icons: {
+            icon: {
+                name: 'plan-list'
+            }
+        },
+        classlist: 'icon-col-2',
         link: {
             url: 'http://datdot.org',
             target: '#frame'
@@ -78,11 +74,11 @@ function demo () {
             }
         }
     }, make_protocol('link-datdot'))
-    const link2 = i_link(
-    {
+
+    const link2 = i_link({
         name: 'link-playproject',
         role: 'link',
-        body: 'Playproject.io',
+        body: 'playproject.io',
         // icon: {name: 'datdot-black', classlist: 'col2-right'},
         cover: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
         disabled: false,
@@ -96,12 +92,12 @@ function demo () {
             }
         }
     }, make_protocol('link-playproject'))
-    const link3 = i_link(
-    {
+
+    const link3 = i_link({
         name: 'link3',
         role: 'link',
-        body: 'Google',
-        // disabled: true
+        body: 'google',
+        disabled: true,
         theme: {
             props: {
                 color: 'var(--color-deep-green)',
@@ -109,19 +105,18 @@ function demo () {
             }
         }
     }, make_protocol('link3'))
-    
-    const link4 = i_link(
-    {
+
+    const link4 = i_link({
         name: 'datdot-ui-issues',
         role: 'link',
-        body: 'DatDot UI issues',
+        body: 'datdot UI issues',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
             target: '_new'
         }
     }, make_protocol('datdot-ui-issues'))
-    const link5 = i_link(
-    {
+
+    const link5 = i_link({
         name: 'go-top',
         role: 'link',
         body: '↑Top',
@@ -129,6 +124,7 @@ function demo () {
             url: '#top'
         },
     }, make_protocol('go-top'))
+    
     // menu items
     const item1 = i_link(
     {
@@ -178,6 +174,7 @@ function demo () {
             // }
         }
     }, make_protocol('item1'))
+
     const item2 = i_link(
     {
         name: 'item2',
@@ -193,6 +190,7 @@ function demo () {
             }
         }
     }, make_protocol('item2'))
+
     const item3 = i_link(
     {
         name: 'item3',
@@ -218,6 +216,7 @@ function demo () {
             }
         }
     }, make_protocol('item3'))
+    
     /*
         if image's width is not equal to height, must be calculated resize to be small or big, 
         to avoid the image is cutting by border-radius, it won't look like a round button,
@@ -232,7 +231,10 @@ function demo () {
                 ${link1}${link2}${link3}${link4}${link5}
             </nav>
             <iframe id="frame" title="frame" src="https://datdot.org"></iframe>
-        </section>   
+        </section>
+        <section>${item1}</section>   
+        <section>${item2}</section>   
+        <section>${item3}</section>   
     </div>`
     const container = bel`<div class="${css.container}">${content}</div>`
     const app = bel`<div class="${css.wrap}">${container}${logs}</div>`
@@ -243,109 +245,8 @@ function demo () {
     function handle_click_event ({head, type, refs, data}) {
         const [from, to, msg_id] = head
         const name = names[from].name
-        // check if name ===...
-        if (from === 'notice' || from === 'warn' || from === 'search') return handle_tab_icon_event({to, data})
-        if (from.match(/button|menuitem/)) return handle_triggered({type, from, data})
-        if (from === 'tab') return handle_tab_event({from, to, data})
-        if (from === 'switch') return handle_toggle_event(from, data)
-        if (from === 'listbox') return handle_dropdown_menu_event(from, data)
-        if (from === 'option') return handle_select_event({from, to, data})
     }
 
-    function handle_triggered () {
-        const { notify, address, make } = recipients['logs']
-        notify(make({ to: address, type: 'triggered' }))
-    }
-
-    function handle_panel_change(id) {
-        const panels = document.querySelector('.panels')
-        const {childNodes} = panels
-        childNodes.forEach( item => {
-            const index = item.id === id ? 0 : -1
-            item.setAttribute('tabindex', index)
-            if (item.id === id) item.removeAttribute('hidden')
-            else item.setAttribute('hidden', 'true')
-        })
-    }
-
-    function handle_tab_event ({from, to, data}) {
-        const {name, selected} = data
-        handle_text_panel_change(to, '.panel1')
-        Object.entries(recipients).forEach(([key, value]) => {
-            if (key === name) {
-                const { address: name_address, notify: name_notify, make: name_make } = recipients[name]
-                name_notify(name_make({ to: name_address, type: 'tab-selected', data: { selected } }))
-                const { address: logs_address, notify: logs_notify, make: logs_make } = recipients['logs']
-                logs_notify(logs_make({ to: logs_address, type: 'tab-selected', data: { name } }) )
-                return name_notify(name_make({ to: name_address, type: 'current', data: selected }))
-            }
-            const { address: key_address, notify: key_notify, make: key_make } = recipients[key]
-            key_notify(key_make({ to: key_address, type: 'tab-selected', data: { selected: !selected } }))
-            return key_notify(key_make({ to: key_address, type: 'current', data: !selected }))
-        }) 
-    }
-
-    function handle_tab_icon_event ({to, data}) {
-        const {name, selected} = data
-        // change contante in panel
-        handle_text_panel_change(to, '.panel2')
-        // if not target is from, then make tab current and selected changed to false
-        Object.entries(recipients).forEach(([key, value]) => {
-            if (key === name) {
-                const { address: name_address, notify: name_notify, make: name_make } = recipients[name]
-                name_notify(name_make({ to: name_address, type: 'tab-selected', data: { selected } }))
-                const { address: logs_address, notify: logs_notify, make: logs_make } = recipients['logs']
-                logs_notify(logs_make({ to: logs_address, type: 'tab-selected', data: { name } }) )
-                return name_notify(name_make({ to: name_address, type: 'current', data: selected }))
-            }
-            const { address: key_address, notify: key_notify, make: key_make } = recipients[key]
-            key_notify(key_make({ to: key_address, type: 'tab-selected', data: { selected: !selected } }))
-            return key_notify(key_make({ to: key_address, type: 'current', data: !selected }))
-        }) 
-    }
-
-    function handle_text_panel_change(id, items) {
-        const panels = document.querySelectorAll(items)
-        panels.forEach( item => {
-            const check = item.id === id
-            const index = check ? 0 : -1
-            item.setAttribute('tabindex', index)
-            if (check) item.removeAttribute('hidden')   
-            else item.setAttribute('hidden', 'true')
-        })
-    }
-
-    function handle_toggle_event (from, data) {
-        const state = !data.checked
-        let body = state ? 'Toggle on' : 'Toggle off'
-        if (from === 'thumb-blossom') body = state ? 'Blossom open' : 'Blossom close'
-        const cover = state ? 'https://cdn.pixabay.com/photo/2019/05/11/02/33/cherry-blossom-4194997_960_720.jpg' : 'https://cdn.pixabay.com/photo/2016/02/19/11/07/japanese-cherry-blossoms-1209577_960_720.jpg'
-        const icon = state ? {name: 'star'} : {name: 'edit'}
-        const content =  {text: body, cover: from === 'thumb-blossom' ? cover : undefined, icon, title: undefined}
-        const { address, notify, make } = names[from]
-        notify(make({ to: address, type: 'switched', data: { checked: state } }))
-        notify(make({ to: address, type: 'changed', data: content }))
-        const { address: logs_address, notify: logs_notify, make: logs_make } = recipients['logs']
-        logs_notify(logs_make({to: logs_address, type: 'triggered', data: { checked: state } }) )
-        logs_notify(logs_make({to: logs_address, type: 'changed', data: content }) )
-    }
-
-    function handle_dropdown_menu_event (from, data) {
-        const state = data.expanded
-        const type = state ? 'expanded' : 'collapsed'
-        const { address, notify, make } = names[from]
-        notify(make({ to: address, type, data: state }))
-        const { address: logs_address, notify: logs_notify, make: logs_make } = recipients['logs']
-        logs_notify(logs_make({ to: logs_address, type }) )
-    }
-
-    function handle_select_event ({to, data}) {
-        const {name, selected, content} = data
-        const type = selected ? 'selected' : 'unselected'
-        recipients[name]({type, data: selected})
-        const { address: logs_address, notify: logs_notify, make: logs_make } = recipients['logs']
-        logs_notify(logs_make({to: logs_address, type, data: { content } }))
-    }
     function handle_changed_event (type, data) {
         const { notify, make, address } = recipients['single-selector']
         notify(make({ to: address, type, data }))
@@ -482,59 +383,6 @@ const css = csjs`
     --primary-icon-size-hover: var(--size16);
     --primary-icon-fill: var(--primary-color);
     --primary-icon-fill-hover: var(--primary-color-hover);
-    /* define current ---------------------------------------------*/
-    --current-size: var(--primary-size);
-    --current-weight: var(--primary-weight);
-    --current-color: var(--color-white);
-    --current-bg-color: var(--color-black);
-    --current-icon-size: var(--primary-icon-size);
-    --current-icon-fill: var(--color-white);
-    --current-list-selected-icon-size: var(--list-selected-icon-size);
-    --current-list-selected-icon-fill: var(--color-white);
-    --current-list-selected-icon-fill-hover: var(--color-white);
-    --current-list-size: var(--current-size);
-    --current-list-color: var(--current-color);
-    --current-list-bg-color: var(--current-bg-color);
-    --current-list-avatar-width: var(--primary-list-avatar-width);
-    --current-list-avatar-height: var(--primary-list-avatar-height);
-    /* role listbox settings ---------------------------------------------*/
-    /*-- collapsed --*/
-    --listbox-collapsed-bg-color: var(--primary-bg-color);
-    --listbox-collapsed-bg-color-hover: var(--primary-bg-color-hover);
-    --listbox-collapsed-icon-size: var(--size14);
-    --listbox-collapsed-icon-size-hover: var(--size14);
-    --listbox-collapsed-icon-fill: var(--primary-icon-fill);
-    --listbox-collapsed-icon-fill-hover: var(--primary-icon-fill-hover);
-    --listbox-collapsed-listbox-size: var(--primary-size);
-    --listbox-collapsed-listbox-size-hover: var(--primary-size-hover);
-    --listbox-collapsed-listbox-weight: var(--primary-weight);
-    --listbox-collapsed-listbox-weight-hover: var(--primary-weight);
-    --listbox-collapsed-listbox-color: var(--primary-color);
-    --listbox-collapsed-listbox-color-hover: var(--primary-color-hover);
-    --listbox-collapsed-listbox-avatar-width: var(--primary-listbox-option-avatar-width);
-    --listbox-collapsed-listbox-avatar-height: var(--primary-listbox-option-avatar-height);
-    --listbox-collapsed-listbox-icon-size: var(--primary-listbox-option-icon-size);
-    --listbox-collapsed-listbox-icon-size-hover: var(--primary-listbox-option-icon-size);
-    --listbox-collapsed-listbox-icon-fill: var(--color-blue);
-    --listbox-collapsed-listbox-icon-fill-hover: var(--color-yellow);
-    /*-- expanded ---*/
-    --listbox-expanded-bg-color: var(--current-bg-color);
-    --listbox-expanded-icon-size: var(--size14);
-    --listbox-expanded-icon-fill: var(--color-light-green);
-    --listbox-expanded-listbox-size: var(--size20);
-    --listbox-expanded-listbox-weight: var(--primary-weight);
-    --listbox-expanded-listbox-color: var(--current-color);
-    --listbox-expanded-listbox-avatar-width: var(--primary-listbox-option-avatar-width);
-    --listbox-expanded-listbox-avatar-height: var(--primary-listbox-option-avatar-height);
-    --listbox-expanded-listbox-icon-size: var(--primary-listbox-option-icon-size);
-    --listbox-expanded-listbox-icon-fill: var(--color-light-green);
-    /* role option settings ---------------------------------------------*/
-    --list-bg-color: var(--primary-bg-color);
-    --list-bg-color-hover: var(--primary-bg-color-hover);
-    --list-selected-icon-size: var(--size16);
-    --list-selected-icon-size-hover: var(--list-selected-icon-size);
-    --list-selected-icon-fill: var(--primary-icon-fill);
-    --list-selected-icon-fill-hover: var(--primary-icon-fill-hover);
     /* role link settings ---------------------------------------------*/
     --link-size: var(--size14);
     --link-size-hover: var(--primary-link-size);
