@@ -7,46 +7,25 @@ const img_btn = require('img-btn')
 // datdot-ui dependences
 const terminal = require('datdot-terminal')
 const icon = require('datdot-ui-icon')
-const message_maker = require('message-maker')
+const protocol_maker = require('protocol-maker')
 const make_grid = require('../src/node_modules/make-grid')
 
 var id = 0
 
 function demo () {
 //------------------------------------------
-    const myaddress = `${__filename}-${id++}`
-    const inbox = {}
-    const outbox = {}
-    const recipients = {}
-    const names = {}
-    const message_id = to => (outbox[to] = 1 + (outbox[to]||0))
-
-    function make_protocol (name) {
-        return function protocol (address, notify) {
-            names[address] = recipients[name] = { name, address, notify, make: message_maker(myaddress) }
-            return { notify: listen, address: myaddress }
-        }
-    }
+    const contacts = protocol_maker('demo', listen)
     function listen (msg) {
         console.log('New message', { msg })
         const { head, refs, type, data, meta } = msg // receive msg
-        inbox[head.join('/')] = msg                  // store msg
         const [from] = head
         // send back ack
-        const { notify, make, address } = names[from]
-        notify(make({ to: address, type: 'ack', refs: { 'cause': head } }))
+        const $from = contacts.by_address[from]
+        $from.notify($from.make({ to: $from.address, type: 'ack', refs: { 'cause': head } }))
         // handle
-        const { notify: logs_notify, make: logs_make, address: logs_address } = recipients['logs']
-        logs_notify(logs_make({ to: logs_address, type, data }))
         if (type === 'click') return handle_click_event(msg)
     }
 //------------------------------------------
-    // logs must be initialized first before components
-    const logs = terminal(
-    {
-        mode: 'compact', 
-        expanded: false
-    }, make_protocol('logs'))
 
     // links
     const link1 = i_link({
@@ -73,7 +52,7 @@ function demo () {
                 // avatar_radius: '50%'
             }
         }
-    }, make_protocol('link-datdot'))
+    }, contacts.add('link-datdot'))
 
     const link2 = i_link({
         name: 'link-playproject',
@@ -91,7 +70,7 @@ function demo () {
                 // avatar_width: '44px'
             }
         }
-    }, make_protocol('link-playproject'))
+    }, contacts.add('link-playproject'))
 
     const link3 = i_link({
         name: 'link3',
@@ -104,7 +83,7 @@ function demo () {
                 color_hover: 'var(--color-electric-violet)'
             }
         }
-    }, make_protocol('link3'))
+    }, contacts.add('link3'))
 
     const link4 = i_link({
         name: 'datdot-ui-issues',
@@ -114,7 +93,7 @@ function demo () {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
             target: '_new'
         }
-    }, make_protocol('datdot-ui-issues'))
+    }, contacts.add('datdot-ui-issues'))
 
     const link5 = i_link({
         name: 'go-top',
@@ -123,7 +102,7 @@ function demo () {
         link: {
             url: '#top'
         },
-    }, make_protocol('go-top'))
+    }, contacts.add('go-top'))
     
     // menu items
     const item1 = i_link(
@@ -173,7 +152,7 @@ function demo () {
             //     }
             // }
         }
-    }, make_protocol('item1'))
+    }, contacts.add('item1'))
 
     const item2 = i_link(
     {
@@ -189,7 +168,7 @@ function demo () {
                 // avatar_width: '40px',
             }
         }
-    }, make_protocol('item2'))
+    }, contacts.add('item2'))
 
     const item3 = i_link(
     {
@@ -215,7 +194,7 @@ function demo () {
                 icon_fill_hover: 'var(--color-dodger-blue)'
             }
         }
-    }, make_protocol('item3'))
+    }, contacts.add('item3'))
     
     /*
         if image's width is not equal to height, must be calculated resize to be small or big, 
@@ -237,19 +216,14 @@ function demo () {
         <section>${item3}</section>   
     </div>`
     const container = bel`<div class="${css.container}">${content}</div>`
-    const app = bel`<div class="${css.wrap}">${container}${logs}</div>`
+    const app = bel`<div class="${css.wrap}">${container}</div>`
 
     return app
 
     // handle events
     function handle_click_event ({head, type, refs, data}) {
         const [from, to, msg_id] = head
-        const name = names[from].name
-    }
-
-    function handle_changed_event (type, data) {
-        const { notify, make, address } = recipients['single-selector']
-        notify(make({ to: address, type, data }))
+        const name = contacts.by_address[from].name
     }
 }
 

@@ -1,5 +1,5 @@
 const style_sheet = require('support-style-sheet')
-const message_maker = require('message-maker')
+const protocol_maker = require('protocol-maker')
 const make_img = require('make-image')
 const make_element = require('make-element')
 const make_grid = require('make-grid')
@@ -11,47 +11,30 @@ var icon_count = 0
 
 module.exports = i_link
 
-function i_link (opts, parent_protocol) {
+function i_link (opts, parent_wire) {
 //-------------------------------------------------
-    const myaddress = `${__filename}-${id++}`
-    const inbox = {}
-    const outbox = {}
-    const recipients = {}
-    const names = {}
-    const message_id = to => (outbox[to] = 1 + (outbox[to]||0))
-
-    const {notify, address} = parent_protocol(myaddress, listen)
-    names[address] = recipients['parent'] = { name: 'parent', notify, address, make: message_maker(myaddress) }
-    notify(recipients['parent'].make({ to: address, type: 'ready', refs: {} }))
-
-    function make_protocol (name) {
-        return function protocol (address, notify) {
-            names[address] = recipients[name] = { name, address, notify, make: message_maker(myaddress) }
-            return { notify: listen, address: myaddress }
-        }
-    }
-
+    const initial_contacts = { 'parent': parent_wire }
+    const contacts = protocol_maker('input-number', listen, initial_contacts)
     function listen (msg) {
         const { head, refs, type, data, meta } = msg // receive msg
-        inbox[head.join('/')] = msg                  // store msg
         const [from, to] = head
-        console.log('New message', { from, name: names[from].name, msg })
+        console.log('New message', { from, name: contacts.by_address[from].name, msg })
     }
     
 //-------------------------------------------------
     const { name, role='link', body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = opts
     const { icon } = icons
-    if (icon?.name) var main_icon = i_icon({ name: icon.name, path: icon.path}, make_protocol(`${icon.name}-${icon_count++}`))
+    if (icon?.name) var main_icon = i_icon({ name: icon.name, path: icon.path}, contacts.add(`${icon.name}-${icon_count++}`))
     
     let {url = '#', target = '_self'} = link
     let is_disabled = disabled
-
+    
     function widget () {
+        const $parent = contacts.by_name['parent']
         const el = make_element({name: 'i-link', role})
         const shadow = el.attachShadow({mode: 'closed'})
         const text = make_element({name: 'span', classlist: 'text'})
         const avatar = make_element({name: 'span', classlist: 'avatar'})
-        const { notify, address, make } = recipients['parent']
         text.append(body)
         el.setAttribute('aria-label', body)
         el.setAttribute('href', url)
@@ -64,11 +47,11 @@ function i_link (opts, parent_protocol) {
         const add_icon = icon ? main_icon : undefined
         const add_text = body ? typeof body === 'string' && (add_icon || add_cover ) ? text : body : typeof body === 'object' && body.localName === 'div' ? body : undefined
         if (typeof cover === 'string') avatar.append(make_img({src: cover, alt: name}))
-        if (typeof cover === 'object') notify(make({ to: address, type: 'error', data: `cover[${typeof cover}] must to be a string` }))
+        if (typeof cover === 'object') $parent.notify($parent.make({ to: $parent.address, type: 'error', data: `cover[${typeof cover}] must to be a string` }))
         if (add_icon) shadow.append(main_icon)
         if (add_cover) shadow.append(add_cover)
         if (add_text) shadow.append(add_text)
-        notify(make({to: address, type: 'ready'}))
+        $parent.notify($parent.make({to: $parent.address, type: 'ready'}))
         if (!is_disabled) el.onclick = handle_open_link
         
         return el
@@ -85,7 +68,7 @@ function i_link (opts, parent_protocol) {
                 const el = document.querySelector(target)
                 el.src = url
             }
-            notify(make({ to: address, type: 'go to', data: { url, window: target } }))
+            $parent.notify($parent.make({ to: $parent.address, type: 'go to', data: { url, window: target } }))
         }
     }
 
