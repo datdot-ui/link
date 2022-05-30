@@ -31,9 +31,8 @@ function demo () {
     // links
     const link1 = i_link({
         name: 'link-datdot',
-        role: 'link',
         body: 'datdot.org',
-        // cover: 'https://cdn.pixabay.com/photo/2018/01/17/20/22/analytics-3088958_960_720.jpg',
+        cover: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
         icons: {
             icon: {
                 name: 'plan-list'
@@ -57,9 +56,7 @@ function demo () {
 
     const link2 = i_link({
         name: 'link-playproject',
-        role: 'link',
         body: 'playproject.io',
-        // icon: {name: 'datdot-black', classlist: 'col2-right'},
         cover: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
         disabled: false,
         link: {
@@ -75,7 +72,6 @@ function demo () {
 
     const link3 = i_link({
         name: 'link3',
-        role: 'link',
         body: 'google',
         disabled: true,
         theme: {
@@ -88,7 +84,6 @@ function demo () {
 
     const link4 = i_link({
         name: 'datdot-ui-issues',
-        role: 'link',
         body: 'datdot UI issues',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
@@ -98,7 +93,6 @@ function demo () {
 
     const link5 = i_link({
         name: 'go-top',
-        role: 'link',
         body: '↑Top',
         link: {
             url: '#top'
@@ -109,14 +103,12 @@ function demo () {
     const item1 = i_link(
     {
         name: 'item1',
-        role: 'menuitem',
         body: `Datdot-UI issues`,
         icons: {
             icon: {
                 name: 'datdot-white'
             }
         },
-        // cover: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/600px-Octicons-mark-github.svg.png',
         cover : 'https://cdn.pixabay.com/photo/2017/01/14/12/59/iceland-1979445__340.jpg',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
@@ -477,7 +469,7 @@ section .links:nth-child(2) {
 `
 
 document.body.append(demo())
-},{"..":52,"../src/node_modules/make-grid":54,"bel":4,"csjs-inject":7,"datdot-terminal":42,"datdot-ui-icon":31,"img-btn":2,"protocol-maker":48}],2:[function(require,module,exports){
+},{"..":52,"../src/node_modules/make-grid":53,"bel":4,"csjs-inject":7,"datdot-terminal":42,"datdot-ui-icon":31,"img-btn":2,"protocol-maker":48}],2:[function(require,module,exports){
 module.exports = img_btn
 
 function img_btn ({name, body, icon = {}, cover, disabled, props = {}}, button, protocol) {
@@ -4407,7 +4399,6 @@ module.exports = function (css, options) {
 const style_sheet = require('support-style-sheet')
 const protocol_maker = require('protocol-maker')
 const make_img = require('make-image')
-const make_element = require('make-element')
 const make_grid = require('make-grid')
 const i_icon = require('datdot-ui-icon')
 
@@ -4428,7 +4419,7 @@ function i_link (opts, parent_wire) {
     }
     
 //-------------------------------------------------
-    const { name, role='link', body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = opts
+    const { name, body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = opts
     const { icon } = icons
     if (icon?.name) var main_icon = i_icon({ name: icon.name, path: icon.path}, contacts.add(`${icon.name}-${icon_count++}`))
     
@@ -4437,10 +4428,12 @@ function i_link (opts, parent_wire) {
     
     function widget () {
         const $parent = contacts.by_name['parent']
-        const el = make_element({name: 'i-link', role})
+        const el = document.createElement('i-link')
         const shadow = el.attachShadow({mode: 'closed'})
-        const text = make_element({name: 'span', classlist: 'text'})
-        const avatar = make_element({name: 'span', classlist: 'avatar'})
+        const text = document.createElement('span')
+        text.className = 'text'
+        const avatar = document.createElement('span')
+        avatar.className = 'avatar'
         text.append(body)
         el.setAttribute('aria-label', body)
         el.setAttribute('href', url)
@@ -4652,12 +4645,10 @@ function i_link (opts, parent_wire) {
     `
     return widget()
 }
-},{"datdot-ui-icon":31,"make-element":53,"make-grid":54,"make-image":55,"protocol-maker":48,"support-style-sheet":56}],53:[function(require,module,exports){
-arguments[4][35][0].apply(exports,arguments)
-},{"dup":35}],54:[function(require,module,exports){
+},{"datdot-ui-icon":31,"make-grid":53,"make-image":54,"protocol-maker":48,"support-style-sheet":55}],53:[function(require,module,exports){
 arguments[4][26][0].apply(exports,arguments)
-},{"dup":26}],55:[function(require,module,exports){
+},{"dup":26}],54:[function(require,module,exports){
 arguments[4][27][0].apply(exports,arguments)
-},{"dup":27}],56:[function(require,module,exports){
+},{"dup":27}],55:[function(require,module,exports){
 arguments[4][28][0].apply(exports,arguments)
 },{"dup":28}]},{},[1]);

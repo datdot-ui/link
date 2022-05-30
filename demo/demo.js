@@ -30,9 +30,8 @@ function demo () {
     // links
     const link1 = i_link({
         name: 'link-datdot',
-        role: 'link',
         body: 'datdot.org',
-        // cover: 'https://cdn.pixabay.com/photo/2018/01/17/20/22/analytics-3088958_960_720.jpg',
+        cover: 'https://raw.githubusercontent.com/playproject-io/datdot/master/packages/datdot/logo-datdot.png',
         icons: {
             icon: {
                 name: 'plan-list'
@@ -56,9 +55,7 @@ function demo () {
 
     const link2 = i_link({
         name: 'link-playproject',
-        role: 'link',
         body: 'playproject.io',
-        // icon: {name: 'datdot-black', classlist: 'col2-right'},
         cover: 'https://avatars.githubusercontent.com/u/51347431?s=200&v=4',
         disabled: false,
         link: {
@@ -74,7 +71,6 @@ function demo () {
 
     const link3 = i_link({
         name: 'link3',
-        role: 'link',
         body: 'google',
         disabled: true,
         theme: {
@@ -87,7 +83,6 @@ function demo () {
 
     const link4 = i_link({
         name: 'datdot-ui-issues',
-        role: 'link',
         body: 'datdot UI issues',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',
@@ -97,7 +92,6 @@ function demo () {
 
     const link5 = i_link({
         name: 'go-top',
-        role: 'link',
         body: '↑Top',
         link: {
             url: '#top'
@@ -108,14 +102,12 @@ function demo () {
     const item1 = i_link(
     {
         name: 'item1',
-        role: 'menuitem',
         body: `Datdot-UI issues`,
         icons: {
             icon: {
                 name: 'datdot-white'
             }
         },
-        // cover: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Octicons-mark-github.svg/600px-Octicons-mark-github.svg.png',
         cover : 'https://cdn.pixabay.com/photo/2017/01/14/12/59/iceland-1979445__340.jpg',
         link: {
             url: 'https://github.com/playproject-io/datdot-ui/issues',

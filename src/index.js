@@ -1,7 +1,6 @@
 const style_sheet = require('support-style-sheet')
 const protocol_maker = require('protocol-maker')
 const make_img = require('make-image')
-const make_element = require('make-element')
 const make_grid = require('make-grid')
 const i_icon = require('datdot-ui-icon')
 
@@ -22,7 +21,7 @@ function i_link (opts, parent_wire) {
     }
     
 //-------------------------------------------------
-    const { name, role='link', body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = opts
+    const { name, body, link = {}, icons = {}, classlist, cover, disabled = false, theme = {}} = opts
     const { icon } = icons
     if (icon?.name) var main_icon = i_icon({ name: icon.name, path: icon.path}, contacts.add(`${icon.name}-${icon_count++}`))
     
@@ -31,10 +30,12 @@ function i_link (opts, parent_wire) {
     
     function widget () {
         const $parent = contacts.by_name['parent']
-        const el = make_element({name: 'i-link', role})
+        const el = document.createElement('i-link')
         const shadow = el.attachShadow({mode: 'closed'})
-        const text = make_element({name: 'span', classlist: 'text'})
-        const avatar = make_element({name: 'span', classlist: 'avatar'})
+        const text = document.createElement('span')
+        text.className = 'text'
+        const avatar = document.createElement('span')
+        avatar.className = 'avatar'
         text.append(body)
         el.setAttribute('aria-label', body)
         el.setAttribute('href', url)
